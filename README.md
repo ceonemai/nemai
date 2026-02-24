@@ -39,12 +39,7 @@ nemai/
 └── README.md
 ```
 
-
-
 ---
-
-
-เป็น:
 
 ```md
 ## 🛠 Installation
