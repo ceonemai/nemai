@@ -14,20 +14,28 @@ Nemai is a modern AI-powered landing page built with React (Vite).
 ---
 
 ## 📂 Project Structure
-src/
+nemai/
 │
-├── assets/ # Images and static assets
+├── public/ # Static public files
 │
-├── components/ # Reusable UI components
-│ ├── Navbar/
-│ ├── Hero/
-│ └── Footer/
+├── src/
+│ ├── assets/ # Images and static assets
+│ │
+│ ├── components/ # Reusable UI components
+│ │ ├── Navbar/
+│ │ ├── Hero/
+│ │ └── Footer/
+│ │
+│ ├── styles/ # Global styles
+│ │ └── global.css
+│ │
+│ ├── App.jsx # Root component
+│ └── main.jsx # Entry point
 │
-├── styles/ # Global styles
-│ └── global.css
-│
-├── App.jsx # Root component
-└── main.jsx # Entry point
+├── index.html
+├── package.json
+└── README.md
+
 
 
 ---
