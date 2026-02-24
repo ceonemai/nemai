@@ -1,18 +1,56 @@
-# React + Vite
+# Nemai
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Nemai is a modern AI-powered landing page built with React (Vite).
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Tech Stack
 
-## React Compiler
+- React
+- Vite
+- CSS Modules (folder separated)
+- Component-based architecture
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+---
 
-Note: This will impact Vite dev & build performances.
+## 📂 Project Structure
+src/
+│
+├── assets/ # Images and static assets
+│
+├── components/ # Reusable UI components
+│ ├── Navbar/
+│ ├── Hero/
+│ └── Footer/
+│
+├── styles/ # Global styles
+│ └── global.css
+│
+├── App.jsx # Root component
+└── main.jsx # Entry point
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🛠 Installation
+npm install
+npm run dev
+
+
+---
+
+## 🎯 Architecture Concept
+
+- Clean separation of concerns
+- Component-driven design
+- Scalable folder structure
+- Easy to extend (add sections like Features, Pricing, etc.)
+
+---
+
+## ✨ Future Improvements
+
+- Add React Router
+- Add Animation (Framer Motion)
+- Add Tailwind or Styled Components
+- Deploy to .... (TBD)
