@@ -1,0 +1,35 @@
+.navbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 24px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10; /* 🔥 สำคัญ */
+}
+
+.logo img {
+  height: 28px;
+  cursor: pointer;
+}
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+
+.nav-links li {
+  cursor: pointer;
+}
+
+.nav-btn {
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: none;
+  background: black;
+  color: white;
+  cursor: pointer;
+}
