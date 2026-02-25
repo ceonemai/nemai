@@ -3,33 +3,108 @@
   top: 0;
   left: 0;
   width: 100%;
-  padding: 24px 60px;
+  padding: 28px 80px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 10; /* 🔥 สำคัญ */
+  z-index: 10;
 }
 
+/* LOGO */
 .logo img {
-  height: 28px;
+  height: 56px;
+  width: auto;
   cursor: pointer;
 }
 
+/* LINKS */
 .nav-links {
   display: flex;
-  gap: 32px;
+  gap: 40px;
   list-style: none;
+  align-items: center;
 }
 
 .nav-links li {
+  position: relative;
   cursor: pointer;
+  font-family: "AllumiSTD", sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  color: #111;
+  transition: all 0.25s ease;
 }
 
-.nav-btn {
-  padding: 10px 20px;
-  border-radius: 999px;
-  border: none;
+/* subtle lift */
+.nav-links li:hover {
+  transform: translateY(-2px);
+}
+
+/* underline animation */
+.nav-links li::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 0%;
+  height: 2px;
+  background: #111;
+  transition: width 0.25s ease;
+}
+
+.nav-links li:hover::after {
+  width: 100%;
+}
+
+/* RIGHT SIDE */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+/* SOCIAL ICONS (Professional Style) */
+.social-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+
+.social-icon img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.social-icon:hover {
   background: black;
-  color: white;
+  transform: translateY(-2px);
+}
+
+.social-icon:hover img {
+  filter: invert(1);
+}
+
+/* COMING SOON BUTTON (Modern SaaS Style) */
+.nav-btn {
+  padding: 12px 30px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 999px;
+  border: 1px solid #111;
+  background: transparent;
+  color: #111;
   cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.nav-btn:hover {
+  background: #111;
+  color: white;
+  transform: translateY(-2px);
 }

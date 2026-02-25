@@ -1,24 +1,25 @@
 import "./Hero.css";
-import logo from "../../assets/images/NEM_LOGO.png";
+import mascot from "../../assets/images/mascots/Mascott NEM-85.png";
 
 function Hero() {
   return (
     <section className="hero">
-    <img src={logo} alt="Nemai Logo" className="hero-bg-logo" />
 
     <div className="hero-content">
         <h1>
-        AI-Powered <br />
-        Health Support
+        First Personalized AI Emergency <br />
+        Decision Support
         </h1>
 
-        <p>Nemai JUST NEM IT</p>
+        <p>Act Smart. Save Countless Lives</p>
 
         <div className="hero-buttons">
-        <button className="primary">Start Now</button>
-        <button className="secondary">Learn More</button>
+        <button className="primary">Get Early Access</button>
         </div>
     </div>
+
+    {/* Nem Background Mascot */}
+    <img src={mascot} alt="Nemai Mascot" className="hero-mascot" />
     </section>
   );
 }

@@ -8,4 +8,19 @@
 body {
   background: white;
   color: black;
+  font-family: "AllumiSTD", sans-serif;
+}
+
+@font-face {
+  font-family: "AllumiSTD";
+  src: url("../assets/fonts/allumi-std-book-bold.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "AllumiSTD";
+  src: url("../assets/fonts/Allumi_Std_Book_Regular.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
 }

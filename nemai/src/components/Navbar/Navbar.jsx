@@ -1,5 +1,7 @@
 import "./Navbar.css";
 import logo from "../../assets/images/NEM_LOGO.png";
+import discordIcon from "../../assets/images/icons/discord.svg";
+import xIcon from "../../assets/images/icons/x.png";
 
 function Navbar() {
   return (
@@ -9,12 +11,31 @@ function Navbar() {
       </div>
 
       <ul className="nav-links">
-        <li>Product</li>
         <li>About</li>
         <li>Contact</li>
       </ul>
 
-      <button className="nav-btn">Get Started</button>
+      <div className="nav-right">
+        <a
+          href="https://discord.gg/yourlink"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="social-icon"
+        >
+          <img src={discordIcon} alt="Discord" />
+        </a>
+
+        <a
+          href="https://x.com/yourlink"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="social-icon"
+        >
+          <img src={xIcon} alt="X" />
+        </a>
+
+        <button className="nav-btn">Coming Soon</button>
+      </div>
     </nav>
   );
 }

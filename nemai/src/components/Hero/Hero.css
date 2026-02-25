@@ -11,10 +11,10 @@
 /* Logo Background */
 .hero-bg-logo {
   position: absolute;
-  left: 15%;
+  left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 750px; 
+  width: 750px;
   opacity: 0.05;
   z-index: 1;
   pointer-events: none;
@@ -25,25 +25,28 @@
   position: relative;
   z-index: 2;
   text-align: center;
-  margin-left: 120px; 
+  max-width: 900px;
+  padding: 0 20px;
 }
 
-/* Font */
+/* Heading */
 .hero h1 {
+  font-family: "AllumiSTD", sans-serif;
   font-size: 64px;
   font-weight: 700;
   margin-bottom: 20px;
-  position: relative;
-  z-index: 3;
 }
 
+/* Subtitle */
 .hero p {
-  max-width: 600px;
+  font-family: "AllumiSTD", sans-serif;
   font-size: 18px;
   color: #555;
+  font-weight: 500;
   margin-bottom: 30px;
 }
 
+/* Buttons */
 .hero-buttons {
   display: flex;
   gap: 20px;
@@ -51,12 +54,29 @@
 }
 
 .primary {
+  font-family: "AllumiSTD", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
   padding: 14px 28px;
   border-radius: 999px;
   border: none;
   background: black;
   color: white;
   cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+/* Hover effect */
+.primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2),
+              0 0 20px rgba(255, 255, 255, 0.1);
+}
+/* Click effect */
+.primary:active {
+  transform: translateY(0);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 }
 
 .secondary {
@@ -65,4 +85,36 @@
   border: 1px solid black;
   background: transparent;
   cursor: pointer;
+}
+
+/* Mascot Position */
+.hero-mascot {
+  position: absolute;
+  right: 8%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 420px;
+  z-index: 2;
+  opacity: 0;
+  animation: float 4s ease-in-out infinite,
+             fadeIn 1s ease forwards;
+}
+
+/* Floating Animation */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 0.5;
+  }
 }
