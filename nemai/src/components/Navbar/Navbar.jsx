@@ -16,6 +16,15 @@ function Navbar() {
       </ul>
 
       <div className="nav-right">
+                <a
+          href="https://x.com/yourlink"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="social-icon"
+        >
+          <img src={xIcon} alt="X" />
+        </a>
+
         <a
           href="https://discord.gg/yourlink"
           target="_blank"
@@ -23,15 +32,6 @@ function Navbar() {
           className="social-icon"
         >
           <img src={discordIcon} alt="Discord" />
-        </a>
-
-        <a
-          href="https://x.com/yourlink"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="social-icon"
-        >
-          <img src={xIcon} alt="X" />
         </a>
 
         <button className="nav-btn">Coming Soon</button>
