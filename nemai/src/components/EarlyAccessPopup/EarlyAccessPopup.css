@@ -192,29 +192,29 @@
     color: #222;
 }
 
-.social-row-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    background: #111;
+.social-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.05);
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.25s ease;
 }
 
-.social-row-icon img {
+.social-icon img {
     width: 18px;
     height: 18px;
     object-fit: contain;
+}
+
+.social-row:hover .social-icon {
+    background: black;
+}
+
+.social-row:hover .social-icon img {
     filter: invert(1);
-}
-
-.social-row-icon.discord {
-    background: #5865F2;
-}
-
-.social-row-icon.discord img {
-    filter: brightness(0) invert(1);
 }
 
 /* ── Check Circle ── */

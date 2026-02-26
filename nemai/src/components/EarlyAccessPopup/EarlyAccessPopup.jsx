@@ -82,7 +82,7 @@ function EarlyAccessPopup({ onClose }) {
                                 onClick={handleFollowX}
                             >
                                 <div className="social-row-left">
-                                    <div className="social-row-icon">
+                                    <div className="social-icon">
                                         <img src={xIcon} alt="X" />
                                     </div>
                                     <span>Follow us on X</span>
@@ -101,7 +101,7 @@ function EarlyAccessPopup({ onClose }) {
                                 onClick={handleJoinDiscord}
                             >
                                 <div className="social-row-left">
-                                    <div className="social-row-icon discord">
+                                    <div className="social-icon">
                                         <img src={discordIcon} alt="Discord" />
                                     </div>
                                     <span>Join our Discord</span>
