@@ -17,7 +17,7 @@ function Navbar() {
 
       <div className="nav-right">
                 <a
-          href="https://x.com/yourlink"
+          href="https://x.com/nemai_io"
           target="_blank"
           rel="noopener noreferrer"
           className="social-icon"
@@ -26,7 +26,7 @@ function Navbar() {
         </a>
 
         <a
-          href="https://discord.gg/yourlink"
+          href="https://discord.gg/xdeUYtwnnb"
           target="_blank"
           rel="noopener noreferrer"
           className="social-icon"
