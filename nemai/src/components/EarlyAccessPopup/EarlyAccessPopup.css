@@ -1,0 +1,427 @@
+/* ═══════════════════════════════════════════
+   Overlay
+   ═══════════════════════════════════════════ */
+.popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    animation: overlayIn 0.25s ease;
+}
+
+@keyframes overlayIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* ═══════════════════════════════════════════
+   Modal Card
+   ═══════════════════════════════════════════ */
+.popup-modal {
+    position: relative;
+    background: #fff;
+    border-radius: 20px;
+    padding: 44px 40px 36px;
+    width: 440px;
+    max-width: 92vw;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.18);
+    animation: modalIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Close Button */
+.popup-close {
+    position: absolute;
+    top: 16px;
+    right: 18px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: #f3f3f3;
+    font-size: 15px;
+    color: #666;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.popup-close:hover {
+    background: #e0e0e0;
+    color: #111;
+    transform: scale(1.05);
+}
+
+/* ═══════════════════════════════════════════
+   Title & Subtitle
+   ═══════════════════════════════════════════ */
+.popup-title {
+    font-family: "AllumiSTD", sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #111;
+    margin: 0 0 6px;
+}
+
+.popup-subtitle {
+    font-family: "AllumiSTD", sans-serif;
+    font-size: 15px;
+    color: #777;
+    margin: 0 0 28px;
+}
+
+/* ═══════════════════════════════════════════
+   Section
+   ═══════════════════════════════════════════ */
+.popup-section {
+    margin-bottom: 24px;
+    transition: opacity 0.3s ease;
+}
+
+.popup-section.locked {
+    opacity: 0.4;
+    pointer-events: none;
+    user-select: none;
+}
+
+.popup-section-label {
+    font-family: "AllumiSTD", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.section-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #111;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.lock-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: #bbb;
+    font-weight: 500;
+    margin-left: auto;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+/* ═══════════════════════════════════════════
+   Social Rows
+   ═══════════════════════════════════════════ */
+.social-row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 1.5px solid #eee;
+    background: #fafafa;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 10px;
+    font-family: "AllumiSTD", sans-serif;
+}
+
+.social-row:hover {
+    border-color: #ccc;
+    background: #f5f5f5;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.social-row.completed {
+    border-color: #c8f7c5;
+    background: #f0fdf0;
+}
+
+.social-row.completed:hover {
+    border-color: #a8e6a3;
+    background: #e8fbe8;
+}
+
+.social-row-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.social-row-left span {
+    font-size: 15px;
+    font-weight: 500;
+    color: #222;
+}
+
+.social-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+}
+
+.social-icon img {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+}
+
+.social-row:hover .social-icon {
+    background: black;
+}
+
+.social-row:hover .social-icon img {
+    filter: invert(1);
+}
+
+/* ── Check Circle ── */
+.check-circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.25s ease;
+}
+
+.check-circle.checked {
+    border-color: #22c55e;
+    background: #22c55e;
+    animation: checkPop 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.check-circle.checked svg {
+    width: 16px;
+    height: 16px;
+    color: #fff;
+}
+
+@keyframes checkPop {
+    0% {
+        transform: scale(0.5);
+    }
+
+    60% {
+        transform: scale(1.15);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* ═══════════════════════════════════════════
+   Email Form
+   ═══════════════════════════════════════════ */
+.email-form {
+    display: flex;
+    gap: 10px;
+}
+
+.email-form input {
+    flex: 1;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1.5px solid #ddd;
+    background: #fafafa;
+    font-family: "AllumiSTD", sans-serif;
+    font-size: 15px;
+    color: #111;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.email-form input::placeholder {
+    color: #bbb;
+}
+
+.email-form input:focus {
+    border-color: #111;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+}
+
+.email-form input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.submit-btn {
+    padding: 14px 24px;
+    border-radius: 12px;
+    border: none;
+    background: #111;
+    color: #fff;
+    font-family: "AllumiSTD", sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+}
+
+.submit-btn:hover:not(:disabled) {
+    background: #333;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+}
+
+.submit-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.submit-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Spinner */
+.spinner {
+    width: 18px;
+    height: 18px;
+    border: 2.5px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Error */
+.error-msg {
+    font-family: "AllumiSTD", sans-serif;
+    font-size: 13px;
+    color: #ef4444;
+    margin-top: 10px;
+}
+
+/* ═══════════════════════════════════════════
+   Success State
+   ═══════════════════════════════════════════ */
+.popup-success {
+    text-align: center;
+    padding: 20px 0 10px;
+    animation: modalIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.success-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #22c55e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    animation: successPop 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.success-icon svg {
+    width: 36px;
+    height: 36px;
+    color: #fff;
+}
+
+@keyframes successPop {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    60% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.popup-success h2 {
+    font-family: "AllumiSTD", sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #111;
+    margin: 0 0 8px;
+}
+
+.popup-success p {
+    font-family: "AllumiSTD", sans-serif;
+    font-size: 15px;
+    color: #777;
+    margin: 0 0 28px;
+}
+
+.popup-done-btn {
+    padding: 14px 40px;
+    border-radius: 999px;
+    border: none;
+    background: #111;
+    color: #fff;
+    font-family: "AllumiSTD", sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.popup-done-btn:hover {
+    background: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
