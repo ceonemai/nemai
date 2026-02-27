@@ -15,14 +15,26 @@ body {
   font-family: "AllumiSTD", sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+section {
+  min-height: 100vh;
+  scroll-margin-top: 110px;
+  /* prevent navbar block */
+}
+
 * {
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+
 }
 
 @font-face {

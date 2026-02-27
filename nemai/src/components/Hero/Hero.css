@@ -2,11 +2,9 @@
   position: relative;
   min-height: 100vh;
   padding: 140px 0 100px;
-  background: linear-gradient(
-    135deg,
-    var(--secondary-pale),
-    var(--brand-light)
-  );
+  background: linear-gradient(135deg,
+      var(--secondary-pale),
+      var(--brand-light));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -39,14 +37,25 @@
   position: absolute;
   width: 600px;
   height: 600px;
-  background: radial-gradient(
-    circle,
-    rgba(89, 224, 244, 0.25) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle,
+      rgba(89, 224, 244, 0.25) 0%,
+      transparent 70%);
   top: -200px;
   right: -200px;
   z-index: 0;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("../../assets/images/LogogramGlassFXNem.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 700px;
+  opacity: 0.4;
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* Heading */
@@ -61,7 +70,8 @@
 .hero p {
   font-family: "AllumiSTD", sans-serif;
   font-size: 18px;
-  color: var(--primary-teal); /* For weaker color use color: #4A6B73; */
+  color: var(--primary-teal);
+  /* For weaker color use color: #4A6B73; */
 
   font-weight: 500;
   margin-bottom: 30px;
@@ -93,6 +103,7 @@
     0 10px 30px rgba(33, 135, 170, 0.35),
     0 0 40px rgba(89, 224, 244, 0.25);
 }
+
 /* Click effect */
 .primary:active {
   transform: translateY(0);
@@ -125,7 +136,7 @@
   z-index: 2;
   opacity: 0;
   animation: float 4s ease-in-out infinite,
-             fadeIn 1s ease forwards;
+    fadeIn 1s ease forwards;
 }
 
 /* Floating Animation */
@@ -133,9 +144,11 @@
   0% {
     transform: translateY(0px);
   }
+
   50% {
     transform: translateY(-15px);
   }
+
   100% {
     transform: translateY(0px);
   }
@@ -154,6 +167,11 @@
 
   .hero h1 {
     font-size: 44px;
+  }
+
+  .hero::after {
+    background-size: 500px;
+    opacity: 0.05;
   }
 }
 
@@ -176,5 +194,10 @@
 
   .nav-links {
     display: none;
+  }
+
+  .hero::after {
+    background-size: 320px;
+    opacity: 0.04;
   }
 }
