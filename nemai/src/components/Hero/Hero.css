@@ -1,7 +1,12 @@
 .hero {
   position: relative;
-  height: 100vh;
-  background: linear-gradient(135deg, #f5f5f5, #e9e9ff);
+  min-height: 100vh;
+  padding: 140px 0 100px;
+  background: linear-gradient(
+    135deg,
+    var(--secondary-pale),
+    var(--brand-light)
+  );
   display: flex;
   align-items: center;
   justify-content: center;
@@ -29,6 +34,21 @@
   padding: 0 20px;
 }
 
+.hero::before {
+  content: "";
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(
+    circle,
+    rgba(89, 224, 244, 0.25) 0%,
+    transparent 70%
+  );
+  top: -200px;
+  right: -200px;
+  z-index: 0;
+}
+
 /* Heading */
 .hero h1 {
   font-family: "AllumiSTD", sans-serif;
@@ -41,7 +61,8 @@
 .hero p {
   font-family: "AllumiSTD", sans-serif;
   font-size: 18px;
-  color: #555;
+  color: var(--primary-teal); /* For weaker color use color: #4A6B73; */
+
   font-weight: 500;
   margin-bottom: 30px;
 }
@@ -60,18 +81,17 @@
   padding: 14px 28px;
   border-radius: 999px;
   border: none;
-  background: black;
+  background: var(--brand-dark);
   color: white;
   cursor: pointer;
-
-  transition: all 0.25s ease;
+  transition: all 0.3s ease;
 }
 
-/* Hover effect */
 .primary:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2),
-              0 0 20px rgba(255, 255, 255, 0.1);
+  transform: translateY(-4px);
+  box-shadow:
+    0 10px 30px rgba(33, 135, 170, 0.35),
+    0 0 40px rgba(89, 224, 244, 0.25);
 }
 /* Click effect */
 .primary:active {
@@ -82,18 +102,26 @@
 .secondary {
   padding: 14px 28px;
   border-radius: 999px;
-  border: 1px solid black;
+  border: 1px solid var(--primary-teal);
   background: transparent;
-  cursor: pointer;
+  color: var(--primary-teal);
+  transition: all 0.25s ease;
 }
+
+.secondary:hover {
+  background: var(--primary-teal);
+  color: white;
+}
+
 
 /* Mascot Position */
 .hero-mascot {
   position: absolute;
-  right: 8%;
+  right: 5%;
   top: 50%;
   transform: translateY(-50%);
-  width: 420px;
+  width: clamp(220px, 30vw, 420px);
+  max-width: 40%;
   z-index: 2;
   opacity: 0;
   animation: float 4s ease-in-out infinite,
@@ -116,5 +144,37 @@
 @keyframes fadeIn {
   to {
     opacity: 0.5;
+  }
+}
+
+@media (max-width: 1024px) {
+  .hero-mascot {
+    display: none;
+  }
+
+  .hero h1 {
+    font-size: 44px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 120px 20px 80px;
+  }
+
+  .hero h1 {
+    font-size: 36px;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+  }
+
+  .navbar {
+    padding: 20px 6%;
+  }
+
+  .nav-links {
+    display: none;
   }
 }
