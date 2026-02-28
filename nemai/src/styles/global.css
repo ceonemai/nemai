@@ -38,6 +38,20 @@ body {
 }
 
 @font-face {
+  font-family: "Prometo";
+  src: url("../assets/fonts/Prometo_Reg.ttf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Prometo";
+  src: url("../assets/fonts/Prometo_Bold.ttf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
   font-family: "AllumiSTD";
   src: url("../assets/fonts/allumi-std-book-bold.otf") format("opentype");
   font-weight: 400;

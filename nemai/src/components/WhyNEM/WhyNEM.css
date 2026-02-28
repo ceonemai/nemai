@@ -24,6 +24,7 @@
 }
 
 .why-left h2 {
+    font-family: "Prometo", sans-serif;
     font-size: 3.2rem;
     font-weight: 700;
     line-height: 1.1;
@@ -37,6 +38,8 @@
 }
 
 .why-left p {
+    font-family: "Prometo", sans-serif;
+    font-weight: 400;
     font-size: 18px;
     line-height: 1.8;
     margin-bottom: 20px;
@@ -44,6 +47,7 @@
 }
 
 .why-highlight {
+    font-family: "Prometo", sans-serif;
     margin-top: 30px;
     font-size: 20px;
     font-weight: 600;
@@ -58,17 +62,6 @@
     gap: 40px;
 }
 
-/* Counter */
-.why-counter h3 {
-    font-size: 72px;
-    font-weight: 700;
-    color: var(--primary-teal);
-}
-
-.why-counter span {
-    font-size: 18px;
-    opacity: 0.7;
-}
 
 /* Cards */
 .why-card {
@@ -88,6 +81,7 @@
 
 
 .why-stat h3 {
+    font-family: "Prometo", sans-serif;
     font-size: 4rem;
     font-weight: 700;
     background: linear-gradient(90deg, #0096ff, #00c2a8);
@@ -138,12 +132,15 @@
 
 /* ทำให้ content อยู่เหนือ glow */
 .why-wrapper {
+        font-family: "Prometo", sans-serif;
+
     position: relative;
     z-index: 1;
 }
 
-/* Intro Title (แทน Counter) */
+/* Intro Title  */
 .why-intro h3 {
+    font-family: "Prometo", sans-serif;
     font-size: 28px;
     font-weight: 600;
     margin-bottom: 10px;

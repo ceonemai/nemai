@@ -60,7 +60,7 @@
 
 /* Heading */
 .hero h1 {
-  font-family: "AllumiSTD", sans-serif;
+  font-family: "Prometo", sans-serif;
   font-size: 64px;
   font-weight: 700;
   margin-bottom: 20px;
@@ -68,7 +68,7 @@
 
 /* Subtitle */
 .hero p {
-  font-family: "AllumiSTD", sans-serif;
+  font-family: "Prometo", sans-serif;
   font-size: 18px;
   color: var(--primary-teal);
   /* For weaker color use color: #4A6B73; */
@@ -85,7 +85,7 @@
 }
 
 .primary {
-  font-family: "AllumiSTD", sans-serif;
+  font-family: "Prometo", sans-serif;
   font-size: 18px;
   font-weight: 500;
   padding: 14px 28px;
