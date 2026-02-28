@@ -73,6 +73,55 @@
   color: white;
 }
 
+.subscribe-message {
+  font-family: "Prometo", sans-serif;
+  font-size: 14px;
+  margin-top: 8px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.subscribe-message.hiding {
+  animation: fadeOut 0.3s ease forwards;
+}
+
+.subscribe-message.success {
+  background: rgba(139, 218, 161, 0.1);
+  color: var(--primary-green, #8bdaa1);
+  border: 1px solid rgba(139, 218, 161, 0.2);
+}
+
+.subscribe-message.error {
+  background: rgba(255, 99, 132, 0.1);
+  color: #ff6384;
+  border: 1px solid rgba(255, 99, 132, 0.2);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+}
+
 /* =========================
    BOTTOM SECTION
 ========================= */
@@ -169,4 +218,49 @@
   text-align: right;
   font-size: 12px;
   color: rgba(247, 247, 247, 0.4);
+}
+
+/* =========================
+   RESPONSIVE DESIGN
+========================= */
+
+@media (max-width: 900px) {
+  .footer {
+    padding: 80px 5% 40px;
+  }
+
+  .footer-top {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    margin-bottom: 60px;
+  }
+
+  .footer-left h2 {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 600px) {
+  .footer-bottom {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    text-align: center;
+  }
+
+  .footer-brand img {
+    height: 48px;
+  }
+
+  .footer-socials {
+    justify-content: center;
+  }
+
+  .footer-copyright {
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .subscribe-form {
+    flex-direction: column;
+  }
 }
