@@ -17,7 +17,7 @@
 }
 
 .navbar.scrolled {
-  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
 }
 
 /* LOGO */
@@ -120,4 +120,32 @@
   color: white;
   transform: translateY(-3px);
   box-shadow: 0 8px 25px rgba(33, 135, 170, 0.35);
+}
+
+/* =========================
+   RESPONSIVE DESIGN
+========================= */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 16px 5%;
+  }
+
+  .logo img {
+    height: 48px;
+  }
+
+  .nav-links {
+    display: none;
+    /* Hide main links on mobile, maybe add hamburger later */
+  }
+
+  .social-icon {
+    display: none;
+    /* Hide social icons on mobile navbar to save space */
+  }
+
+  .nav-btn {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
 }
