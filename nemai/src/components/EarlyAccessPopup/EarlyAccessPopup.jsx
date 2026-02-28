@@ -8,6 +8,7 @@ function EarlyAccessPopup({ onClose }) {
     const [joinedDiscord, setJoinedDiscord] = useState(false);
     const [email, setEmail] = useState("");
     const [status, setStatus] = useState("idle"); // idle | submitting | success | error
+    const [message, setMessage] = useState("");
 
     const allSocialDone = followedX && joinedDiscord;
 
@@ -26,20 +27,41 @@ function EarlyAccessPopup({ onClose }) {
         if (!email || !allSocialDone) return;
 
         setStatus("submitting");
+        setMessage("");
 
         try {
-            await fetch(
+            const response = await fetch(
                 "https://script.google.com/macros/s/AKfycbzDUECP_tHkxF3jN0vlo1uWB_s_aduZQIfM1Qvuo0vZgvEKljoEbWAfP7Jj2hQQZzFfgQ/exec",
                 {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
                     body: JSON.stringify({ email }),
-                    mode: "no-cors",
                 }
             );
-            setStatus("success");
-        } catch {
+
+            const data = await response.json();
+
+            if (data.responseCode === 409 || data.status === "duplicate") {
+                setStatus("error");
+                setMessage(data.message || "Email already subscribed");
+            } else if (data.responseCode === 400) {
+                setStatus("error");
+                setMessage(data.message || "Invalid request");
+            } else if (data.responseCode === 500) {
+                setStatus("error");
+                setMessage(data.message || "Internal server error. Please try again later.");
+            } else if (data.responseCode === 200 || data.status === "success" || response.ok) {
+                setStatus("success");
+                setMessage("");
+            } else {
+                setStatus("error");
+                setMessage(data.message || "Something went wrong.");
+            }
+
+        } catch (error) {
+            console.error("Subscription error:", error);
             setStatus("error");
+            setMessage("Something went wrong. Please try again later.");
         }
     };
 
@@ -154,8 +176,10 @@ function EarlyAccessPopup({ onClose }) {
                                 </button>
                             </form>
 
-                            {status === "error" && (
-                                <p className="error-msg">Something went wrong. Please try again.</p>
+                            {status === "error" && message && (
+                                <div className="popup-error-msg">
+                                    {message}
+                                </div>
                             )}
                         </div>
                     </>
