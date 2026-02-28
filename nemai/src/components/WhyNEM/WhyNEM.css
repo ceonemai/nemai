@@ -132,7 +132,7 @@
 
 /* ทำให้ content อยู่เหนือ glow */
 .why-wrapper {
-        font-family: "Prometo", sans-serif;
+    font-family: "Prometo", sans-serif;
     position: relative;
     z-index: 1;
 }

@@ -22,12 +22,14 @@
 }
 
 .mission-center h2 {
+    font-family: "Prometo", sans-serif;
     font-size: 3.5rem;
     font-weight: 700;
     margin-bottom: 30px;
 }
 
 .mission-main {
+    font-family: "Prometo", sans-serif;
     font-size: 20px;
     line-height: 1.9;
     margin-bottom: 40px;
@@ -35,6 +37,7 @@
 }
 
 .mission-highlight {
+    font-family: "Prometo", sans-serif;
     font-size: 22px;
     font-weight: 600;
     color: var(--primary-teal);
@@ -52,6 +55,7 @@
     padding: 18px 30px;
     border-radius: 50px;
     backdrop-filter: blur(10px);
+    font-family: "Prometo", sans-serif;
     font-size: 16px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     transition: 0.3s ease;
