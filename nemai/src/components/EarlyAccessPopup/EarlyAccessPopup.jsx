@@ -14,12 +14,16 @@ function EarlyAccessPopup({ onClose }) {
 
     const handleFollowX = () => {
         window.open("https://x.com/nemai_io", "_blank", "noopener,noreferrer");
-        setFollowedX(true);
+        setTimeout(() => {
+            setFollowedX(true);
+        }, 8000);
     };
 
     const handleJoinDiscord = () => {
         window.open("https://discord.gg/xdeUYtwnnb", "_blank", "noopener,noreferrer");
-        setJoinedDiscord(true);
+        setTimeout(() => {
+            setJoinedDiscord(true);
+        }, 8000);
     };
 
     const handleSubmit = async (e) => {
