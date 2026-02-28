@@ -1,0 +1,105 @@
+.mission-alt {
+    position: relative;
+    min-height: 100vh;
+    padding: 160px 8%;
+    background: linear-gradient(
+        180deg,
+        var(--brand-light),
+        var(--secondary-mint)
+    );
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+    font-family: "Prometo", sans-serif;
+}
+
+.mission-center {
+    max-width: 900px;
+    position: relative;
+    z-index: 2;
+}
+
+.mission-center h2 {
+    font-family: "Prometo", sans-serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+.mission-main {
+    font-family: "Prometo", sans-serif;
+    font-size: 20px;
+    line-height: 1.9;
+    margin-bottom: 40px;
+    opacity: 0.9;
+}
+
+.mission-highlight {
+    font-family: "Prometo", sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--primary-teal);
+    margin-bottom: 60px;
+}
+
+.mission-pillars {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.mission-pillars div {
+    background: rgba(255, 255, 255, 0.6);
+    padding: 18px 30px;
+    border-radius: 50px;
+    backdrop-filter: blur(10px);
+    font-family: "Prometo", sans-serif;
+    font-size: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    transition: 0.3s ease;
+}
+
+.mission-pillars div:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 150, 255, 0.15);
+}
+
+/* Mascot Floating */
+.mission-mascot {
+    position: absolute;
+    bottom: -20px;
+    right: 8%;
+    width: 220px;
+    opacity: 0.95;
+    z-index: 1;
+}
+
+.mission-mascot {
+    filter: drop-shadow(0 20px 30px rgba(0,0,0,0.1));
+}
+
+/* Soft ambient glow */
+.mission-alt::before {
+    content: "";
+    position: absolute;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(
+        circle,
+        rgba(0, 150, 255, 0.15),
+        transparent 70%
+    );
+    top: -200px;
+    left: -200px;
+    filter: blur(60px);
+}
+
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .mission-mascot {
+        display: none;
+    }
+}

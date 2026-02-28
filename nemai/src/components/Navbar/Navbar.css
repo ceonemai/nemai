@@ -1,13 +1,23 @@
 .navbar {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  padding: 28px 80px;
+  padding: 24px 5%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.navbar.scrolled {
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
 }
 
 /* LOGO */
@@ -31,13 +41,14 @@
   font-family: "AllumiSTD", sans-serif;
   font-weight: 500;
   letter-spacing: 0.4px;
-  color: #111;
+  color: var(--brand-dark);
   transition: all 0.25s ease;
 }
 
 /* subtle lift */
 .nav-links li:hover {
   transform: translateY(-2px);
+  color: var(--primary-teal);
 }
 
 /* underline animation */
@@ -48,7 +59,7 @@
   bottom: -6px;
   width: 0%;
   height: 2px;
-  background: #111;
+  background: var(--primary-teal);
   transition: width 0.25s ease;
 }
 
@@ -68,7 +79,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(33, 135, 170, 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -82,12 +93,13 @@
 }
 
 .social-icon:hover {
-  background: black;
-  transform: translateY(-2px);
+  background: var(--primary-teal);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(33, 135, 170, 0.35);
 }
 
 .social-icon:hover img {
-  filter: invert(1);
+  opacity: 0.9;
 }
 
 /* COMING SOON BUTTON (Modern SaaS Style) */
@@ -96,15 +108,16 @@
   font-size: 14px;
   font-weight: 600;
   border-radius: 999px;
-  border: 1px solid #111;
+  border: 1px solid var(--primary-teal);
   background: transparent;
-  color: #111;
+  color: var(--primary-teal);
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.3s ease;
 }
 
 .nav-btn:hover {
-  background: #111;
+  background: var(--primary-teal);
   color: white;
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(33, 135, 170, 0.35);
 }

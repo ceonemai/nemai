@@ -79,15 +79,15 @@
    Title & Subtitle
    ═══════════════════════════════════════════ */
 .popup-title {
-    font-family: "AllumiSTD", sans-serif;
+    font-family: "Prometo", sans-serif;
     font-size: 26px;
-    font-weight: 700;
+    font-weight: 600;
     color: #111;
     margin: 0 0 6px;
 }
 
 .popup-subtitle {
-    font-family: "AllumiSTD", sans-serif;
+    font-family: "Prometo", sans-serif;
     font-size: 15px;
     color: #777;
     margin: 0 0 28px;
@@ -108,7 +108,7 @@
 }
 
 .popup-section-label {
-    font-family: "AllumiSTD", sans-serif;
+    font-family: "Prometo", sans-serif;
     font-size: 13px;
     font-weight: 600;
     color: #999;
@@ -160,7 +160,7 @@
     cursor: pointer;
     transition: all 0.2s ease;
     margin-bottom: 10px;
-    font-family: "AllumiSTD", sans-serif;
+    font-family: "Prometo", sans-serif;
 }
 
 .social-row:hover {
@@ -270,7 +270,7 @@
     border-radius: 12px;
     border: 1.5px solid #ddd;
     background: #fafafa;
-    font-family: "AllumiSTD", sans-serif;
+    font-family: "Prometo", sans-serif;
     font-size: 15px;
     color: #111;
     outline: none;
@@ -298,7 +298,7 @@
     border: none;
     background: #111;
     color: #fff;
-    font-family: "AllumiSTD", sans-serif;
+    font-family: "Prometo", sans-serif;
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
@@ -343,7 +343,7 @@
 
 /* Error */
 .error-msg {
-    font-family: "AllumiSTD", sans-serif;
+    font-family: "Prometo", sans-serif;
     font-size: 13px;
     color: #ef4444;
     margin-top: 10px;
@@ -393,7 +393,7 @@
 }
 
 .popup-success h2 {
-    font-family: "AllumiSTD", sans-serif;
+    font-family: "Prometo", sans-serif;
     font-size: 28px;
     font-weight: 700;
     color: #111;
@@ -401,7 +401,7 @@
 }
 
 .popup-success p {
-    font-family: "AllumiSTD", sans-serif;
+    font-family: "Prometo", sans-serif;
     font-size: 15px;
     color: #777;
     margin: 0 0 28px;
@@ -413,7 +413,7 @@
     border: none;
     background: #111;
     color: #fff;
-    font-family: "AllumiSTD", sans-serif;
+    font-family: "Prometo", sans-serif;
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;

@@ -1,13 +1,17 @@
 import { useState } from "react";
 import "./Hero.css";
 import mascot from "../../assets/images/mascots/Mascott NEM-85.png";
+import glassLogo from "../../assets/images/LogogramGlassFXNem.png";
 import EarlyAccessPopup from "../EarlyAccessPopup/EarlyAccessPopup";
 
 function Hero() {
   const [showPopup, setShowPopup] = useState(false);
 
   return (
-    <section className="hero">
+    <section
+      className="hero"
+      style={{ "--glass-bg": `url(${glassLogo})` }}
+    >
 
       <div className="hero-content">
         <h1>

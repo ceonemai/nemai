@@ -1,14 +1,54 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
+:root {
+  --primary-teal: #2187AA;
+  --primary-green: #8BDAA1;
+  --brand-dark: #272827;
+  --brand-light: #F7F7F7;
+
+  --secondary-teal: #59E0F4;
+  --secondary-mint: #9FECB8;
+  --secondary-pale: #CCECD4;
 }
 
 body {
-  background: white;
-  color: black;
+  background: var(--brand-light);
+  color: var(--brand-dark);
   font-family: "AllumiSTD", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+section {
+  min-height: 100vh;
+  scroll-margin-top: 110px;
+  /* prevent navbar block */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+
+}
+
+@font-face {
+  font-family: "Prometo";
+  src: url("../assets/fonts/Prometo_Reg.ttf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Prometo";
+  src: url("../assets/fonts/Prometo_Bold.ttf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
 }
 
 @font-face {
