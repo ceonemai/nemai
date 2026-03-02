@@ -5,7 +5,9 @@ import discordIcon from "../../assets/images/icons/discord.svg";
 
 function EarlyAccessPopup({ onClose }) {
     const [followedX, setFollowedX] = useState(false);
+    const [isCheckingX, setIsCheckingX] = useState(false);
     const [joinedDiscord, setJoinedDiscord] = useState(false);
+    const [isCheckingDiscord, setIsCheckingDiscord] = useState(false);
     const [email, setEmail] = useState("");
     const [status, setStatus] = useState("idle"); // idle | submitting | success | error
     const [message, setMessage] = useState("");
@@ -14,15 +16,19 @@ function EarlyAccessPopup({ onClose }) {
 
     const handleFollowX = () => {
         window.open("https://x.com/nemai_io", "_blank", "noopener,noreferrer");
+        setIsCheckingX(true);
         setTimeout(() => {
             setFollowedX(true);
+            setIsCheckingX(false);
         }, 8000);
     };
 
     const handleJoinDiscord = () => {
         window.open("https://discord.gg/xdeUYtwnnb", "_blank", "noopener,noreferrer");
+        setIsCheckingDiscord(true);
         setTimeout(() => {
             setJoinedDiscord(true);
+            setIsCheckingDiscord(false);
         }, 8000);
     };
 
@@ -113,7 +119,8 @@ function EarlyAccessPopup({ onClose }) {
                                     </div>
                                     <span>Follow us on X</span>
                                 </div>
-                                <div className={`check-circle ${followedX ? "checked" : ""}`}>
+                                <div className={`check-circle ${followedX ? "checked" : ""} ${isCheckingX ? "checking" : ""}`}>
+                                    {isCheckingX && <span className="spinner-small" />}
                                     {followedX && (
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                                             <path d="M20 6L9 17l-5-5" />
@@ -132,7 +139,8 @@ function EarlyAccessPopup({ onClose }) {
                                     </div>
                                     <span>Join our Discord</span>
                                 </div>
-                                <div className={`check-circle ${joinedDiscord ? "checked" : ""}`}>
+                                <div className={`check-circle ${joinedDiscord ? "checked" : ""} ${isCheckingDiscord ? "checking" : ""}`}>
+                                    {isCheckingDiscord && <span className="spinner-small" />}
                                     {joinedDiscord && (
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                                             <path d="M20 6L9 17l-5-5" />
