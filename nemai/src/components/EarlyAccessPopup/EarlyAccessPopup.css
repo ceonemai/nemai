@@ -335,11 +335,28 @@
     animation: spin 0.6s linear infinite;
 }
 
+
 @keyframes spin {
     to {
         transform: rotate(360deg);
     }
 }
+
+/* Small Spinner for Social Rows */
+.spinner-small {
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-top-color: #111;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+.check-circle.checking {
+    border-color: #ccc;
+    background: transparent;
+}
+
 
 /* Error */
 .popup-error-msg {
