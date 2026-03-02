@@ -1,109 +1,199 @@
-.mission-alt {
+/* =========================================
+   SECTION BASE
+========================================= */
+.mission {
     position: relative;
-    padding: 220px 8%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+    padding: 180px 6%;
     overflow: hidden;
     font-family: "Prometo", sans-serif;
 }
 
-.mission-center {
-    max-width: 900px;
+.mission-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 110px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
     position: relative;
     z-index: 2;
 }
 
-.mission-center h2 {
-    font-family: "Prometo", sans-serif;
-    font-size: 3.5rem;
-    font-weight: 700;
-    margin-bottom: 30px;
-}
-
-.mission-main {
-    font-family: "Prometo", sans-serif;
-    font-size: 20px;
-    line-height: 1.9;
-    margin-bottom: 40px;
-    opacity: 0.9;
-}
-
-.mission-highlight {
-    font-family: "Prometo", sans-serif;
-    font-size: 22px;
-    font-weight: 600;
-    color: var(--primary-teal);
-    margin-bottom: 60px;
+/* =========================================
+   LEFT COLUMN
+========================================= */
+.mission-left {
+    flex: 1;
+    display: flex;
+    justify-content: center;   /* ทำให้ block ไม่ติดซ้าย */
 }
 
 .mission-pillars {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 28px;
+    width: 100%;
+    max-width: 480px; /* จำกัดความกว้างเพื่อให้ลอยบาลานซ์ */
 }
 
-.mission-pillars div {
-    background: rgba(10, 25, 35, 0.55);
+/* Glass Card */
+.mission-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 20px;
+    padding: 26px 32px 26px 70px;
     backdrop-filter: blur(14px);
-    border: 1px solid rgba(0, 200, 255, 0.15);
-    padding: 18px 30px;
-    border-radius: 50px;
-    backdrop-filter: blur(10px);
-    font-family: "Prometo", sans-serif;
-    font-size: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    transition: 0.3s ease;
+    transition: all 0.35s ease;
+    cursor: pointer;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
 }
 
-.mission-pillars div:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 20px 40px rgba(0, 150, 255, 0.15);
+.mission-card::before {
+    content: "";
+    position: absolute;
+    left: 26px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #00c6ff, #00e0b8);
+    box-shadow: 0 0 12px rgba(0, 200, 255, 0.6);
 }
 
-/* Mascot Floating */
+.mission-card:hover {
+    transform: translateY(-6px);
+    box-shadow:
+        0 18px 40px rgba(0, 0, 0, 0.12),
+        0 0 25px rgba(0, 200, 255, 0.25);
+}
+
+.mission-card-title {
+    font-size: 19px;
+    font-weight: 600;
+    color: #0b1f24;
+}
+
+/* =========================================
+   RIGHT COLUMN
+========================================= */
+.mission-right {
+    flex: 1.5; /* ขวากว้างกว่าเล็กน้อยเพื่อบาลานซ์ */
+    max-width: 560px;
+}
+
+.mission-right h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 28px;
+    line-height: 1.15;
+}
+
+.mission-right h2 span {
+    background: linear-gradient(90deg, #0096ff, #00c2a8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.mission-right p {
+    font-size: 17.5px;
+    line-height: 1.85;
+    margin-bottom: 22px;
+    color: #102a2f;
+}
+
+/* =========================================
+   HIGHLIGHT BLOCK
+========================================= */
+.mission-highlight {
+    margin-top: 36px;
+    padding: 26px 30px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.9;
+    color: #0f2f34;
+}
+
+.mission-highlight span {
+    display: block;
+    margin-top: 8px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #0096ff, #00c2a8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* =========================================
+   MASCOT
+========================================= */
 .mission-mascot {
     position: absolute;
-    bottom: -20px;
-    right: 8%;
-    width: 220px;
-    opacity: 0.95;
+    bottom: 0;
+    right: 4%;
+    width: 210px;
+    opacity: 0.9;
     z-index: 1;
+    pointer-events: none;
+    filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.12));
 }
 
-.mission-mascot {
-    filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.1));
+/* =========================================
+   RESPONSIVE
+========================================= */
+@media (max-width: 1100px) {
+    .mission-wrapper {
+        gap: 80px;
+    }
 }
 
-
-
-/* Responsive */
 @media (max-width: 1024px) {
+
+    .mission-wrapper {
+        flex-direction: column;
+        gap: 70px;
+        text-align: center;
+    }
+
+    .mission-left,
+    .mission-right {
+        max-width: 600px;
+        width: 100%;
+    }
+
+    .mission-pillars {
+        max-width: 600px;
+    }
+
     .mission-mascot {
         display: none;
     }
 }
 
 @media (max-width: 768px) {
-    .mission-alt {
-        padding: 100px 5%;
+
+    .mission {
+        padding: 120px 6%;
     }
 
-    .mission-center h2 {
-        font-size: 2.5rem;
+    .mission-right h2 {
+        font-size: 2.4rem;
     }
 
-    .mission-main {
+    .mission-right p {
         font-size: 16px;
     }
 
-    .mission-highlight {
-        font-size: 18px;
+    .mission-card-title {
+        font-size: 17px;
     }
 
-    .mission-pillars div {
-        font-size: 14px;
-        padding: 14px 20px;
+    .mission-highlight {
+        font-size: 16.5px;
     }
 }
