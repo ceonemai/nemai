@@ -1,10 +1,6 @@
 .why {
     position: relative;
-    min-height: 100vh;
-    padding: 140px 8%;
-    background: linear-gradient(135deg,
-            var(--secondary-pale),
-            var(--brand-light));
+    padding: 200px 8%;
     display: flex;
     align-items: center;
     overflow: hidden;
@@ -65,20 +61,64 @@
 
 /* Cards */
 .why-card {
-    backdrop-filter: blur(12px);
-    background: rgba(255, 255, 255, 0.6);
-    border-radius: 20px;
-    padding: 22px 28px;
-    margin-bottom: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
+    background: rgba(89, 224, 224, 0.25);
+    border: 1px solid rgba(226, 240, 237, 0.12);
+    border-radius: 18px;
+    padding: 28px 32px;
+    backdrop-filter: blur(14px);
+    transition: all 0.35s ease;
+    cursor: pointer;
+}
+
+.why-card-title {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+    color: #0b1f24;
+    position: relative;
+    display: inline-block;
+}
+
+.why-card-desc {
+    font-size: 15px;
+    line-height: 1.75;
+    margin-top: 16px;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transform: translateY(-6px);
+    transition: all 0.35s ease;
+    color: #1f3a40;
 }
 
 .why-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 20px 60px rgba(0, 150, 255, 0.15);
+    transform: translateY(-4px);
+    border: 1px solid rgba(0, 255, 200, 0.35);
+    box-shadow:
+        0 0 30px rgba(0, 255, 200, 0.2);
 }
 
+
+.why-card:hover .why-card-desc {
+    opacity: 1;
+    max-height: 200px;
+    transform: translateY(0);
+}
+
+.why-card-title::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 0%;
+    height: 2px;
+    background: linear-gradient(90deg, #00f0ff, #00ffa3);
+    transition: width 0.3s ease;
+}
+
+.why-card:hover .why-card-title::after {
+    width: 100%;
+}
 
 .why-stat h3 {
     font-family: "Prometo", sans-serif;
@@ -94,36 +134,10 @@
     opacity: 0.7;
 }
 
-/* ===== PARALLAX GLOW LAYER ===== */
-
-.why-glow {
-    position: absolute;
-    width: 650px;
-    height: 650px;
-    background: radial-gradient(circle,
-            rgba(0, 150, 255, 0.18) 0%,
-            rgba(0, 150, 255, 0.08) 35%,
-            transparent 70%);
-    top: -220px;
-    right: -180px;
-    z-index: 0;
-    pointer-events: none;
-    filter: blur(40px);
-}
-
-.why::after {
-    content: "";
-    position: absolute;
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle,
-            rgba(0, 200, 170, 0.12) 0%,
-            transparent 70%);
-    bottom: -200px;
-    left: -150px;
-    filter: blur(60px);
-    z-index: 0;
-    pointer-events: none;
+.emphasis {
+    font-weight: 600;
+    color: #0f3f46;   /* teal เข้ม สุขุม */
+    letter-spacing: -0.2px;
 }
 
 /* ทำให้ content อยู่เหนือ glow */
@@ -145,7 +159,12 @@
 
 /* ทำให้ cards spacing ดู intentional ขึ้น */
 .why-cards {
-    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    /* เพิ่มระยะหายใจ */
+    margin-top: 24px;
+    /* ดันลงจาก intro */
 }
 
 

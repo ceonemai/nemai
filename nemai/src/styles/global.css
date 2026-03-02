@@ -10,9 +10,25 @@
 }
 
 body {
-  background: var(--brand-light);
-  color: var(--brand-dark);
-  font-family: "AllumiSTD", sans-serif;
+  margin: 0;
+  font-family: "Allumi Std", sans-serif;
+  color: var(--text-dark);
+
+  background: radial-gradient(1200px 800px at 10% 15%,
+      rgba(0, 255, 200, 0.18),
+      transparent 60%),
+    radial-gradient(1200px 800px at 10% 15%,
+      rgba(0, 255, 200, 0.20),
+      transparent 60%),
+    radial-gradient(1000px 700px at 85% 80%,
+      rgba(0, 200, 255, 0.20),
+      transparent 60%),
+    linear-gradient(135deg,
+      #f5fffd,
+      #eef8ff);
+
+  background-attachment: fixed;
+  min-height: 100vh;
 }
 
 html {
@@ -20,9 +36,9 @@ html {
 }
 
 section {
-  min-height: 100vh;
   scroll-margin-top: 110px;
-  /* prevent navbar block */
+  position: relative;
+  padding: 160px 0;
 }
 
 * {
