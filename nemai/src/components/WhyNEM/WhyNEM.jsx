@@ -12,6 +12,24 @@ function WhyNEM() {
         offset: ["start end", "end start"]
     });
 
+    const challenges = [
+        {
+            title: "Uncertainty about symptom severity",
+            description:
+                "Many people are unsure which symptoms are truly dangerous and require immediate medical attention."
+        },
+        {
+            title: "Delayed action during critical moments",
+            description:
+                "In critical situations, hesitation and lack of clear guidance often delay life-saving action."
+        },
+        {
+            title: "Overwhelming and unreliable medical information online",
+            description:
+                "Online medical information is frequently overwhelming, conflicting, and unreliable, leading to confusion and unnecessary fear."
+        }
+    ];
+
     // glow เลื่อนช้ากว่า content (parallax)
     const y = useTransform(scrollYProgress, [0, 1], [0, -80]);
 
@@ -36,22 +54,27 @@ function WhyNEM() {
                     viewport={{ amount: 0.4 }}
                 >
                     <h2>
-                        Why We Built <span>NEM AI</span>?
+                        Why Do We Build <span className="brand">NEM&nbsp;AI</span>
                     </h2>
-
                     <p>
-                        Our CEO & Co-founder, Nem, he saw people die, not because help isn't available,
-                        but because they didn’t know what to do in an emergency.
+                        Every day, more than 74,000 people die from emergency medical conditions,
+                        many of which are preventable with timely action.
                     </p>
 
                     <p>
-                        Every day, millions of people face sudden medical situations without
-                        clear guidance on whether their symptoms are dangerous
-                        or when they should seek urgent care.
+                        Too often, people don’t know whether their symptoms are serious,
+                        what steps to take, or when to seek urgent care.
+                    </p>
+
+                    <p>
+                        As health risks continue to rise globally, the need for immediate,
+                        personalized guidance has never been more critical.
+                        People need tools that are simple, accessible, and available anytime, anywhere
+                        especially in moments when <span className="emphasis">clarity and speed can save lives.</span>
                     </p>
 
                     <div className="why-highlight">
-                        Lack of timely action leads to life-threatening and preventable deaths.
+                        This is where NEM AI comes in.
                     </div>
                 </motion.div>
 
@@ -70,20 +93,17 @@ function WhyNEM() {
                     </div>
 
                     <div className="why-cards">
-                        {[
-                            "Not knowing which symptoms are truly dangerous",
-                            "Delaying medical response when every minute matters",
-                            "Confusing and overwhelming medical information online — often causing unnecessary fear and misinformation"
-                        ].map((text, index) => (
+                        {challenges.map((item, index) => (
                             <motion.div
                                 key={index}
                                 className="why-card"
                                 initial={{ opacity: 0, y: 40 }}
                                 whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.6, delay: index * 0.2 }}
+                                transition={{ duration: 0.6, delay: index * 0.15 }}
                                 viewport={{ once: false }}
                             >
-                                {text}
+                                <div className="why-card-title">{item.title}</div>
+                                <div className="why-card-desc">{item.description}</div>
                             </motion.div>
                         ))}
                     </div>

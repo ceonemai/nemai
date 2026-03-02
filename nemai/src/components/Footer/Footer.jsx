@@ -122,9 +122,8 @@ export default function Footer() {
 
         {/* LINKS */}
         <div className="footer-links">
-          <a href="#">Docs</a>
-          <a href="#">Product</a>
-          <a href="#">Contact</a>
+          {/* ค่อยมาใส่ NavLink ตรงนี้ */}
+
         </div>
         {/* SOCIAL */}
         <div className="footer-socials">

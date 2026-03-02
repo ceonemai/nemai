@@ -36,8 +36,33 @@ function Navbar() {
             About
           </a>
         </li>
+
         <li>
-          <a href="#contact">Contact</a>
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              document.getElementById("mission").scrollIntoView({
+                behavior: "smooth"
+              });
+            }}
+          >
+            Mission
+          </a>
+        </li>
+
+        <li>
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              document.getElementById("backbone").scrollIntoView({
+                behavior: "smooth"
+              });
+            }}
+          >
+            Goal
+          </a>
         </li>
       </ul>
 

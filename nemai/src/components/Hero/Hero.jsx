@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./Hero.css";
 import mascot from "../../assets/images/mascots/Mascott NEM-85.png";
-import glassLogo from "../../assets/images/LogogramGlassFXNem.png";
+import glassLogo from "../../assets/images/LogogramFullColor.png";
 import EarlyAccessPopup from "../EarlyAccessPopup/EarlyAccessPopup";
 
 function Hero() {
@@ -19,7 +19,9 @@ function Hero() {
           Decision Support
         </h1>
 
-        <p>Act Smart. Save Countless Lives</p>
+        <p className="hero-tagline">
+          <span className="act">Act Smart. Save Countless Lives </span>
+        </p>
 
         <div className="hero-buttons">
           <button className="primary" onClick={() => setShowPopup(true)}>
