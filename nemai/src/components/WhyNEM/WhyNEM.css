@@ -55,7 +55,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 24px;
 }
 
 
@@ -136,7 +136,8 @@
 
 .emphasis {
     font-weight: 600;
-    color: #0f3f46;   /* teal เข้ม สุขุม */
+    color: #0f3f46;
+    /* teal เข้ม สุขุม */
     letter-spacing: -0.2px;
 }
 
@@ -148,6 +149,10 @@
 }
 
 /* Intro Title  */
+.why-intro {
+    margin-top: 30px;
+}
+
 .why-intro h3 {
     font-family: "Prometo", sans-serif;
     font-size: 28px;
@@ -162,9 +167,7 @@
     display: flex;
     flex-direction: column;
     gap: 28px;
-    /* เพิ่มระยะหายใจ */
-    margin-top: 24px;
-    /* ดันลงจาก intro */
+    margin-top: 1px;
 }
 
 
