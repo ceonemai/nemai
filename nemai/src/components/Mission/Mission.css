@@ -10,7 +10,8 @@
 
 .mission-wrapper {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    /* ⭐ สำคัญ: ทำให้สองฝั่งเริ่มระดับเดียวกัน */
     justify-content: center;
     gap: 110px;
     max-width: 1200px;
@@ -26,15 +27,16 @@
 .mission-left {
     flex: 1;
     display: flex;
-    justify-content: center;   /* ทำให้ block ไม่ติดซ้าย */
+    justify-content: center;
 }
 
 .mission-pillars {
     display: flex;
     flex-direction: column;
+    margin-top: 175px;
     gap: 28px;
     width: 100%;
-    max-width: 480px; /* จำกัดความกว้างเพื่อให้ลอยบาลานซ์ */
+    max-width: 480px;
 }
 
 /* Glass Card */
@@ -80,14 +82,15 @@
    RIGHT COLUMN
 ========================================= */
 .mission-right {
-    flex: 1.5; /* ขวากว้างกว่าเล็กน้อยเพื่อบาลานซ์ */
+    flex: 1.5;
     max-width: 560px;
 }
 
 .mission-right h2 {
     font-size: 3rem;
     font-weight: 700;
-    margin-bottom: 28px;
+    margin: 0 0 28px 0;
+    /* ⭐ reset margin บน */
     line-height: 1.15;
 }
 
