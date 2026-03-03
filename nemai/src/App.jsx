@@ -4,6 +4,7 @@ import Footer from "./components/Footer/Footer";
 import WhyNEM from "./components/WhyNEM/WhyNEM";
 import Mission from "./components/Mission/Mission";
 import Backbone from "./components/Backbone/Backbone";
+import Blockchain from "./components/Blockchain/Blockchain";
 
 function App() {
   return (
@@ -24,6 +25,10 @@ function App() {
 
       <section id="backbone">
         <Backbone />
+      </section>
+
+      <section id="blockchain">
+        <Blockchain />
       </section>
 
       <Footer />
