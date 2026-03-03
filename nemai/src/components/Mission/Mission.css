@@ -3,7 +3,7 @@
 ========================================= */
 .mission {
     position: relative;
-    padding: 180px 6%;
+    padding: 160px 6%;
     overflow: hidden;
     font-family: "Prometo", sans-serif;
 }
@@ -11,7 +11,6 @@
 .mission-wrapper {
     display: flex;
     align-items: flex-start;
-    /* ⭐ สำคัญ: ทำให้สองฝั่งเริ่มระดับเดียวกัน */
     justify-content: center;
     gap: 110px;
     max-width: 1200px;

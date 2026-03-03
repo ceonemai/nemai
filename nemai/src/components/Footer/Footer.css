@@ -28,9 +28,12 @@
 
 .subscribe-label {
   font-family: "Prometo", sans-serif;
-  margin-bottom: 12px;
-  font-size: 14px;
-  color: rgba(247, 247, 247, 0.6);
+  margin-bottom: 18px;
+  margin-top: 40px;
+  font-size: 25px;
+  font-weight: 500;
+  color: var(--brand-light);
+  letter-spacing: -0.3px;
 }
 
 .subscribe-form {
@@ -40,13 +43,13 @@
 }
 
 .subscribe-form input {
-  padding: 14px 16px;
+  padding: 18px 20px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
+  border-radius: 12px;
   color: var(--brand-light);
   font-family: "Prometo", sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   transition: all 0.3s ease;
 }
 
@@ -57,14 +60,15 @@
 }
 
 .subscribe-form button {
-  padding: 14px;
+  padding: 18px;
   background: transparent;
   border: 1px solid var(--primary-teal);
   color: var(--primary-teal);
-  border-radius: 30px;
+  border-radius: 40px;
   cursor: pointer;
   font-family: "Prometo", sans-serif;
-  font-size: 15px;
+  font-size: 17px;
+  font-weight: 500;
   transition: all 0.3s ease;
 }
 

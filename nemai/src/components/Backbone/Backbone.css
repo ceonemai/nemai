@@ -5,7 +5,7 @@
     /* ใช้ flex */
     align-items: center;
     /* จัดกลางแนวตั้ง */
-    padding: 220px 8%;
+    padding: 160px 8%;
     /* เอา padding บนล่างออก */
     overflow: hidden;
 }
