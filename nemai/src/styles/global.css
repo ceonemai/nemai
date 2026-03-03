@@ -33,12 +33,12 @@ body {
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 80px;
 }
 
 section {
-  scroll-margin-top: 110px;
   position: relative;
-  padding: 100px 0;
+  padding: 0;
 }
 
 * {

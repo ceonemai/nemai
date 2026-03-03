@@ -1,7 +1,7 @@
 .hero {
   position: relative;
-  min-height: 100vh;
-  padding: 60px 0 100px;
+  min-height: 90vh;
+  padding: 120px 0 80px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -47,11 +47,11 @@
 /* Heading */
 .hero h1 {
   font-family: "Prometo", sans-serif;
-  font-size: clamp(64px, 6vw, 88px);
+  font-size: clamp(48px, 4.8vw, 68px);
   font-weight: 700;
-  line-height: 1.05;
-  letter-spacing: -1px;
-  margin-bottom: 28px;
+  line-height: 1.08;
+  letter-spacing: -0.5px;
+  margin-bottom: 24px;
 }
 
 .hero-tagline {
