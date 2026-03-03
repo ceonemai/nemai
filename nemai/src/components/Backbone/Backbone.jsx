@@ -40,15 +40,18 @@ export default function Backbone() {
             <div className="backbone-grid">
                 <div className="backbone-left">
                     <h2 className="backbone-title">
-                        The Backbone of the Emergency Medical Ecosystem
+                        The <span className="highlight"> Backbone </span> of the Emergency Medical Ecosystem
                     </h2>
 
                     <p className="backbone-sub">
                         NEM AI stands for Network of Emergency Medical AI.
                     </p>
+                    <p className="backbone-description">
+                        It is designed to become the backbone of the emergency medical ecosystem by connecting users, medical knowledge, and AI-driven decision support into one intelligent network.
+                    </p>
 
                     <p className="backbone-description">
-                        We are building NEM AI to become the backbone of the emergency medical ecosystem—providing intelligent, fast, and reliable decision support when every second matters.
+                        It standardizes emergency guidance through urgency-based triage, personalized health data (PHD Model), and real-time symptom analysis—helping individuals act faster while supporting healthcare systems with better-prepared patients.
                     </p>
                 </div>
 
