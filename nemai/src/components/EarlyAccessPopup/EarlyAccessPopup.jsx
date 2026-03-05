@@ -89,8 +89,8 @@ function EarlyAccessPopup({ onClose }) {
                                 <path d="M20 6L9 17l-5-5" />
                             </svg>
                         </div>
-                        <h2>You're In!</h2>
-                        <p>We'll notify you when Nemai launches.</p>
+                        <h2>Success!</h2>
+                        <p>We'll notify you when you're in.</p>
                         <button className="popup-done-btn" onClick={onClose}>
                             Done
                         </button>
