@@ -15,8 +15,7 @@ function Hero() {
 
       <div className="hero-content">
         <h1>
-          First Personalized AI Emergency <br />
-          Decision Support
+          First Personalized Health AI Support
         </h1>
 
         <p className="hero-tagline">
