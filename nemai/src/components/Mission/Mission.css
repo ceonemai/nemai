@@ -1,6 +1,7 @@
 /* =========================================
    SECTION BASE
 ========================================= */
+
 .mission {
     position: relative;
     padding: 160px 6%;
@@ -10,7 +11,7 @@
 
 .mission-wrapper {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
     gap: 110px;
     max-width: 1200px;
@@ -23,117 +24,90 @@
 /* =========================================
    LEFT COLUMN
 ========================================= */
+
 .mission-left {
     flex: 1;
-    display: flex;
-    justify-content: center;
-}
+    max-width: 460px;
 
-.mission-pillars {
     display: flex;
     flex-direction: column;
-    margin-top: 175px;
-    gap: 28px;
-    width: 100%;
-    max-width: 480px;
+    gap: 30px;
 }
 
-/* Glass Card */
-.mission-card {
-    position: relative;
-    background: rgba(255, 255, 255, 0.55);
-    border: 1px solid rgba(255, 255, 255, 0.4);
+/* Title */
+
+.mission-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.1;
+}
+
+.mission-title span {
+    background: linear-gradient(90deg, #0096ff, #00c2a8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* =========================================
+   MISSION BOX
+========================================= */
+
+.mission-highlight {
+
+    padding: 34px 36px;
+
     border-radius: 20px;
-    padding: 26px 32px 26px 70px;
-    backdrop-filter: blur(14px);
-    transition: all 0.35s ease;
-    cursor: pointer;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
-}
 
-.mission-card::before {
-    content: "";
-    position: absolute;
-    left: 26px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #00c6ff, #00e0b8);
-    box-shadow: 0 0 12px rgba(0, 200, 255, 0.6);
-}
+    background: rgba(255,255,255,0.65);
+    backdrop-filter: blur(16px);
 
-.mission-card:hover {
-    transform: translateY(-6px);
-    box-shadow:
-        0 18px 40px rgba(0, 0, 0, 0.12),
-        0 0 25px rgba(0, 200, 255, 0.25);
-}
+    box-shadow: 0 18px 40px rgba(0,0,0,0.08);
 
-.mission-card-title {
-    font-size: 19px;
+    font-size: 20px;
     font-weight: 600;
-    color: #0b1f24;
+    line-height: 1.7;
+
+    color: #0f2f34;
 }
+
+.mission-highlight span {
+
+    display: block;
+    margin-top: 14px;
+
+    font-weight: 700;
+
+    background: linear-gradient(90deg,#0096ff,#00c2a8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
 
 /* =========================================
    RIGHT COLUMN
 ========================================= */
+
 .mission-right {
     flex: 1.5;
     max-width: 560px;
 }
 
-.mission-right h2 {
-    font-size: 3rem;
-    font-weight: 700;
-    margin: 0 0 28px 0;
-    /* ⭐ reset margin บน */
-    line-height: 1.15;
-}
-
-.mission-right h2 span {
-    background: linear-gradient(90deg, #0096ff, #00c2a8);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
 .mission-right p {
     font-size: 17.5px;
-    line-height: 1.85;
-    margin-bottom: 22px;
+    line-height: 1.9;
+    margin-bottom: 20px;
     color: #102a2f;
 }
 
-/* =========================================
-   HIGHLIGHT BLOCK
-========================================= */
-.mission-highlight {
-    margin-top: 36px;
-    padding: 26px 30px;
-    border-radius: 18px;
-    background: rgba(255, 255, 255, 0.65);
-    backdrop-filter: blur(16px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
-    font-size: 18px;
-    font-weight: 600;
-    line-height: 1.9;
-    color: #0f2f34;
-}
-
-.mission-highlight span {
-    display: block;
-    margin-top: 8px;
-    font-weight: 700;
-    background: linear-gradient(90deg, #0096ff, #00c2a8);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+.mission-lead {
+    font-size: 19px;
 }
 
 /* =========================================
    MASCOT
 ========================================= */
+
 .mission-mascot {
     position: absolute;
     bottom: 0;
@@ -145,13 +119,17 @@
     filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.12));
 }
 
+
 /* =========================================
    RESPONSIVE
 ========================================= */
+
 @media (max-width: 1100px) {
+
     .mission-wrapper {
         gap: 80px;
     }
+
 }
 
 @media (max-width: 1024px) {
@@ -160,6 +138,7 @@
         flex-direction: column;
         gap: 70px;
         text-align: center;
+        align-items: center;
     }
 
     .mission-left,
@@ -168,13 +147,10 @@
         width: 100%;
     }
 
-    .mission-pillars {
-        max-width: 600px;
-    }
-
     .mission-mascot {
         display: none;
     }
+
 }
 
 @media (max-width: 768px) {
@@ -183,7 +159,7 @@
         padding: 120px 6%;
     }
 
-    .mission-right h2 {
+    .mission-title {
         font-size: 2.4rem;
     }
 
@@ -191,11 +167,9 @@
         font-size: 16px;
     }
 
-    .mission-card-title {
-        font-size: 17px;
-    }
-
     .mission-highlight {
         font-size: 16.5px;
+        padding: 26px 26px;
     }
+
 }

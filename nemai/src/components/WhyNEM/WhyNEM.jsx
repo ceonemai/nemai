@@ -57,20 +57,19 @@ function WhyNEM() {
                         Why Do We Build <span className="brand">NEM&nbsp;AI</span>
                     </h2>
                     <p>
-                        Every day, more than 74,000 people die from emergency medical conditions,
-                        many of which are preventable with timely action.
+                        Every day, people face health concerns without knowing
+                        whether their symptoms are harmless or life-threatening.
                     </p>
 
                     <p>
-                        Too often, people don’t know whether their symptoms are serious,
-                        what steps to take, or when to seek urgent care.
+                        What begins as a simple question can quickly become an emergency when guidance is unclear or delayed. 
+                        NEM AI was built as a personal health AI with emergency intelligence at its core
                     </p>
 
                     <p>
-                        As health risks continue to rise globally, the need for immediate,
-                        personalized guidance has never been more critical.
-                        People need tools that are simple, accessible, and available anytime, anywhere
-                        especially in moments when <span className="emphasis">clarity and speed can save lives.</span>
+                        supporting everyday health decisions while delivering fast, 
+                        reliable guidance when
+                        <span className="emphasis"> clarity and speed can save lives.</span>
                     </p>
 
                     <div className="why-highlight">

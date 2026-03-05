@@ -16,7 +16,7 @@ function Mission() {
 
             <div className="mission-wrapper">
 
-                {/* LEFT — PILLARS */}
+                {/* LEFT COLUMN */}
                 <motion.div
                     className="mission-left"
                     initial={{ opacity: 0, x: -60 }}
@@ -24,30 +24,25 @@ function Mission() {
                     transition={{ duration: 0.8 }}
                     viewport={{ amount: 0.4 }}
                 >
-                    <div className="mission-pillars">
 
-                        <div className="mission-card">
-                            <div className="mission-card-title">
-                                Clear, reliable, and real-time guidance
-                            </div>
-                        </div>
+                    <h2 className="mission-title">
+                        Our <span>Mission</span>
+                    </h2>
 
-                        <div className="mission-card">
-                            <div className="mission-card-title">
-                                Make informed decisions & act faster
-                            </div>
-                        </div>
+                    <div className="mission-highlight">
+                        The mission is simple yet urgent.
 
-                        <div className="mission-card">
-                            <div className="mission-card-title">
-                                Ultimately save lives
-                            </div>
-                        </div>
-
+                        <span>
+                            Reduce preventable deaths caused by delay and uncertainty,
+                            and build a new global standard for trusted health intelligence
+                            in the age of AI.
+                        </span>
                     </div>
+
                 </motion.div>
 
-                {/* RIGHT — TEXT */}
+
+                {/* RIGHT COLUMN */}
                 <motion.div
                     className="mission-right"
                     initial={{ opacity: 0, x: 60 }}
@@ -55,31 +50,24 @@ function Mission() {
                     transition={{ duration: 0.8 }}
                     viewport={{ amount: 0.4 }}
                 >
-                    <h2>
-                        Our <span>Missions</span>
-                    </h2>
 
-                    <p>
+                    <p className="mission-lead">
                         <strong>
-                            NEM AI exists to redefine how the world responds to medical emergencies.
+                            NEM AI aims to become a personal health AI for everyone.
                         </strong>
                     </p>
 
                     <p>
-                        It begins with real-time, AI-powered emergency guidance, delivering immediate, clear, and personalized decision support when seconds matter most. By transforming uncertainty into informed action, NEM AI helps individuals respond faster and more effectively in critical moments.
+                        Delivering real-time intelligent guidance for daily health decisions
+                        and critical moments alike.
                     </p>
 
                     <p>
-                        But this is only the foundation. NEM AI is building the core infrastructure for emergency medical intelligence, a scalable, always-accessible AI network designed to support urgent health decision-making anytime, anywhere.
+                        By transforming uncertainty into action, NEM AI builds a global
+                        emergency intelligence network that provides trusted,
+                        personalized medical support anytime, anywhere.
                     </p>
 
-                    <div className="mission-highlight">
-                        The mission is simple yet urgent:
-                        <span>
-                            {" "}
-                            Eliminate preventable deaths caused by delay, confusion, and lack of immediate guidance, and set a new global standard for emergency response in the age of AI.
-                        </span>
-                    </div>
                 </motion.div>
 
             </div>
