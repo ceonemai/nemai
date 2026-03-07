@@ -16,9 +16,9 @@ function Mission() {
 
             <div className="mission-wrapper">
 
-                {/* LEFT COLUMN */}
+                {/* LEFT COLUMN (TEXT) */}
                 <motion.div
-                    className="mission-left"
+                    className="mission-right"
                     initial={{ opacity: 0, x: -60 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.8 }}
@@ -28,28 +28,6 @@ function Mission() {
                     <h2 className="mission-title">
                         Our <span>Mission</span>
                     </h2>
-
-                    <div className="mission-highlight">
-                        The mission is simple yet urgent.
-
-                        <span>
-                            Reduce preventable deaths caused by delay and uncertainty,
-                            and build a new global standard for trusted health intelligence
-                            in the age of AI.
-                        </span>
-                    </div>
-
-                </motion.div>
-
-
-                {/* RIGHT COLUMN */}
-                <motion.div
-                    className="mission-right"
-                    initial={{ opacity: 0, x: 60 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.8 }}
-                    viewport={{ amount: 0.4 }}
-                >
 
                     <p className="mission-lead">
                         <strong>
@@ -67,6 +45,28 @@ function Mission() {
                         emergency intelligence network that provides trusted,
                         personalized medical support anytime, anywhere.
                     </p>
+
+                </motion.div>
+
+
+                {/* RIGHT COLUMN (BOX) */}
+                <motion.div
+                    className="mission-left"
+                    initial={{ opacity: 0, x: 60 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.8 }}
+                    viewport={{ amount: 0.4 }}
+                >
+
+                    <div className="mission-highlight">
+                        The mission is simple yet urgent.
+
+                        <span>
+                            Reduce preventable deaths caused by delay and uncertainty,
+                            and build a new global standard for trusted health intelligence
+                            in the age of AI.
+                        </span>
+                    </div>
 
                 </motion.div>
 
