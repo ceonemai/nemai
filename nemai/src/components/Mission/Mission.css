@@ -14,32 +14,28 @@
     align-items: center;
     justify-content: center;
     gap: 110px;
+
     max-width: 1200px;
     margin: 0 auto;
     width: 100%;
+
     position: relative;
     z-index: 2;
 }
 
 /* =========================================
-   LEFT COLUMN
+   LEFT COLUMN (TEXT)
 ========================================= */
 
-.mission-left {
+.mission-right {
     flex: 1;
-    max-width: 460px;
-
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
+    max-width: 520px;
 }
-
-/* Title */
 
 .mission-title {
     font-size: 3rem;
     font-weight: 700;
-    margin: 0;
+    margin-bottom: 28px;
     line-height: 1.1;
 }
 
@@ -49,11 +45,34 @@
     -webkit-text-fill-color: transparent;
 }
 
+.mission-right p {
+    font-size: 17.5px;
+    line-height: 1.9;
+    margin-bottom: 20px;
+    color: #102a2f;
+}
+
+.mission-lead {
+    font-size: 19px;
+}
+
 /* =========================================
-   MISSION BOX
+   RIGHT COLUMN (BOX)
 ========================================= */
 
+.mission-left {
+    flex: 1;
+    max-width: 520px;
+
+    display: flex;
+    justify-content: center;
+}
+
 .mission-highlight {
+    margin-top: 125px;
+
+    max-width: 420px;
+    width: 100%;
 
     padding: 34px 36px;
 
@@ -83,26 +102,6 @@
     -webkit-text-fill-color: transparent;
 }
 
-
-/* =========================================
-   RIGHT COLUMN
-========================================= */
-
-.mission-right {
-    flex: 1.5;
-    max-width: 560px;
-}
-
-.mission-right p {
-    font-size: 17.5px;
-    line-height: 1.9;
-    margin-bottom: 20px;
-    color: #102a2f;
-}
-
-.mission-lead {
-    font-size: 19px;
-}
 
 /* =========================================
    MASCOT
@@ -145,6 +144,10 @@
     .mission-right {
         max-width: 600px;
         width: 100%;
+    }
+
+    .mission-left {
+        justify-content: center;
     }
 
     .mission-mascot {
