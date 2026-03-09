@@ -18,11 +18,13 @@ function Navbar() {
 
   return (
     <nav className={`navbar ${scrolled ? "scrolled" : ""}`}>
+      
       <div className="logo" onClick={() => window.scrollTo(0, 0)}>
         <img src={logo} alt="Nemai Logo" />
       </div>
 
       <ul className="nav-links">
+
         <li>
           <a
             href="#"
@@ -64,9 +66,16 @@ function Navbar() {
             Goal
           </a>
         </li>
+
+        {/* NEW DOCS DON'T FORGET la*/}
+        <li>
+          <a href="#">Docs</a>
+        </li>
+
       </ul>
 
       <div className="nav-right">
+
         <a
           href="https://x.com/nemai_io"
           target="_blank"
@@ -86,6 +95,7 @@ function Navbar() {
         </a>
 
         <button className="nav-btn">Coming Soon</button>
+
       </div>
     </nav>
   );
