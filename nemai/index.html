@@ -1,13 +1,31 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/nem-browser-logo.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NEM AI</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/nem-browser-logo.png" />
+
+  <!-- iOS Home Screen -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/nem-browser-logo-180.png" />
+  <!-- Android PWA -->
+  <link rel="manifest" href="/manifest.json" />
+
+  <!-- Mobile PWA settings -->
+  <meta name="theme-color" content="#0a0a0a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="NEM AI" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>NEM AI</title>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
 </html>
