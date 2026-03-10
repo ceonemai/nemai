@@ -71,29 +71,28 @@
 /* Text */
 .backbone-title {
     font-family: "Prometo", sans-serif;
-    font-size: 46px;
-    font-weight: 600;
-    line-height: 1.2;
+    font-size: 3rem;        
+    font-weight: 700;
+    line-height: 1.1;
     color: #1b2b2a;
-    margin-bottom: 25px;
+    margin-bottom: 28px;
 }
 
 .backbone-sub {
     font-family: "Prometo", sans-serif;
-    font-size: 20px;
-    font-weight: 400;
+    font-size: 19px;       
+    font-weight: 500;
     color: #3f5553;
-    margin-bottom: 30px;
+    margin-bottom: 26px;
 }
 
 .backbone-description {
     font-family: "Prometo", sans-serif;
-    font-size: 21px;
-    line-height: 1.7;
+    font-size: 17.5px;      
+    line-height: 1.9;
     color: #2c3e3c;
-    font-weight: 500;
+    font-weight: 400;
 }
-
 /* Right Visual Core */
 
 .backbone-right {
