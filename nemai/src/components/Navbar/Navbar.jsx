@@ -5,23 +5,70 @@ import xIcon from "../../assets/images/icons/x.png";
 import { useEffect, useState } from "react";
 
 function Navbar() {
+
   const [scrolled, setScrolled] = useState(false);
 
+  /* =========================
+     SCROLL EFFECT
+  ========================= */
+
   useEffect(() => {
+
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+
+      if (window.scrollY > 60) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
     return () => window.removeEventListener("scroll", handleScroll);
+
   }, []);
 
+
+  /* =========================
+     SMOOTH SCROLL
+  ========================= */
+
+  const scrollToSection = (id) => {
+
+    const element = document.getElementById(id);
+
+    if (!element) return;
+
+    element.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
+  };
+
+
   return (
+
     <nav className={`navbar ${scrolled ? "scrolled" : ""}`}>
-      
-      <div className="logo" onClick={() => window.scrollTo(0, 0)}>
-        <img src={logo} alt="Nemai Logo" />
+
+      {/* LOGO */}
+
+      <div
+        className="logo"
+        onClick={() =>
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+          })
+        }
+      >
+        <img src={logo} alt="NEM AI Logo" />
       </div>
+
+
+      {/* NAV LINKS */}
 
       <ul className="nav-links">
 
@@ -30,9 +77,7 @@ function Navbar() {
             href="#"
             onClick={(e) => {
               e.preventDefault();
-              document.getElementById("why").scrollIntoView({
-                behavior: "smooth"
-              });
+              scrollToSection("why");
             }}
           >
             About
@@ -44,9 +89,7 @@ function Navbar() {
             href="#"
             onClick={(e) => {
               e.preventDefault();
-              document.getElementById("mission").scrollIntoView({
-                behavior: "smooth"
-              });
+              scrollToSection("mission");
             }}
           >
             Mission
@@ -58,21 +101,27 @@ function Navbar() {
             href="#"
             onClick={(e) => {
               e.preventDefault();
-              document.getElementById("backbone").scrollIntoView({
-                behavior: "smooth"
-              });
+              scrollToSection("backbone");
             }}
           >
             Goal
           </a>
         </li>
 
-        {/* NEW DOCS DON'T FORGET la*/}
         <li>
-          <a href="#">Docs</a>
+          <a
+            href="https://nem-ai.gitbook.io/doc#"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Docs
+          </a>
         </li>
 
       </ul>
+
+
+      {/* RIGHT SIDE */}
 
       <div className="nav-right">
 
@@ -94,11 +143,16 @@ function Navbar() {
           <img src={discordIcon} alt="Discord" />
         </a>
 
-        <button className="nav-btn">Coming Soon</button>
+        <button className="nav-btn">
+          Coming Soon
+        </button>
 
       </div>
+
     </nav>
+
   );
+
 }
 
 export default Navbar;

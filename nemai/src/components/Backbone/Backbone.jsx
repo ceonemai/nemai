@@ -51,7 +51,7 @@ export default function Backbone() {
                     </p>
 
                     <p className="backbone-description">
-                        Through standardized triage and our Personal Health Data (PHD) Model, NEM AI helps individuals make better health decisions and enables healthcare systems to respond faster and smarter, especially in critical moments.
+                        By combining standardized triage with Personal Health Data (PHD) and the Health Data Model (HD Model), NEM AI helps individuals make better health decisions while enabling healthcare systems to respond faster and more effectively, especially during critical moments.
                     </p>
                 </div>
 
