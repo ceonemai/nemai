@@ -30,7 +30,6 @@ function Navbar() {
 
   }, []);
 
-
   /* =========================
      SMOOTH SCROLL
   ========================= */
@@ -47,7 +46,6 @@ function Navbar() {
     });
 
   };
-
 
   return (
 
@@ -67,8 +65,7 @@ function Navbar() {
         <img src={logo} alt="NEM AI Logo" />
       </div>
 
-
-      {/* NAV LINKS */}
+      {/* NAV LINKS (DESKTOP) */}
 
       <ul className="nav-links">
 
@@ -120,7 +117,6 @@ function Navbar() {
 
       </ul>
 
-
       {/* RIGHT SIDE */}
 
       <div className="nav-right">
@@ -141,6 +137,16 @@ function Navbar() {
           className="social-icon"
         >
           <img src={discordIcon} alt="Discord" />
+        </a>
+
+        {/* MOBILE DOCS */}
+        <a
+          href="https://nem-ai.gitbook.io/doc#"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mobile-docs"
+        >
+          Docs
         </a>
 
         <button className="nav-btn">

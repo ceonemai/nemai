@@ -13,7 +13,6 @@
   justify-content: space-between;
   align-items: center;
   z-index: 100;
-
   box-sizing: border-box;
   transition: all 0.35s ease;
 }
@@ -34,13 +33,9 @@
   box-shadow: 0 10px 35px rgba(0,0,0,0.08);
 }
 
-/* change nav color when scroll */
-
 .navbar.scrolled .nav-links li {
   color: #0f3f46;
 }
-
-/* shrink logo */
 
 .navbar.scrolled .logo img {
   height: 40px;
@@ -58,7 +53,7 @@
 }
 
 /* =========================
-   NAV LINKS (CENTERED)
+   NAV LINKS
 ========================= */
 
 .nav-links {
@@ -69,6 +64,7 @@
 
   display: flex;
   gap: 44px;
+
   list-style: none;
   align-items: center;
 
@@ -95,15 +91,11 @@
   transition: all 0.25s ease;
 }
 
-/* hover lift */
-
 .nav-links li:hover {
 
   transform: translateY(-2px);
   color: var(--primary-teal);
 }
-
-/* underline animation */
 
 .nav-links li::after {
 
@@ -211,6 +203,37 @@
 }
 
 /* =========================
+   MOBILE DOCS
+========================= */
+
+.mobile-docs {
+
+  display: none;
+
+  padding: 10px 20px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  border-radius: 999px;
+
+  border: 1px solid var(--primary-teal);
+
+  color: var(--primary-teal);
+
+  text-decoration: none;
+
+  transition: all 0.25s ease;
+}
+
+.mobile-docs:hover {
+
+  background: var(--primary-teal);
+  color: white;
+
+}
+
+/* =========================
    TABLET
 ========================= */
 
@@ -229,32 +252,47 @@
 @media (max-width: 768px) {
 
   .navbar {
-    padding: 16px 5%;
+    padding: 14px 5%;
   }
+
+  /* ลดขนาด logo */
 
   .logo img {
-    height: 40px;
+    height: 34px;
   }
 
-  /* hide main navigation */
-
-  .nav-links {
-    display: none;
-  }
-
-  /* hide socials */
-
-  .social-icon {
-    display: none;
-  }
+  /* เพิ่มระยะห่าง logo กับ icons */
 
   .nav-right {
-    gap: 10px;
+    gap: 8px;
+    margin-left: 8px;
   }
 
+  /* ลดขนาด social icons */
+
+  .social-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .social-icon img {
+    width: 12px;
+    height: 12px;
+  }
+
+  /* Docs button */
+
+  .mobile-docs {
+    display: block;
+    padding: 7px 12px;
+    font-size: 12px;
+  }
+
+  /* Coming soon */
+
   .nav-btn {
-    padding: 10px 20px;
-    font-size: 13px;
+    padding: 7px 12px;
+    font-size: 12px;
   }
 
 }
