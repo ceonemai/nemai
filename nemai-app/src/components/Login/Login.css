@@ -1,0 +1,200 @@
+/* ===== NEM AI Login — Fullscreen Responsive ===== */
+
+.login-page {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+
+    /* Brand dark base */
+    background: #272827;
+
+    /* Prometo like main site */
+    font-family: "Prometo", sans-serif;
+    letter-spacing: 0.4px;
+}
+
+/* ===== Ambient Glow ===== */
+.login-bg {
+    position: absolute;
+    inset: 0;
+    opacity: 0.55;
+    background:
+        radial-gradient(1200px 700px at 50% 10%, rgba(33, 135, 170, 0.28), transparent 60%),
+        radial-gradient(900px 600px at 85% 90%, rgba(139, 216, 161, 0.22), transparent 60%),
+        radial-gradient(700px 500px at 10% 80%, rgba(89, 224, 244, 0.18), transparent 60%);
+}
+
+/* ===== Layout ===== */
+.login-center {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 64px 24px;
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+/* ===== Logo ===== */
+.login-logo {
+    width: 96px;
+    margin-bottom: 40px;
+    filter: drop-shadow(0 0 22px rgba(139, 216, 161, 0.45));
+}
+
+/* ===== Title ===== */
+.login-title {
+    color: #F7F7F7;
+    font-size: 48px;
+    font-family: "Prometo", sans-serif;
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 20px;
+}
+
+.login-title span {
+    font-family: "Prometo", sans-serif;
+    display: block;
+    margin-top: 12px;
+    font-size: 30px;
+    font-weight: 600;
+    color: #8BD8A1;
+    letter-spacing: 1px;
+}
+
+/* ===== Subtitle ===== */
+.login-subtitle {
+    color: #CCECD4;
+    font-size: 18px;
+    line-height: 1.9;
+    max-width: 620px;
+    margin: 0 auto 52px auto;
+}
+
+/* ===== Buttons ===== */
+.login-btn {
+    border: none;
+    padding: 18px 52px;
+    font-size: 18px;
+    font-family: "Prometo", sans-serif;
+    border-radius: 18px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.login-btn.primary {
+    background: linear-gradient(90deg, #2187AA, #8BD8A1);
+    color: #272827;
+    box-shadow: 0 12px 34px rgba(33, 135, 170, 0.35);
+}
+
+.login-btn.primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 48px rgba(33, 135, 170, 0.45);
+}
+
+.login-btn.secondary {
+    background: #F7F7F7;
+    color: #272827;
+}
+
+.login-btn.full {
+    width: 100%;
+    margin-top: 18px;
+}
+
+/* ===== Modal ===== */
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    z-index: 10;
+}
+
+.modal-wrap {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    padding: 24px;
+}
+
+.modal {
+    width: 100%;
+    max-width: 420px;
+    background: #F7F7F7;
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+    border: 1px solid #CCECD4;
+}
+
+.modal h2 {
+    margin-bottom: 24px;
+    color: #272827;
+    font-family: "Prometo", sans-serif;
+}
+
+.modal input {
+    width: 100%;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    border-radius: 12px;
+    border: 1px solid #CCECD4;
+    font-size: 15px;
+    font-family: "Prometo", sans-serif;
+}
+
+.modal input:focus {
+    outline: none;
+    border-color: #2187AA;
+}
+
+.modal-cancel {
+    width: 100%;
+    margin-top: 12px;
+    background: none;
+    border: none;
+    color: #2187AA;
+    cursor: pointer;
+    font-family: "Prometo", sans-serif;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .login-center {
+        padding: 48px 20px;
+    }
+
+    .login-logo {
+        width: 72px;
+        margin-bottom: 28px;
+    }
+
+    .login-title {
+        font-size: 34px;
+    }
+
+    .login-title span {
+        font-size: 22px;
+    }
+
+    .login-subtitle {
+        font-size: 16px;
+        line-height: 1.8;
+        margin-bottom: 40px;
+    }
+
+    .login-btn {
+        width: 100%;
+        padding: 16px;
+        font-size: 16px;
+    }
+}
