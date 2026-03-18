@@ -9,23 +9,21 @@
     position: relative;
     overflow: hidden;
 
-    /* Brand dark base */
-    background: #272827;
+    /* Let global background show through */
+    background: transparent;
 
-    /* Prometo like main site */
     font-family: "Prometo", sans-serif;
     letter-spacing: 0.4px;
 }
 
-/* ===== Ambient Glow ===== */
+/* ===== Ambient Accent Glow (Subtle Layer) ===== */
 .login-bg {
     position: absolute;
     inset: 0;
-    opacity: 0.55;
+    opacity: 0.35;
     background:
-        radial-gradient(1200px 700px at 50% 10%, rgba(33, 135, 170, 0.28), transparent 60%),
-        radial-gradient(900px 600px at 85% 90%, rgba(139, 216, 161, 0.22), transparent 60%),
-        radial-gradient(700px 500px at 10% 80%, rgba(89, 224, 244, 0.18), transparent 60%);
+        radial-gradient(900px 600px at 50% 0%, rgba(33, 135, 170, 0.18), transparent 65%),
+        radial-gradient(700px 500px at 90% 100%, rgba(139, 216, 161, 0.16), transparent 65%);
 }
 
 /* ===== Layout ===== */
@@ -41,14 +39,24 @@
 
 /* ===== Logo ===== */
 .login-logo {
-    width: 96px;
-    margin-bottom: 40px;
-    filter: drop-shadow(0 0 22px rgba(139, 216, 161, 0.45));
+    width: 140px;
+    margin-bottom: 48px;
+    filter:
+        drop-shadow(0 10px 30px rgba(0, 0, 0, 0.12)) drop-shadow(0 0 28px rgba(33, 135, 170, 0.35)) drop-shadow(0 0 46px rgba(139, 216, 161, 0.28));
+
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.login-logo:hover {
+    transform: translateY(-4px) scale(1.04);
+    filter:
+        drop-shadow(0 16px 42px rgba(0, 0, 0, 0.18)) drop-shadow(0 0 36px rgba(33, 135, 170, 0.45)) drop-shadow(0 0 60px rgba(139, 216, 161, 0.35));
 }
 
 /* ===== Title ===== */
 .login-title {
-    color: #F7F7F7;
+    color: #0F1720;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
     font-size: 48px;
     font-family: "Prometo", sans-serif;
     font-weight: 700;
@@ -57,18 +65,17 @@
 }
 
 .login-title span {
-    font-family: "Prometo", sans-serif;
     display: block;
     margin-top: 12px;
     font-size: 30px;
     font-weight: 600;
-    color: #8BD8A1;
+    color: #1FA97A;
     letter-spacing: 1px;
 }
 
 /* ===== Subtitle ===== */
 .login-subtitle {
-    color: #CCECD4;
+    color: #4A635C;
     font-size: 18px;
     line-height: 1.9;
     max-width: 620px;
@@ -138,7 +145,7 @@
 
 .modal h2 {
     margin-bottom: 24px;
-    color: #272827;
+    color: #0F1720;
     font-family: "Prometo", sans-serif;
 }
 
@@ -174,8 +181,8 @@
     }
 
     .login-logo {
-        width: 72px;
-        margin-bottom: 28px;
+        width: 110px;
+        margin-bottom: 32px;
     }
 
     .login-title {

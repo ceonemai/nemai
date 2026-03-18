@@ -50,8 +50,17 @@
   }
 }
 
+/* ===== Global Background — Same as Landing Page ===== */
 body {
   margin: 0;
+
+  background:
+    radial-gradient(1200px 800px at 10% 15%, rgba(0, 255, 200, 0.18), transparent 60%),
+    radial-gradient(1000px 700px at 85% 20%, rgba(0, 200, 255, 0.16), transparent 60%),
+    radial-gradient(900px 700px at 50% 90%, rgba(120, 255, 200, 0.14), transparent 60%),
+    linear-gradient(180deg, #0E1412 0%, #0B0F0E 100%);
+
+  background-attachment: fixed;
 }
 
 #root {
