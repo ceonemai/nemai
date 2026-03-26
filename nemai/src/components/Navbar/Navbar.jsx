@@ -149,7 +149,15 @@ function Navbar() {
           Docs
         </a>
 
-        <button className="nav-btn">
+        <button
+          className="nav-btn"
+          onClick={() => {
+            const redirectUrl = import.meta.env.VITE_APP_URL;
+            if (redirectUrl) {
+              window.open(redirectUrl, "_blank");
+            }
+          }}
+        >
           Coming Soon
         </button>
 

@@ -1,0 +1,83 @@
+:root {
+  --primary-teal: #2187AA;
+  --primary-green: #8BDAA1;
+  --brand-dark: #272827;
+  --brand-light: #F7F7F7;
+
+  --secondary-teal: #59E0F4;
+  --secondary-mint: #9FECB8;
+  --secondary-pale: #CCECD4;
+}
+
+/* ================= FONT FACE ================= */
+/* Path: src/assets/fonts */
+
+@font-face {
+  font-family: "Prometo";
+  src: url("/src/assets/fonts/Prometo_Reg.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Prometo";
+  src: url("/src/assets/fonts/Prometo_Bold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "AllumiSTD";
+  src: url("/src/assets/fonts/allumi-std-book-bold.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "AllumiSTD";
+  src: url("/src/assets/fonts/Allumi_Std_Book_Regular.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ================= BASE ================= */
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+body {
+  margin: 0;
+  font-family: "AllumiSTD", sans-serif; /* ✅ FIXED NAME */
+  color: var(--brand-dark);
+
+  background:
+    radial-gradient(1200px 800px at 10% 15%, rgba(0,255,200,0.18), transparent 60%),
+    radial-gradient(1200px 800px at 10% 15%, rgba(0,255,200,0.20), transparent 60%),
+    radial-gradient(1000px 700px at 85% 80%, rgba(0,200,255,0.20), transparent 60%),
+    linear-gradient(135deg, #f5fffd, #eef8ff);
+
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+section {
+  position: relative;
+  padding: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}

@@ -1,0 +1,33 @@
+/* ===== Global App Styles — NEM AI Theme ===== */
+
+:root {
+  --nem-primary: #2187AA;
+  --nem-accent: #8BD8A1;
+  --nem-dark: #272827;
+  --nem-light: #F7F7F7;
+  --nem-soft: #CCECD4;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+/* ✅ Global default font = AllumiSTD */
+body {
+  margin: 0;
+  background: var(--nem-dark);
+  color: var(--nem-light);
+  font-family: "AllumiSTD", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.app-root {
+  min-height: 100%;
+}
