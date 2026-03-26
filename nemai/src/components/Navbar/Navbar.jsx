@@ -158,7 +158,7 @@ function Navbar() {
             }
           }}
         >
-          Coming Soon
+          Go to App
         </button>
 
       </div>
