@@ -152,10 +152,9 @@ function Navbar() {
         <button
           className="nav-btn"
           onClick={() => {
-            const redirectUrl = import.meta.env.VITE_APP_URL;
-            if (redirectUrl) {
-              window.open(redirectUrl, "_blank");
-            }
+            // ใช้ VITE_APP_URL จาก env (ตอน Deploy) หรือ fallback ไปที่ localhost (สำหรับ Local)
+            const redirectUrl = import.meta.env.VITE_APP_URL || "http://localhost:5174";
+            window.open(redirectUrl, "_blank");
           }}
         >
           Go to App
