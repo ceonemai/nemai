@@ -18,7 +18,7 @@ export default function AppChat() {
 
   const sendMessageToBackend = async (text) => {
     return new Promise((resolve) => {
-      setTimeout(() => resolve("Mock response from future AI model."), 800);
+      setTimeout(() => resolve("Nem AI is not available at the moment. We're sorry for the inconvenience."), 800);
     });
   };
 
