@@ -4,7 +4,13 @@
 
 import { useState } from "react";
 import { usePrivy } from "@privy-io/react-auth";
+import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
 import "./AppChat.css";
+
+const apiUrl = import.meta.env.VITE_DIFY_API_URL || "https://api.dify.ai/v1";
+const apiKey = import.meta.env.VITE_DIFY_API_KEY;
 
 export default function AppChat() {
   const { logout, user } = usePrivy();
@@ -16,10 +22,34 @@ export default function AppChat() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const [conversationId, setConversationId] = useState("");
   const sendMessageToBackend = async (text) => {
-    return new Promise((resolve) => {
-      setTimeout(() => resolve("Nem AI is not available at the moment. We're sorry for the inconvenience."), 800);
-    });
+    try {
+      const response = await fetch(`${apiUrl}/chat-messages`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          inputs: {},
+          query: text,
+          user: user?.id || "anonymous-user", // ใช้ id จาก Privy หรือระบุเอง
+          response_mode: "blocking", // ใช้แบบ blocking เพื่อความง่ายในเบื้องต้น
+          conversation_id: conversationId // ส่ง id เดิมกลับไปเพื่อคุยต่อ
+        })
+      });
+      const data = await response.json();
+
+      // เก็บ conversation_id ไว้ใช้ในครั้งถัดไป
+      if (data.conversation_id) {
+        setConversationId(data.conversation_id);
+      }
+      return data.answer;
+    } catch (error) {
+      console.error("Dify Error:", error);
+      throw error;
+    }
   };
 
   const handleSend = async () => {
@@ -89,7 +119,7 @@ export default function AppChat() {
             <div className="message-row assistant">
               <div className="avatar bot" />
               <div className="bubble assistant">
-                <div className="typing"><span/><span/><span/></div>
+                <div className="typing"><span /><span /><span /></div>
               </div>
             </div>
           )}
@@ -120,7 +150,14 @@ function Message({ role, content }) {
   return (
     <div className={`message-row ${isUser ? "user" : "assistant"}`}>
       {!isUser && <div className="avatar bot" />}
-      <div className={`bubble ${isUser ? "user" : "assistant"}`}>{content}</div>
+      <div className={`bubble ${isUser ? "user" : "assistant"}`}>
+        <ReactMarkdown 
+          rehypePlugins={[rehypeRaw]} 
+          remarkPlugins={[remarkGfm]}
+        >
+          {content}
+        </ReactMarkdown>
+      </div>
       {isUser && <div className="avatar user" />}
     </div>
   );
