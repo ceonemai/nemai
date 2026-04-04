@@ -189,6 +189,14 @@
   background: #0F1720;
 }
 
+/* สไตล์สำหรับรูปภาพมาสคอต */
+.avatar.bot-img {
+  background-color: #0F1720;
+  border: none;
+  object-fit: contain;
+  padding: 2px;
+}
+
 .avatar.user {
   background: linear-gradient(135deg, #2187AA, #8BD8A1);
 }
@@ -201,6 +209,8 @@
   line-height: 1.6;
   overflow-wrap: break-word;
   word-break: break-word;
+  text-align: left;
+  white-space: pre-wrap;
 }
 
 .bubble.assistant {
@@ -308,6 +318,7 @@
   min-height: 24px;
   background: transparent;
   color: #0F1720;
+  text-align: left;
 }
 
 .input-box textarea::placeholder {
