@@ -189,12 +189,12 @@
   background: #0F1720;
 }
 
-/* สไตล์สำหรับรูปภาพมาสคอต */
+/* สไตล์สำหรับรูปภาพโลโก้ */
 .avatar.bot-img {
-  background-color: #0F1720;
-  border: none;
+  background-color: #ffffff;
+  border: 1px solid #DCEBFA;
   object-fit: contain;
-  padding: 2px;
+  padding: 4px;
 }
 
 .avatar.user {

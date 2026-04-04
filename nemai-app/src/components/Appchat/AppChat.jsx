@@ -9,7 +9,6 @@ import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import "./AppChat.css";
 import logo from "../../../../nemai/src/assets/images/LogogramFullColor.png";
-import mascot from "../../../../nemai/src/assets/images/mascots/Mascott NEM-86.png";
 
 const apiUrl = import.meta.env.VITE_DIFY_API_URL || "https://api.dify.ai/v1";
 const apiKey = import.meta.env.VITE_DIFY_API_KEY;
@@ -129,7 +128,7 @@ export default function AppChat() {
 
           {loading && (
             <div className="message-row assistant">
-              <img src={mascot} alt="NEM AI Mascot" className="avatar bot-img" />
+              <img src={logo} alt="NEM AI Logo" className="avatar bot-img" />
               <div className="bubble assistant">
                 <div className="typing"><span /><span /><span /></div>
               </div>
@@ -168,7 +167,7 @@ function Message({ role, content, displayName }) {
   const isUser = role === "user";
   return (
     <div className={`message-row ${isUser ? "user" : "assistant"}`}>
-      {!isUser && <img src={mascot} alt="NEM AI Mascot" className="avatar bot-img" />}
+      {!isUser && <img src={logo} alt="NEM AI Logo" className="avatar bot-img" />}
       <div className={`bubble ${isUser ? "user" : "assistant"}`}>
         <ReactMarkdown 
           rehypePlugins={[rehypeRaw]} 
