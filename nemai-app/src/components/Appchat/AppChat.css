@@ -93,12 +93,55 @@
 }
 
 .bubble {
-  max-width: 70%;
-  padding: 12px 16px;
+  max-width: 75%;
+  padding: 12px 18px;
   border-radius: 18px;
   line-height: 1.6;
-  white-space: pre-wrap;
-  font-size: 14px;
+  font-size: 15px;
+  text-align: left;
+  word-break: break-word;
+}
+
+/* Markdown Elements Styling */
+.bubble p {
+  margin: 0 0 12px 0;
+}
+
+.bubble p:last-child {
+  margin-bottom: 0;
+}
+
+.bubble ol, .bubble ul {
+  padding-left: 24px;
+  margin: 12px 0;
+}
+
+.bubble li {
+  margin-bottom: 8px;
+}
+
+.bubble li:last-child {
+  margin-bottom: 0;
+}
+
+.bubble h1, .bubble h2, .bubble h3 {
+  margin: 16px 0 8px 0;
+  font-size: 1.15em;
+  font-weight: 600;
+}
+
+.bubble blockquote {
+  border-left: 4px solid var(--primary-1);
+  margin: 12px 0;
+  padding-left: 12px;
+  opacity: 0.8;
+}
+
+.bubble code {
+  background: rgba(0,0,0,0.05);
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-family: monospace;
 }
 
 .bubble.assistant {
