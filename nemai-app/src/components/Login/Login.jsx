@@ -48,7 +48,7 @@ export default function Login() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.6 }}
         >
-          You are among the first users helping us shape the future of AI-powered health guidance.
+          If you’re chosen to participate in the alpha test, join below.
         </motion.p>
 
         {!authenticated ? (
@@ -59,7 +59,7 @@ export default function Login() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
           >
-            Log in / Sign up
+        Log in / Sign up
           </motion.button>
         ) : (
           <>

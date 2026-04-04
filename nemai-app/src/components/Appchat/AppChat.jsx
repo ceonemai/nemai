@@ -8,6 +8,7 @@ import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import "./AppChat.css";
+import logo from "../../../../nemai/src/assets/images/LogogramFullColor.png";
 
 const apiUrl = import.meta.env.VITE_DIFY_API_URL || "https://api.dify.ai/v1";
 const apiKey = import.meta.env.VITE_DIFY_API_KEY;
@@ -77,58 +78,73 @@ export default function AppChat() {
     }
   };
 
+  const handleNewChat = () => {
+    setMessages([{ id: 1, role: "assistant", content: "Hi, I'm NEM AI. How can I help you today?" }]);
+    setConversationId("");
+  };
+
   const displayName =
     user?.email?.address ||
     user?.twitter?.username ||
     "User";
 
+  // เช็คว่าเริ่มแชทหรือยัง (ถ้ามีข้อความมากกว่า 1 หรือกำลังโหลด)
+  const isChatStarted = messages.length > 1 || loading;
+
   return (
-    <div className="appchat">
-      {/* 🔹 Top Utility Bar */}
-      <div className="topbar">
-        <div className="topbar-right">
-          <div className="user-info">
-            <div className="user-dot" />
-            <span>{displayName}</span>
+    <div className="appchat-layout">
+      {/* 🔹 Sidebar (Gemini Style) */}
+      <aside className="appchat-sidebar">
+        <div className="sidebar-header">
+          <img src={logo} alt="NEM AI Logo" className="sidebar-logo" />
+          <div className="brand-title">NEM AI</div>
+        </div>
+        
+        <button className="new-chat-btn" onClick={handleNewChat}>
+          <span className="plus-icon">+</span> New Chat
+        </button>
+
+        <div className="sidebar-history">
+          {/* พื้นที่สำหรับประวัติการแชทในอนาคต */}
+        </div>
+
+        <div className="sidebar-footer">
+          <div className="user-profile">
+            <div className="user-avatar">{displayName.charAt(0).toUpperCase()}</div>
+            <span className="user-name">{displayName}</span>
           </div>
           <button className="logout-btn" onClick={logout}>
             Logout
           </button>
         </div>
-      </div>
+      </aside>
 
-      {/* Header */}
-      <header className="appchat-header">
-        <div className="brand">
-          <div className="brand-dot" />
-          <div>
-            <div className="brand-title">NEM AI Assistant</div>
-            <div className="brand-sub">Emergency Decision Support</div>
-          </div>
-        </div>
-      </header>
-
-      {/* Messages */}
-      <main className="appchat-body">
-        <div className="chat-container">
+      {/* 🔹 Main Chat Area */}
+      <main className={`appchat-main ${isChatStarted ? "started" : "empty"}`}>
+        <div className="chat-messages" style={{ display: isChatStarted ? "flex" : "none" }}>
           {messages.map((msg) => (
-            <Message key={msg.id} role={msg.role} content={msg.content} />
+            <Message key={msg.id} role={msg.role} content={msg.content} displayName={displayName} />
           ))}
 
           {loading && (
             <div className="message-row assistant">
-              <div className="avatar bot" />
+              <div className="avatar bot">N</div>
               <div className="bubble assistant">
                 <div className="typing"><span /><span /><span /></div>
               </div>
             </div>
           )}
         </div>
-      </main>
 
-      {/* Input */}
-      <footer className="appchat-input">
-        <div className="input-wrap">
+        {!isChatStarted && (
+          <div className="welcome-text">
+            <h1>Hello, {displayName.split('@')[0]}</h1>
+            <p>How can I help you today?</p>
+          </div>
+        )}
+
+        <div className="chat-input-container">
+          <div className="input-box">
           <textarea
             placeholder="Type your message..."
             value={input}
@@ -140,16 +156,18 @@ export default function AppChat() {
             Send
           </button>
         </div>
-      </footer>
+          <div className="disclaimer">NEM AI can make mistakes. Consider verifying critical information.</div>
+        </div>
+      </main>
     </div>
   );
 }
 
-function Message({ role, content }) {
+function Message({ role, content, displayName }) {
   const isUser = role === "user";
   return (
     <div className={`message-row ${isUser ? "user" : "assistant"}`}>
-      {!isUser && <div className="avatar bot" />}
+      {!isUser && <div className="avatar bot">N</div>}
       <div className={`bubble ${isUser ? "user" : "assistant"}`}>
         <ReactMarkdown 
           rehypePlugins={[rehypeRaw]} 
@@ -158,7 +176,7 @@ function Message({ role, content }) {
           {content}
         </ReactMarkdown>
       </div>
-      {isUser && <div className="avatar user" />}
+      {isUser && <div className="avatar user">{displayName?.charAt(0).toUpperCase() || "U"}</div>}
     </div>
   );
 }
