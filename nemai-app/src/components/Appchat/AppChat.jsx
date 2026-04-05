@@ -2,7 +2,7 @@
 // File: src/components/Appchat/AppChat.jsx
 // =========================================
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePrivy } from "@privy-io/react-auth";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
@@ -12,6 +12,8 @@ import logo from "../../../../nemai/src/assets/images/LogogramFullColor.png";
 
 const apiUrl = import.meta.env.VITE_DIFY_API_URL || "https://api.dify.ai/v1";
 const apiKey = import.meta.env.VITE_DIFY_API_KEY;
+
+const QUOTA_ERROR_MSG = "⚠️ **System is busy (Quota Exceeded)**\nThe system is currently handling many requests. Please wait a moment.";
 
 export default function AppChat() {
   const { logout, user } = usePrivy();
@@ -24,6 +26,61 @@ export default function AppChat() {
   const [loading, setLoading] = useState(false);
 
   const [conversationId, setConversationId] = useState("");
+  const [conversations, setConversations] = useState([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
+
+  // Fetch conversations history
+  const fetchConversations = async () => {
+    if (!user?.id) return;
+    setHistoryLoading(true);
+    try {
+      const response = await fetch(`${apiUrl}/conversations?user=${user.id}&limit=20`, {
+        headers: {
+          "Authorization": `Bearer ${apiKey}`
+        }
+      });
+      const data = await response.json();
+      setConversations(data.data || []);
+    } catch (error) {
+      console.error("Fetch history error:", error);
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
+
+  // Load a specific conversation
+  const loadConversation = async (id) => {
+    if (loading) return;
+    setLoading(true);
+    setConversationId(id);
+    try {
+      const response = await fetch(`${apiUrl}/messages?conversation_id=${id}&user=${user.id}`, {
+        headers: {
+          "Authorization": `Bearer ${apiKey}`
+        }
+      });
+      const data = await response.json();
+      
+      // Transform Dify messages to our format
+      const formattedMessages = data.data.map(m => ([
+        { id: m.id + "_u", role: "user", content: m.query },
+        { id: m.id + "_a", role: "assistant", content: m.answer || QUOTA_ERROR_MSG }
+      ])).reverse().flat();
+
+      setMessages(formattedMessages.length > 0 ? formattedMessages : [
+        { id: 1, role: "assistant", content: "Hi, I'm NEM AI. How can I help you today?" }
+      ]);
+    } catch (error) {
+      console.error("Load conversation error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch history on user load
+  useEffect(() => {
+    if (user?.id) fetchConversations();
+  }, [user?.id]);
   const sendMessageToBackend = async (text) => {
     try {
       const response = await fetch(`${apiUrl}/chat-messages`, {
@@ -35,18 +92,27 @@ export default function AppChat() {
         body: JSON.stringify({
           inputs: {},
           query: text,
-          user: user?.id || "anonymous-user", // ใช้ id จาก Privy หรือระบุเอง
-          response_mode: "blocking", // ใช้แบบ blocking เพื่อความง่ายในเบื้องต้น
-          conversation_id: conversationId // ส่ง id เดิมกลับไปเพื่อคุยต่อ
+          user: user?.id || "anonymous-user",
+          response_mode: "blocking",
+          conversation_id: conversationId 
         })
       });
+
       const data = await response.json();
 
-      // เก็บ conversation_id ไว้ใช้ในครั้งถัดไป
+      if (!response.ok) {
+        // ส่ง error object ออกไปเพื่อให้ handleSend จัดการต่อ
+        throw { 
+          status: response.status, 
+          message: data.message || "Unknown error",
+          code: data.code 
+        };
+      }
+
       if (data.conversation_id) {
         setConversationId(data.conversation_id);
       }
-      return data.answer;
+      return { answer: data.answer, conversation_id: data.conversation_id };
     } catch (error) {
       console.error("Dify Error:", error);
       throw error;
@@ -62,10 +128,36 @@ export default function AppChat() {
     setLoading(true);
 
     try {
-      const reply = await sendMessageToBackend(userMsg.content);
-      setMessages((m) => [...m, { id: Date.now() + 1, role: "assistant", content: reply }]);
-    } catch {
-      setMessages((m) => [...m, { id: Date.now() + 2, role: "assistant", content: "Something went wrong." }]);
+      const isNewConversation = !conversationId;
+      const { answer, conversation_id } = await sendMessageToBackend(userMsg.content);
+      setMessages((m) => [...m, { id: Date.now() + 1, role: "assistant", content: answer }]);
+      
+      if (isNewConversation && conversation_id) {
+        // อัปเดตประวัติใน UI ทันที (Optimistic Update)
+        const newConv = { 
+          id: conversation_id,
+          name: userMsg.content.substring(0, 30) + (userMsg.content.length > 30 ? "..." : "") 
+        };
+        setConversations(prev => [newConv, ...prev]);
+        
+        // รอ Dify ประมวลผลชื่อจริงๆ สักครู่แล้วค่อยดึงประวัติมาทับ
+        setTimeout(fetchConversations, 2000);
+      }
+    } catch (err) {
+      let errorMsg = "Sorry, something went wrong. Please try again later.";
+      
+      // Check for Dify or Gemini quota errors
+      const errorString = typeof err === 'string' ? err : JSON.stringify(err);
+      
+      if (err.status === 429 || errorString.includes("RESOURCE_EXHAUSTED") || errorString.includes("quota")) {
+        errorMsg = QUOTA_ERROR_MSG;
+      } else if (err.message && (err.message.includes("Run failed") || err.message.includes("PluginInvokeError"))) {
+        if (err.message.includes("429")) {
+           errorMsg = QUOTA_ERROR_MSG;
+        }
+      }
+      
+      setMessages((m) => [...m, { id: Date.now() + 2, role: "assistant", content: errorMsg }]);
     } finally {
       setLoading(false);
     }
@@ -81,6 +173,11 @@ export default function AppChat() {
   const handleNewChat = () => {
     setMessages([{ id: 1, role: "assistant", content: "Hi, I'm NEM AI. How can I help you today?" }]);
     setConversationId("");
+  };
+
+  const handleConversationClick = (id) => {
+    if (id === conversationId) return;
+    loadConversation(id);
   };
 
   const displayName =
@@ -105,7 +202,20 @@ export default function AppChat() {
         </button>
 
         <div className="sidebar-history">
-          {/* พื้นที่สำหรับประวัติการแชทในอนาคต */}
+          <div className="history-label">Recent Chats</div>
+          {historyLoading && conversations.length === 0 && <div className="history-status">Loading...</div>}
+          {!historyLoading && conversations.length === 0 && <div className="history-status">No history yet</div>}
+          
+          {conversations.map((conv) => (
+            <div 
+              key={conv.id} 
+              className={`history-item ${conv.id === conversationId ? "active" : ""}`}
+              onClick={() => handleConversationClick(conv.id)}
+            >
+              <span className="history-icon">💬</span>
+              <span className="history-name">{conv.name || "Untitled Chat"}</span>
+            </div>
+          ))}
         </div>
 
         <div className="sidebar-footer">
@@ -173,7 +283,7 @@ function Message({ role, content, displayName }) {
           rehypePlugins={[rehypeRaw]} 
           remarkPlugins={[remarkGfm]}
         >
-          {content}
+          {content?.replace(/\n{3,}/g, '\n\n')}
         </ReactMarkdown>
       </div>
       {isUser && <div className="avatar user">{displayName?.charAt(0).toUpperCase() || "U"}</div>}
