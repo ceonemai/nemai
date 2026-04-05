@@ -13,7 +13,7 @@ import logo from "../../../../nemai/src/assets/images/LogogramFullColor.png";
 const apiUrl = import.meta.env.VITE_DIFY_API_URL || "https://api.dify.ai/v1";
 const apiKey = import.meta.env.VITE_DIFY_API_KEY;
 
-const QUOTA_ERROR_MSG = "⚠️ **System is busy (Quota Exceeded)**\nThe system is currently handling many requests. Please wait a moment.";
+const QUOTA_ERROR_MSG = "⚠️ **System is busy (Quota Exceeded)**\n\nThe system is currently handling many requests. Please wait a moment.";
 
 export default function AppChat() {
   const { logout, user } = usePrivy();
