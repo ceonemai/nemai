@@ -60,7 +60,7 @@ export default function AppChat() {
         }
       });
       const data = await response.json();
-      
+
       // Transform Dify messages to our format
       const formattedMessages = data.data.map(m => ([
         { id: m.id + "_u", role: "user", content: m.query },
@@ -94,7 +94,7 @@ export default function AppChat() {
           query: text,
           user: user?.id || "anonymous-user",
           response_mode: "blocking",
-          conversation_id: conversationId 
+          conversation_id: conversationId
         })
       });
 
@@ -102,10 +102,10 @@ export default function AppChat() {
 
       if (!response.ok) {
         // ส่ง error object ออกไปเพื่อให้ handleSend จัดการต่อ
-        throw { 
-          status: response.status, 
+        throw {
+          status: response.status,
           message: data.message || "Unknown error",
-          code: data.code 
+          code: data.code
         };
       }
 
@@ -131,32 +131,32 @@ export default function AppChat() {
       const isNewConversation = !conversationId;
       const { answer, conversation_id } = await sendMessageToBackend(userMsg.content);
       setMessages((m) => [...m, { id: Date.now() + 1, role: "assistant", content: answer }]);
-      
+
       if (isNewConversation && conversation_id) {
         // อัปเดตประวัติใน UI ทันที (Optimistic Update)
-        const newConv = { 
+        const newConv = {
           id: conversation_id,
-          name: userMsg.content.substring(0, 30) + (userMsg.content.length > 30 ? "..." : "") 
+          name: userMsg.content.substring(0, 30) + (userMsg.content.length > 30 ? "..." : "")
         };
         setConversations(prev => [newConv, ...prev]);
-        
+
         // รอ Dify ประมวลผลชื่อจริงๆ สักครู่แล้วค่อยดึงประวัติมาทับ
         setTimeout(fetchConversations, 2000);
       }
     } catch (err) {
       let errorMsg = "Sorry, something went wrong. Please try again later.";
-      
+
       // Check for Dify or Gemini quota errors
       const errorString = typeof err === 'string' ? err : JSON.stringify(err);
-      
+
       if (err.status === 429 || errorString.includes("RESOURCE_EXHAUSTED") || errorString.includes("quota")) {
         errorMsg = QUOTA_ERROR_MSG;
       } else if (err.message && (err.message.includes("Run failed") || err.message.includes("PluginInvokeError"))) {
         if (err.message.includes("429")) {
-           errorMsg = QUOTA_ERROR_MSG;
+          errorMsg = QUOTA_ERROR_MSG;
         }
       }
-      
+
       setMessages((m) => [...m, { id: Date.now() + 2, role: "assistant", content: errorMsg }]);
     } finally {
       setLoading(false);
@@ -196,7 +196,7 @@ export default function AppChat() {
           <img src={logo} alt="NEM AI Logo" className="sidebar-logo" />
           <div className="brand-title">NEM AI</div>
         </div>
-        
+
         <button className="new-chat-btn" onClick={handleNewChat}>
           <span className="plus-icon">+</span> New Chat
         </button>
@@ -205,14 +205,31 @@ export default function AppChat() {
           <div className="history-label">Recent Chats</div>
           {historyLoading && conversations.length === 0 && <div className="history-status">Loading...</div>}
           {!historyLoading && conversations.length === 0 && <div className="history-status">No history yet</div>}
-          
+
           {conversations.map((conv) => (
-            <div 
-              key={conv.id} 
+            <div
+              key={conv.id}
               className={`history-item ${conv.id === conversationId ? "active" : ""}`}
               onClick={() => handleConversationClick(conv.id)}
             >
-              <span className="history-icon">💬</span>
+              <span className="history-icon" style={{ display: "flex", alignItems: "center" }}>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <defs>
+                    <linearGradient id="aiGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#5ce1e6" />
+                      <stop offset="100%" stopColor="#3092d6" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M12 6C12 8.2091 13.7909 10 16 10C13.7909 10 12 11.7909 12 14C12 11.7909 10.2091 10 8 10C10.2091 10 12 8.2091 12 6Z" fill="url(#aiGradient)" />
+                </svg>
+              </span>
               <span className="history-name">{conv.name || "Untitled Chat"}</span>
             </div>
           ))}
@@ -255,17 +272,17 @@ export default function AppChat() {
 
         <div className="chat-input-container">
           <div className="input-box">
-          <textarea
-            placeholder="Type your message..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={onKeyDown}
-            rows={1}
-          />
-          <button onClick={handleSend} disabled={!input.trim() || loading}>
-            Send
-          </button>
-        </div>
+            <textarea
+              placeholder="Type your message..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={onKeyDown}
+              rows={1}
+            />
+            <button onClick={handleSend} disabled={!input.trim() || loading}>
+              Send
+            </button>
+          </div>
           <div className="disclaimer">NEM AI can make mistakes. Consider verifying critical information.</div>
         </div>
       </main>
@@ -279,8 +296,8 @@ function Message({ role, content, displayName }) {
     <div className={`message-row ${isUser ? "user" : "assistant"}`}>
       {!isUser && <img src={logo} alt="NEM AI Logo" className="avatar bot-img" />}
       <div className={`bubble ${isUser ? "user" : "assistant"}`}>
-        <ReactMarkdown 
-          rehypePlugins={[rehypeRaw]} 
+        <ReactMarkdown
+          rehypePlugins={[rehypeRaw]}
           remarkPlugins={[remarkGfm]}
         >
           {content?.replace(/\n{3,}/g, '\n\n')}

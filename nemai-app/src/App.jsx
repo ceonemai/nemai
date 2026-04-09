@@ -4,16 +4,14 @@ import { usePrivy } from "@privy-io/react-auth";
 import Login from "./components/Login/Login";
 import AppChat from "./components/Appchat/AppChat";
 
-function ProtectedRoute({ children }) {
+function MainRoute() {
   const { authenticated, ready } = usePrivy();
 
   // รอ auth โหลดก่อน
   if (!ready) return null;
 
-  // ยังไม่ login → กลับหน้า Login
-  if (!authenticated) return <Navigate to="/" replace />;
-
-  return children;
+  // เลือกว่าจะแสดงหน้าไหนตามสถานะการ Login
+  return authenticated ? <AppChat /> : <Login />;
 }
 
 export default function App() {
@@ -21,20 +19,10 @@ export default function App() {
     <div className="app-root">
       <BrowserRouter>
         <Routes>
-          {/* Login Page */}
-          <Route path="/" element={<Login />} />
+          {/* หน้าหลัก: จัดการ Login และ Chat ใน Path เดียวกัน */}
+          <Route path="/" element={<MainRoute />} />
 
-          {/* Chatbot App (ต้อง Login ก่อน) */}
-          <Route
-            path="/app"
-            element={
-              <ProtectedRoute>
-                <AppChat />
-              </ProtectedRoute>
-            }
-          />
-
-          {/* Fallback */}
+          {/* Fallback (ป้องกันแอปพังหากหลุดไป Path อื่น) */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
