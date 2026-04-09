@@ -1,20 +1,10 @@
 import { motion } from "framer-motion";
 import { usePrivy } from "@privy-io/react-auth";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import "./Login.css";
 import logo from "../../../../nemai/src/assets/images/LogogramFullColor.png";
 
 export default function Login() {
-  const navigate = useNavigate();
   const { login, logout, authenticated, ready, user } = usePrivy();
-
-  // ✅ ถ้า login แล้ว → ไปหน้า Chat
-  useEffect(() => {
-    if (ready && authenticated) {
-      navigate("/app");
-    }
-  }, [ready, authenticated, navigate]);
 
   if (!ready) return null;
 
