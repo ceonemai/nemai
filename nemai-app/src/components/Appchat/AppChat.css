@@ -484,40 +484,139 @@
   }
 }
 
+/* ------------------------------------------- */
+/* Mobile Header & Overlay (Hidden on Desktop) */
+/* ------------------------------------------- */
+.mobile-header {
+  display: none;
+}
+.sidebar-overlay {
+  display: none;
+}
+.mobile-close-btn {
+  display: none;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .appchat-layout {
     flex-direction: column;
   }
 
-  .appchat-sidebar {
-    width: 100%;
-    height: auto;
-    padding: 16px;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    border-right: none;
-    border-bottom: 1px solid #DCEBFA;
+  .appchat-main {
+    min-height: 0; /* บังคับให้ขนาดไม่ทะลุจอ เพื่อให้ช่องแชท Scroll ได้ */
+    height: 100%;
   }
 
-  .sidebar-history,
+  /* 🔹 แสดง Mobile Header ด้านบน */
+  .mobile-header {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #DCEBFA;
+    color: #0F1720;
+    flex-shrink: 0;
+  }
+
+  .menu-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    margin-right: 12px;
+    color: #2187AA;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+  }
+  
+  .menu-btn:hover {
+    background: #EEF6FF;
+  }
+
+  .mobile-title {
+    font-weight: 700;
+    font-size: 18px;
+    background: linear-gradient(90deg, #2187AA, #1FA97A);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* 🔹 Sidebar ทำเป็น Drawer Slide จากซ้าย และคุมโทนสีเดิม */
+  .appchat-sidebar {
+    position: fixed;
+    left: -100%;
+    top: 0;
+    bottom: 0;
+    width: 280px;
+    height: 100dvh;
+    z-index: 1001;
+    transition: left 0.3s ease-in-out;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+    padding: 20px;
+    background-color: #EEF6FF; /* คุมโทนสีหลัก */
+    border-right: 1px solid #DCEBFA;
+    flex-direction: column; /* เรียงจากบนลงล่างเหมือน Desktop */
+  }
+
+  .appchat-sidebar.open {
+    left: 0;
+  }
+
+  .sidebar-header {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .mobile-close-btn {
+    display: flex;
+    background: transparent;
+    border: none;
+    color: #2187AA;
+    padding: 6px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .mobile-close-btn:hover {
+    background: #DCEBFA;
+  }
+
+  /* 🔹 Overlay พื้นหลังดำเบลอๆ ตอนเปิด Sidebar */
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15, 23, 32, 0.4);
+    z-index: 1000;
+    backdrop-filter: blur(2px);
+    animation: fadeIn 0.3s forwards;
+  }
+
+  /* 🔹 คืนค่า History ให้แสดงในมือถือเหมือน Desktop */
+  .sidebar-history {
+    display: flex;
+  }
+  
   .sidebar-footer .user-name {
-    display: none;
+    display: block;
   }
 
   .sidebar-footer {
-    margin: 0;
-    padding: 0;
-    border: none;
-    flex-direction: row;
-    align-items: center;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* เพิ่มความลื่นไหลในการ Scroll บนมือถือ และปรับระยะขอบ */
+  .chat-messages {
+    padding: 16px 16px 20px;
+    -webkit-overflow-scrolling: touch;
   }
 
   .new-chat-btn {
-    margin: 0;
-    padding: 8px 14px;
-    font-size: 14px;
+    margin-bottom: 12px;
   }
 
   /* ดัน Input ให้อยู่ล่างสุดในมือถือ และข้อความต้อนรับอยู่ตรงกลาง */
@@ -541,5 +640,6 @@
 
   .chat-input-container {
     padding: 12px 16px 20px;
+    flex-shrink: 0; /* ป้องกันกล่องพิมพ์ข้อความถูกบีบผิดรูป */
   }
 }

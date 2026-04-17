@@ -11,7 +11,7 @@ createRoot(document.getElementById("root")).render(
     <PrivyProvider
       appId={import.meta.env.VITE_PRIVY_APP_ID}
       config={{
-        loginMethods: ["email", "twitter"], // twitter = X
+        loginMethods: ["email"], // twitter = X
         appearance: {
           theme: "light",
           accentColor: "#5ce1e6",

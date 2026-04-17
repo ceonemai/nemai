@@ -2,7 +2,7 @@
 // File: src/components/Appchat/AppChat.jsx
 // =========================================
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePrivy } from "@privy-io/react-auth";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
@@ -25,9 +25,12 @@ export default function AppChat() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [conversationId, setConversationId] = useState("");
   const [conversations, setConversations] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(false);
+
+  const messagesEndRef = useRef(null);
 
   // Fetch conversations history
   const fetchConversations = async () => {
@@ -81,6 +84,14 @@ export default function AppChat() {
   useEffect(() => {
     if (user?.id) fetchConversations();
   }, [user?.id]);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, loading]);
   const sendMessageToBackend = async (text) => {
     try {
       const response = await fetch(`${apiUrl}/chat-messages`, {
@@ -173,11 +184,13 @@ export default function AppChat() {
   const handleNewChat = () => {
     setMessages([{ id: 1, role: "assistant", content: "Hi, I'm NEM AI. How can I help you today?" }]);
     setConversationId("");
+    setIsSidebarOpen(false);
   };
 
   const handleConversationClick = (id) => {
     if (id === conversationId) return;
     loadConversation(id);
+    setIsSidebarOpen(false);
   };
 
   const displayName =
@@ -190,11 +203,21 @@ export default function AppChat() {
 
   return (
     <div className="appchat-layout">
+      {/* Mobile Overlay */}
+      {isSidebarOpen && (
+        <div className="sidebar-overlay" onClick={() => setIsSidebarOpen(false)}></div>
+      )}
+
       {/* 🔹 Sidebar (Gemini Style) */}
-      <aside className="appchat-sidebar">
+      <aside className={`appchat-sidebar ${isSidebarOpen ? "open" : ""}`}>
         <div className="sidebar-header">
-          <img src={logo} alt="NEM AI Logo" className="sidebar-logo" />
-          <div className="brand-title">NEM AI</div>
+          <div className="brand-info" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <img src={logo} alt="NEM AI Logo" className="sidebar-logo" />
+            <div className="brand-title">NEM AI</div>
+          </div>
+          <button className="mobile-close-btn" onClick={() => setIsSidebarOpen(false)}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
         </div>
 
         <button className="new-chat-btn" onClick={handleNewChat}>
@@ -248,6 +271,14 @@ export default function AppChat() {
 
       {/* 🔹 Main Chat Area */}
       <main className={`appchat-main ${isChatStarted ? "started" : "empty"}`}>
+        {/* Mobile Header (Hamburger Menu) */}
+        <div className="mobile-header">
+          <button className="menu-btn" onClick={() => setIsSidebarOpen(true)}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+          <span className="mobile-title">NEM AI</span>
+        </div>
+
         <div className="chat-messages" style={{ display: isChatStarted ? "flex" : "none" }}>
           {messages.map((msg) => (
             <Message key={msg.id} role={msg.role} content={msg.content} displayName={displayName} />
@@ -261,6 +292,7 @@ export default function AppChat() {
               </div>
             </div>
           )}
+          <div ref={messagesEndRef} />
         </div>
 
         {!isChatStarted && (
