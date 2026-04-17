@@ -1,0 +1,342 @@
+.setup-profile-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f8fafc;
+  background-image: 
+    radial-gradient(at 0% 0%, hsla(190, 100%, 94%, 1) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(210, 100%, 90%, 1) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, hsla(190, 100%, 94%, 1) 0px, transparent 50%);
+  padding: 20px;
+}
+
+.setup-profile-card {
+  background: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  padding: 40px;
+  border-radius: 24px;
+  width: 100%;
+  max-width: 680px;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.05), 0 0 20px rgba(255, 255, 255, 0.5) inset;
+  box-sizing: border-box;
+}
+
+.setup-title {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 2.25rem;
+  text-align: center;
+  color: #0f172a;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.step-indicator {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-top: 32px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.6;
+}
+
+.setup-header {
+  margin-bottom: 32px;
+}
+
+.progress-container {
+  width: 100%;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--nem-primary), var(--nem-accent));
+  border-radius: 10px;
+  transition: width 0.4s ease;
+}
+
+.location-action {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: -4px;
+}
+
+.location-btn {
+  background: transparent;
+  border: none;
+  color: #2187AA;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.location-btn:hover:not(:disabled) {
+  background: rgba(33, 135, 170, 0.08);
+}
+
+.location-btn:disabled {
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.setup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.form-group label {
+  text-align: left; 
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem; /* ขยายขนาดขึ้นให้อ่านง่าย */
+  margin-bottom: 6px;
+  color: #334155;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.label-icon {
+  color: #2187AA;
+  display: flex;
+  align-items: center;
+  margin-right: 8px; /* เว้นระยะห่างจากตัวหนังสือ */
+}
+
+.required {
+  color: #ef4444; 
+  margin-left: 2px;
+  font-weight: 700;
+}
+
+.form-group input {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+  padding: 12px 16px; /* ปรับลด Padding นิดหน่อยให้กล่องไม่หนาเกินไป */
+  border-radius: 12px;
+  font-size: 1rem;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  line-height: 1.5; /* ทำให้ข้อความใน Input ตรงกลางพอดี */
+}
+
+.form-group input::placeholder {
+  color: #94a3b8;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #5ce1e6;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(92, 225, 230, 0.15), 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+/* ===== Step 2 Layouts ===== */
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-top: 20px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.checkbox-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.checkbox-box {
+  padding: 10px 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #ffffff;
+  user-select: none;
+}
+
+.checkbox-box:hover {
+  border-color: #94a3b8;
+  background: #f8fafc;
+}
+
+.checkbox-box.selected {
+  background: #eef6ff;
+  border-color: #2187AA;
+  color: #2187AA;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(33, 135, 170, 0.15);
+}
+
+.yes-no-group {
+  display: flex;
+  gap: 12px;
+  margin-top: 6px;
+  margin-bottom: 12px;
+}
+
+.yes-no-btn {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.yes-no-btn:hover {
+  border-color: #94a3b8;
+  background: #f8fafc;
+}
+
+.yes-no-btn.active-yes {
+  background: #eef6ff;
+  border-color: #2187AA;
+  color: #2187AA;
+  box-shadow: 0 2px 8px rgba(33, 135, 170, 0.15);
+}
+
+.yes-no-btn.active-no {
+  background: #f1f5f9;
+  border-color: #64748b;
+  color: #475569;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.free-text-input {
+  margin-top: 4px;
+  margin-bottom: 12px;
+}
+
+.next-btn {
+  flex: 1;
+  padding: 16px;
+  margin-top: 0;
+  background: #0f172a;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1; /* บังคับข้อความให้สูงพอดีกับ Icon */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.next-btn:hover:not(:disabled) {
+  background: #1e293b;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -10px rgba(15, 23, 42, 0.5);
+}
+
+.next-btn:disabled {
+  background: #e2e8f0;
+  color: #94a3b8;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.next-btn:active {
+  transform: scale(0.98);
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.back-btn {
+  width: 35%;
+  padding: 16px;
+  background: #ffffff;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.back-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.05);
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* ===== Responsive (Mobile) ===== */
+@media (max-width: 600px) {
+  .setup-profile-card {
+    padding: 30px 20px;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
