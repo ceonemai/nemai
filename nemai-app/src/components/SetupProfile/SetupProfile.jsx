@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import "./SetupProfile.css";
 
 // Mock data สำหรับ API ในอนาคต
@@ -15,6 +16,7 @@ const mockChronicConditions = [
 
 export default function SetupProfile() {
   const [step, setStep] = useState(1);
+  const navigate = useNavigate();
   const totalSteps = 2; // กำหนดจำนวน Step ทั้งหมดไว้ก่อน (สามารถเปลี่ยนได้เมื่อมี Step เพิ่ม)
   const [formData, setFormData] = useState({
     streetAddress: "",
@@ -67,7 +69,11 @@ export default function SetupProfile() {
   const handleNext = (e) => {
     e.preventDefault();
     if (step === 1) setStep(2);
-    else console.log("Final Setup Data:", formData); // TODO: ส่งข้อมูลไป API แล้วเปลี่ยนหน้า
+    else {
+      console.log("Final Setup Data:", formData); // TODO: นำข้อมูล formData ไปยิง API บันทึก Profile ต่อที่นี่
+      // เมื่อ Setup Profile เสร็จแล้ว ให้เด้งกลับไปหน้า Chat
+      navigate("/", { replace: true });
+    }
   };
 
   const handleBack = () => {

@@ -7,7 +7,7 @@ import AppChat from "./components/Appchat/AppChat";
 import SetupProfile from "./components/SetupProfile/SetupProfile";
 
 function MainRoute() {
-  const { authenticated, ready, getAccessToken } = usePrivy();
+  const { authenticated, ready, getAccessToken, user } = usePrivy();
   const navigate = useNavigate();
   const [isSyncing, setIsSyncing] = useState(false);
   const hasSynced = useRef(false);
@@ -21,29 +21,35 @@ function MainRoute() {
 
   useEffect(() => {
     const syncUser = async () => {
-      if (ready && authenticated && !hasSynced.current) {
+      // เพิ่มการเช็ค user เพื่อให้แน่ใจว่า Privy โหลดข้อมูลเสร็จสมบูรณ์แล้ว 100%
+      if (ready && authenticated && user && !hasSynced.current) {
         hasSynced.current = true; // มาร์คไว้ว่ากำลัง/ได้ซิงค์แล้ว เพื่อป้องกันการยิงซ้ำ
         setIsSyncing(true);
         try {
           const token = await getAccessToken();
+          console.log("Sending POST /api/v1/auth/sync...");
           const response = await fetch("https://customer-service-iphv.onrender.com/api/v1/auth/sync", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
               "Authorization": `Bearer ${token}`
-            }
+            },
+            body: JSON.stringify({}) // 🔹 ใส่ body ว่างไปเพื่อป้องกัน API Server/Browser ตีตก Request
           });
 
           if (response.ok) {
             const data = await response.json();
+            console.log("Sync API Response:", data);
             if (data.is_new) {
               navigate("/setup-profile", { replace: true });
             }
           } else {
             console.error("Sync API failed with status:", response.status);
+            hasSynced.current = false; // รีเซ็ตสถานะเผื่อให้ยิงใหม่ถ้ายิงไม่สำเร็จ
           }
         } catch (error) {
           console.error("Error syncing user:", error);
+          hasSynced.current = false; // รีเซ็ตสถานะเผื่อให้ยิงใหม่ถ้ายิงไม่สำเร็จ
         } finally {
           setIsSyncing(false);
         }
@@ -51,7 +57,7 @@ function MainRoute() {
     };
 
     syncUser();
-  }, [ready, authenticated, getAccessToken, navigate]);
+  }, [ready, authenticated, user, getAccessToken, navigate]);
 
   // รอ auth โหลดก่อน หรือกำลังรอการ sync ข้อมูล
   if (!ready || isSyncing) return null;
