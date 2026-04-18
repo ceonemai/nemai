@@ -70,7 +70,7 @@ export default function SetupProfile() {
     e.preventDefault();
     if (step === 1) setStep(2);
     else {
-      console.log("Final Setup Data:", formData); // TODO: นำข้อมูล formData ไปยิง API บันทึก Profile ต่อที่นี่
+      // TODO: นำข้อมูล formData ไปยิง API บันทึก Profile ต่อที่นี่
       // เมื่อ Setup Profile เสร็จแล้ว ให้เด้งกลับไปหน้า Chat
       navigate("/", { replace: true });
     }

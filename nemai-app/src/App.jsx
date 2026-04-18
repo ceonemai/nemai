@@ -5,6 +5,7 @@ import { useEffect, useState, useRef } from "react";
 import Login from "./components/Login/Login";
 import AppChat from "./components/Appchat/AppChat";
 import SetupProfile from "./components/SetupProfile/SetupProfile";
+import logo from "./assets/images/LogogramFullColor.png";
 
 function MainRoute() {
   const { authenticated, ready, getAccessToken, user } = usePrivy();
@@ -27,8 +28,7 @@ function MainRoute() {
         setIsSyncing(true);
         try {
           const token = await getAccessToken();
-          console.log("Sending POST /api/v1/auth/sync...");
-          const response = await fetch("https://customer-service-iphv.onrender.com/api/v1/auth/sync", {
+          const response = await fetch("https://customer-api.nemai.io/api/v1/auth/sync", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -39,7 +39,6 @@ function MainRoute() {
 
           if (response.ok) {
             const data = await response.json();
-            console.log("Sync API Response:", data);
             if (data.is_new) {
               navigate("/setup-profile", { replace: true });
             }
@@ -60,7 +59,61 @@ function MainRoute() {
   }, [ready, authenticated, user, getAccessToken, navigate]);
 
   // รอ auth โหลดก่อน หรือกำลังรอการ sync ข้อมูล
-  if (!ready || isSyncing) return null;
+  if (!ready || isSyncing) {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor: "#ffffff" }}>
+        <style>
+          {`
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+            @keyframes pulse {
+              0%, 100% { opacity: 1; transform: scale(1); }
+              50% { opacity: 0.8; transform: scale(0.95); }
+            }
+            .loading-logo {
+              width: 55px;
+              height: 55px;
+              animation: pulse 2s ease-in-out infinite;
+              z-index: 2;
+              object-fit: contain;
+            }
+            .spinner-ring {
+              position: absolute;
+              width: 100px;
+              height: 100px;
+              border: 3px solid rgba(92, 225, 230, 0.2); /* สีโปร่งใสของ #5ce1e6 */
+              border-top-color: #5ce1e6; /* สีฟ้า accent หลัก */
+              border-radius: 50%;
+              animation: spin 1s linear infinite;
+              z-index: 1;
+            }
+            .loading-container {
+              position: relative;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              margin-bottom: 24px;
+            }
+            .loading-text {
+              color: #5ce1e6;
+              font-family: sans-serif;
+              font-size: 1rem;
+              font-weight: 500;
+              letter-spacing: 0.5px;
+              animation: pulse 2s ease-in-out infinite;
+            }
+          `}
+        </style>
+        <div className="loading-container">
+          <div className="spinner-ring"></div>
+          <img src={logo} alt="Loading" className="loading-logo" />
+        </div>
+        <div className="loading-text">กำลังเตรียมพร้อม...</div>
+      </div>
+    );
+  }
 
   // เลือกว่าจะแสดงหน้าไหนตามสถานะการ Login
   return authenticated ? <AppChat /> : <Login />;
