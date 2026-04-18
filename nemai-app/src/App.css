@@ -31,3 +31,59 @@ body {
 .app-root {
   min-height: 100%;
 }
+
+/* ===== Loading Screen Styles ===== */
+.loading-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f9f9f9; /* ปรับเป็นสีขาวโทนเดียวกับหน้า Chatbot */
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(0.95); }
+}
+
+.loading-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.loading-logo {
+  width: 55px;
+  height: 55px;
+  animation: pulse 2s ease-in-out infinite;
+  z-index: 2;
+  object-fit: contain;
+}
+
+.spinner-ring {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border: 3px solid rgba(92, 225, 230, 0.2); /* สีฟ้าโปร่งใส */
+  border-top-color: #5ce1e6; /* สีฟ้า accent หลัก */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  z-index: 1;
+}
+
+.loading-text {
+  color: #5ce1e6;
+  font-family: inherit; /* ใช้ AllumiSTD ตามที่กำหนดใน body */
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  animation: pulse 2s ease-in-out infinite;
+}
