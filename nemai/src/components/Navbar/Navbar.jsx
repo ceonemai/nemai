@@ -151,7 +151,6 @@ function Navbar() {
 
         <button
           className="nav-btn"
-          disabled={import.meta.env.PROD}
           onClick={() => {
             // ใช้ VITE_APP_URL จาก env (ตอน Deploy) หรือ fallback ไปที่ localhost (สำหรับ Local)
             const redirectUrl = import.meta.env.VITE_APP_URL || "http://localhost:5174";
