@@ -83,7 +83,7 @@ body {
   color: #5ce1e6;
   font-family: inherit; /* ใช้ AllumiSTD ตามที่กำหนดใน body */
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.5px;
   animation: pulse 2s ease-in-out infinite;
 }
