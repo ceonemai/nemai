@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./Footer.css";
+import { Link } from "react-router-dom";
 import nemLogo from "../../assets/images/NEM_LOGO_ALT.png";
 import discordIcon from "../../assets/images/icons/discord.svg";
 import xIcon from "../../assets/images/icons/x.png";
@@ -122,8 +123,8 @@ export default function Footer() {
 
         {/* LINKS */}
         <div className="footer-links">
-          {/* ค่อยมาใส่ NavLink ตรงนี้ */}
-
+          <Link to="/privacy-policies">Privacy Policies</Link>
+          <Link to="/terms-of-service">Terms of Service</Link>
         </div>
         {/* SOCIAL */}
         <div className="footer-socials">

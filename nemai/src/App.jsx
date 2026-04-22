@@ -7,6 +7,8 @@ import Mission from "./components/Mission/Mission";
 import Backbone from "./components/Backbone/Backbone";
 import Blockchain from "./components/Blockchain/Blockchain";
 import NumiPFP from "./components/NumiPFP/NumiPFP";
+import PrivacyPolicies from "./components/Footer/PrivacyPolicies";
+import TermsOfService from "./components/Footer/TermsOfService";
 
 function HomePage() {
   return (
@@ -43,6 +45,26 @@ function App() {
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/numipfp" element={<NumiPFP />} />
+      <Route 
+        path="/privacy-policies" 
+        element={
+          <>
+            <Navbar />
+            <PrivacyPolicies />
+            <Footer />
+          </>
+        } 
+      />
+      <Route 
+        path="/terms-of-service" 
+        element={
+          <>
+            <Navbar />
+            <TermsOfService />
+            <Footer />
+          </>
+        } 
+      />
     </Routes>
   );
 }
