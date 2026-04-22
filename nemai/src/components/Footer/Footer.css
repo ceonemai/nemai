@@ -159,11 +159,17 @@
 .footer-links a {
   color: rgba(247, 247, 247, 0.6);
   text-decoration: none;
+  font-family: "Prometo", sans-serif;
+  font-size: 15px;
+  letter-spacing: 0.5px;
   transition: all 0.3s ease;
+  display: inline-block;
 }
 
 .footer-links a:hover {
   color: var(--primary-green);
+  transform: translateY(-2px);
+  text-shadow: 0 0 10px rgba(139, 218, 161, 0.4);
 }
 
 

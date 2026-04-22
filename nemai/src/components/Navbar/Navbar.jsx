@@ -3,10 +3,13 @@ import logo from "../../assets/images/NEM_LOGO.png";
 import discordIcon from "../../assets/images/icons/discord.svg";
 import xIcon from "../../assets/images/icons/x.png";
 import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function Navbar() {
 
   const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   /* =========================
      SCROLL EFFECT
@@ -31,10 +34,33 @@ function Navbar() {
   }, []);
 
   /* =========================
+     HANDLE CROSS-PAGE SCROLL
+  ========================= */
+
+  useEffect(() => {
+    // ตรวจสอบว่าถ้ากลับมาหน้า Home และมี hash (เช่น /#why) ให้เลื่อนไปที่ section นั้น
+    if (location.pathname === "/" && location.hash) {
+      setTimeout(() => {
+        const id = location.hash.replace("#", "");
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 100); // ดีเลย์เล็กน้อยเพื่อให้ Component ของหน้า Home เรนเดอร์เสร็จก่อน
+    }
+  }, [location]);
+
+  /* =========================
      SMOOTH SCROLL
   ========================= */
 
   const scrollToSection = (id) => {
+
+    // ถ้าไม่ได้อยู่หน้า Home ให้เปลี่ยนหน้าไป Home ก่อน
+    if (location.pathname !== "/") {
+      navigate(`/#${id}`);
+      return;
+    }
 
     const element = document.getElementById(id);
 
@@ -55,12 +81,14 @@ function Navbar() {
 
       <div
         className="logo"
-        onClick={() =>
-          window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-          })
-        }
+        onClick={() => {
+          if (location.pathname !== "/") {
+            navigate("/");
+            window.scrollTo(0, 0); // กลับหน้า Home แล้วขึ้นบนสุด
+          } else {
+            window.scrollTo({ top: 0, behavior: "smooth" }); // ถ้าอยู่ Home เลื่อนขึ้นบนสุดนุ่มๆ
+          }
+        }}
       >
         <img src={logo} alt="NEM AI Logo" />
       </div>
