@@ -3,7 +3,7 @@
 // =========================================
 
 import { useState, useEffect, useRef } from "react";
-import { usePrivy } from "@privy-io/react-auth";
+import { usePrivy, getAccessToken } from "@privy-io/react-auth";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
@@ -30,6 +30,10 @@ export default function AppChat() {
   const [conversations, setConversations] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(false);
 
+  // Profile Popup State
+  const [isProfilePopupOpen, setIsProfilePopupOpen] = useState(false);
+  const [profileData, setProfileData] = useState(null);
+  const [profileLoading, setProfileLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
   // Fetch conversations history
@@ -92,6 +96,45 @@ export default function AppChat() {
   useEffect(() => {
     scrollToBottom();
   }, [messages, loading]);
+
+  const fetchUserProfile = async () => {
+    setProfileLoading(true);
+    try {
+      const token = await getAccessToken();
+      const response = await fetch("https://customer-service-iphv.onrender.com/api/v1/users", {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      });
+      if (response.ok) {
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const data = await response.json();
+          setProfileData(data.data || data);
+        } else {
+          console.error("Expected JSON but received:", contentType);
+          setProfileData({ id: "-", email: "API returned HTML (Check URL or Proxy)" });
+        }
+      } else {
+        console.error("Failed to fetch user profile", response.status);
+      }
+    } catch (err) {
+      console.error("Error fetching profile:", err);
+    } finally {
+      setProfileLoading(false);
+    }
+  };
+
+  const toggleProfilePopup = () => {
+    const willOpen = !isProfilePopupOpen;
+    setIsProfilePopupOpen(willOpen);
+    if (willOpen && !profileData) {
+      fetchUserProfile();
+    }
+  };
+
   const sendMessageToBackend = async (text) => {
     try {
       const response = await fetch(`${apiUrl}/chat-messages`, {
@@ -208,6 +251,47 @@ export default function AppChat() {
         <div className="sidebar-overlay" onClick={() => setIsSidebarOpen(false)}></div>
       )}
 
+      {/* 🔹 Profile Modal (Centered) */}
+      {isProfilePopupOpen && (
+        <div className="profile-modal-overlay" onClick={() => setIsProfilePopupOpen(false)}>
+          <div className="profile-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="profile-modal-header">
+              <h3>Edit Profile</h3>
+              <button className="modal-close-btn" onClick={() => setIsProfilePopupOpen(false)}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+            </div>
+            <div className="profile-modal-body">
+              {profileLoading ? (
+                <div className="profile-modal-loading">Loading profile...</div>
+              ) : profileData ? (
+                <div className="profile-modal-content">
+                  <div className="profile-modal-avatar">
+                    {profileData?.email?.charAt(0).toUpperCase() || displayName.charAt(0).toUpperCase() || "U"}
+                  </div>
+                  <div className="profile-input-box">
+                    <span className="inner-label">Name</span>
+                    <input type="text" value={profileData?.profile?.first_name || "-"} disabled readOnly />
+                  </div>
+                  <div className="profile-input-box">
+                    <span className="inner-label">Email</span>
+                    <input type="text" value={profileData?.email || "-"} disabled readOnly />
+                  </div>
+                </div>
+              ) : (
+                <div className="profile-modal-error">Could not load profile.</div>
+              )}
+            </div>
+            <div className="profile-modal-footer">
+              <button className="modal-logout-btn" onClick={logout}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                Log out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* 🔹 Sidebar (Gemini Style) */}
       <aside className={`appchat-sidebar ${isSidebarOpen ? "open" : ""}`}>
         <div className="sidebar-header">
@@ -259,13 +343,10 @@ export default function AppChat() {
         </div>
 
         <div className="sidebar-footer">
-          <div className="user-profile">
+          <div className="user-profile" onClick={toggleProfilePopup}>
             <div className="user-avatar">{displayName.charAt(0).toUpperCase()}</div>
             <span className="user-name">{displayName}</span>
           </div>
-          <button className="logout-btn" onClick={logout}>
-            Logout
-          </button>
         </div>
       </aside>
 
