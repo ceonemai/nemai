@@ -5,6 +5,7 @@
 import { useState, useEffect, useRef } from "react";
 import { usePrivy, getAccessToken } from "@privy-io/react-auth";
 import ReactMarkdown from "react-markdown";
+import { motion, AnimatePresence } from "framer-motion";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import "./AppChat.css";
@@ -35,6 +36,21 @@ export default function AppChat() {
   const [profileData, setProfileData] = useState(null);
   const [profileLoading, setProfileLoading] = useState(false);
   const messagesEndRef = useRef(null);
+  
+  // Profile Menu & PHD State
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [isPhdPopupOpen, setIsPhdPopupOpen] = useState(false);
+  const [phdFormData, setPhdFormData] = useState({
+    medicalConditionIds: [],
+    drugIds: [],
+    allergyCategoryIds: [],
+    allergyDetails: {}
+  });
+  const [medicalConditions, setMedicalConditions] = useState([]);
+  const [drugs, setDrugs] = useState([]);
+  const [allergyCategories, setAllergyCategories] = useState([]);
+  const [isSavingPhd, setIsSavingPhd] = useState(false);
+  const [masterDataLoading, setMasterDataLoading] = useState(false);
 
   // Fetch conversations history
   const fetchConversations = async () => {
@@ -101,12 +117,13 @@ export default function AppChat() {
     setProfileLoading(true);
     try {
       const token = await getAccessToken();
-      const response = await fetch("https://customer-service-iphv.onrender.com/api/v1/users", {
+      const response = await fetch("https://customer-api.nemai.io/api/v1/users", {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json"
-        }
+        },
+        cache: "no-store" // บังคับไม่ให้จำข้อมูลเก่า ขอข้อมูลใหม่สุดจาก Server เสมอ
       });
       if (response.ok) {
         const contentType = response.headers.get("content-type");
@@ -127,11 +144,117 @@ export default function AppChat() {
     }
   };
 
+  // Fetch Master Data for PHD
+  const fetchMasterData = async () => {
+    setMasterDataLoading(true);
+    try {
+      const token = await getAccessToken();
+      const headers = { Authorization: `Bearer ${token}` };
+
+      const [medRes, drugsRes, allergyCatsRes] = await Promise.all([
+        fetch("https://customer-api.nemai.io/api/v1/master/medical-conditions", { headers }),
+        fetch("https://customer-api.nemai.io/api/v1/master/drugs", { headers }),
+        fetch("https://customer-api.nemai.io/api/v1/master/allergy-categories", { headers })
+      ]);
+
+      if (medRes.ok) { const d = await medRes.json(); setMedicalConditions(d.data || d || []); }
+      if (drugsRes.ok) { const d = await drugsRes.json(); setDrugs(d.data || d || []); }
+      if (allergyCatsRes.ok) { const d = await allergyCatsRes.json(); setAllergyCategories(d.data || d || []); }
+    } catch (error) {
+      console.error("Error fetching master data:", error);
+    } finally {
+      setMasterDataLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (profileData && isPhdPopupOpen) {
+      const mc = profileData.medical_conditions || profileData.profile?.medical_conditions || [];
+      const dr = profileData.drugs || profileData.profile?.drugs || [];
+      const al = profileData.user_allergies || profileData.allergies || profileData.profile?.allergies || [];
+
+      setPhdFormData({
+        medicalConditionIds: mc.map(mc => String(mc.id)),
+        drugIds: dr.map(d => String(d.id)),
+        allergyCategoryIds: al.map(a => String(a.allergy_category_id || a.category_id)),
+        allergyDetails: al.reduce((acc, a) => ({ ...acc, [a.allergy_category_id || a.category_id]: a.allergy }), {})
+      });
+    }
+  }, [profileData, isPhdPopupOpen]);
+
+  const openPhdPopup = () => {
+    setIsPhdPopupOpen(true);
+    fetchUserProfile(); // เรียก API GET /api/v1/users ใหม่ทุกครั้งที่เปิดเพื่อให้ได้ข้อมูลล่าสุด
+    if (medicalConditions.length === 0) fetchMasterData();
+  };
+
+  const handlePhdChange = (e) => {
+    const { name, value } = e.target;
+    setPhdFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleAllergyDetailChange = (categoryId, value) => {
+    setPhdFormData(prev => ({ ...prev, allergyDetails: { ...prev.allergyDetails, [categoryId]: value } }));
+  };
+
+  const isPhdValid = phdFormData.allergyCategoryIds.every(
+    id => phdFormData.allergyDetails[id] && phdFormData.allergyDetails[id].trim() !== ""
+  );
+
+  const handleSavePhd = async () => {
+    setIsSavingPhd(true);
+    try {
+      // แปลงรูปแบบวันที่เหมือนใน SetupProfile (เผื่อกรณี API ส่งกลับมามี / หรือ T)
+      let formattedBirthDate = profileData?.birth_date || profileData?.profile?.birth_date || "";
+      if (formattedBirthDate.includes("/")) {
+        const [day, month, year] = formattedBirthDate.split("/");
+        formattedBirthDate = `${year}-${month}-${day}`;
+      } else if (formattedBirthDate.includes("T")) {
+        formattedBirthDate = formattedBirthDate.split("T")[0]; // ตัดเอาเฉพาะ YYYY-MM-DD
+      }
+
+      const token = await getAccessToken();
+      
+      const payload = {
+        id: user?.id || profileData?.id || "", // ยัด ID นอกสุดบังคับให้ Backend รู้ตัว
+        user_id: user?.id || profileData?.id || "",
+        allergies: phdFormData.allergyCategoryIds.map(id => ({
+          allergy: phdFormData.allergyDetails[id] || "",
+          category_id: Number(id),
+          allergy_category_id: Number(id), // ดักชื่อคอลัมน์เผื่อ Backend รับค่านี้
+          user_id: user?.id || profileData?.id || "" // บังคับผูก ID เข้ากับแต่ละ Allergy
+        })),
+        user_allergies: phdFormData.allergyCategoryIds.map(id => ({ allergy: phdFormData.allergyDetails[id] || "", category_id: Number(id), allergy_category_id: Number(id), user_id: user?.id || profileData?.id || "" })), // ดักชื่อ Array
+        birth_date: formattedBirthDate,
+        country_id: Number(profileData?.country_id || profileData?.profile?.country_id || 0),
+        drug_ids: phdFormData.drugIds.map(Number),
+        first_name: profileData?.first_name || profileData?.profile?.first_name || "",
+        gender: profileData?.gender || profileData?.profile?.gender || "",
+        last_name: profileData?.last_name || profileData?.profile?.last_name || "",
+        medical_condition_ids: phdFormData.medicalConditionIds.map(Number)
+      };
+
+      console.log("Submit Payload:", payload);
+
+      const response = await fetch("https://customer-api.nemai.io/api/v1/users/profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+        body: JSON.stringify(payload)
+      });
+      
+      if (response.ok) { setIsPhdPopupOpen(false); fetchUserProfile(); }
+      else { alert("Failed to save PHD."); }
+    } catch (error) {
+      console.error(error);
+      alert("Error saving PHD.");
+    } finally { setIsSavingPhd(false); }
+  };
+
   const toggleProfilePopup = () => {
     const willOpen = !isProfilePopupOpen;
     setIsProfilePopupOpen(willOpen);
-    if (willOpen && !profileData) {
-      fetchUserProfile();
+    if (willOpen) {
+      fetchUserProfile(); // ดึงข้อมูล Profile ใหม่ทุกครั้งเช่นกัน
     }
   };
 
@@ -244,6 +367,46 @@ export default function AppChat() {
   // เช็คว่าเริ่มแชทหรือยัง (ถ้ามีข้อความมากกว่า 1 หรือกำลังโหลด)
   const isChatStarted = messages.length > 1 || loading;
 
+  const mcData = profileData?.medical_conditions || profileData?.profile?.medical_conditions || [];
+  const drugData = profileData?.drugs || profileData?.profile?.drugs || [];
+  const allergyData = profileData?.user_allergies || profileData?.allergies || profileData?.profile?.allergies || [];
+
+  const combinedMcOptions = (() => {
+    const map = new Map();
+    mcData.forEach(c => {
+      if (c?.id) map.set(String(c.id), c.name);
+    });
+    medicalConditions.forEach(c => {
+      if (c?.id) map.set(String(c.id), c.name);
+    });
+    return Array.from(map, ([value, label]) => ({ value, label }));
+  })();
+
+  const combinedDrugOptions = (() => {
+    const map = new Map();
+    drugData.forEach(c => {
+      if (c?.id) map.set(String(c.id), c.name);
+    });
+    drugs.forEach(c => {
+      if (c?.id) map.set(String(c.id), c.name);
+    });
+    return Array.from(map, ([value, label]) => ({ value, label }));
+  })();
+
+  const combinedAllergyOptions = (() => {
+    const map = new Map();
+    allergyData.forEach(a => {
+      const catId = a?.allergy_category_id || a?.category_id;
+      if (catId) {
+        map.set(String(catId), a.category?.name || a.category_name || `Category ${catId}`);
+      }
+    });
+    allergyCategories.forEach(c => {
+      if (c?.id) map.set(String(c.id), c.name);
+    });
+    return Array.from(map, ([value, label]) => ({ value, label }));
+  })();
+
   return (
     <div className="appchat-layout">
       {/* Mobile Overlay */}
@@ -271,7 +434,7 @@ export default function AppChat() {
                   </div>
                   <div className="profile-input-box">
                     <span className="inner-label">Name</span>
-                    <input type="text" value={profileData?.profile?.first_name || "-"} disabled readOnly />
+                    <input type="text" value={profileData?.profile?.first_name || profileData?.first_name || "-"} disabled readOnly />
                   </div>
                   <div className="profile-input-box">
                     <span className="inner-label">Email</span>
@@ -282,11 +445,91 @@ export default function AppChat() {
                 <div className="profile-modal-error">Could not load profile.</div>
               )}
             </div>
-            <div className="profile-modal-footer">
-              <button className="modal-logout-btn" onClick={logout}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                Log out
+          </div>
+        </div>
+      )}
+
+      {/* 🔹 PHD Modal (Centered) */}
+      {isPhdPopupOpen && (
+        <div className="profile-modal-overlay" onClick={() => setIsPhdPopupOpen(false)}>
+          <div className="profile-modal phd-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="profile-modal-header">
+              <h3>Personal Health Data (PHD)</h3>
+              <button className="modal-close-btn" onClick={() => setIsPhdPopupOpen(false)}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
               </button>
+            </div>
+            <div className="profile-modal-body phd-modal-body">
+              {profileLoading || masterDataLoading ? (
+                <div className="profile-modal-loading">Loading data...</div>
+              ) : (
+                <div className="phd-form">
+                  <div className="form-group">
+                    <label className="phd-form-label">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                      Medical Conditions
+                    </label>
+                    <MultiSelectDropdown
+                      name="medicalConditionIds"
+                      value={phdFormData.medicalConditionIds}
+                      selectedValues={phdFormData.medicalConditionIds}
+                      onChange={handlePhdChange}
+                      options={combinedMcOptions}
+                      placeholder="Select conditions (Optional)"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label className="phd-form-label">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 2a2 2 0 0 0-2 2v5H4a2 2 0 0 0-2 2v2c0 1.1.9 2 2 2h5v5c0 1.1.9 2 2 2h2a2 2 0 0 0 2-2v-5h5a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-5V4a2 2 0 0 0-2-2h-2z"></path></svg>
+                      Current Medications (Drugs)
+                    </label>
+                    <MultiSelectDropdown
+                      name="drugIds"
+                      value={phdFormData.drugIds}
+                      selectedValues={phdFormData.drugIds}
+                      onChange={handlePhdChange}
+                      options={combinedDrugOptions}
+                      placeholder="Select drugs (Optional)"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label className="phd-form-label">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"></path><path d="m8.5 8.5 7 7"></path></svg>
+                      Allergies
+                    </label>
+                    <MultiSelectDropdown
+                      name="allergyCategoryIds"
+                      value={phdFormData.allergyCategoryIds}
+                      selectedValues={phdFormData.allergyCategoryIds}
+                      onChange={handlePhdChange}
+                      options={combinedAllergyOptions}
+                      placeholder="Select allergies (Optional)"
+                    />
+
+                    <AnimatePresence>
+                      {phdFormData.allergyCategoryIds.length > 0 && (
+                        <motion.div className="allergy-details-container" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}>
+                          {phdFormData.allergyCategoryIds.map(id => {
+                            const category = combinedAllergyOptions.find(c => String(c.value) === String(id));
+                            return (
+                              <div key={id} className="allergy-detail-input">
+                                <label className="allergy-detail-label">Specify {category?.label} <span className="required-asterisk">*</span></label>
+                                <input type="text" className="allergy-text-input" placeholder={getAllergyPlaceholder(category?.label)} value={phdFormData.allergyDetails[id] || ""} onChange={(e) => handleAllergyDetailChange(id, e.target.value)} required />
+                              </div>
+                            );
+                          })}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="profile-modal-footer phd-modal-footer">
+              <button className="phd-cancel-btn" onClick={() => setIsPhdPopupOpen(false)}>Cancel</button>
+              <button className="phd-save-btn" onClick={handleSavePhd} disabled={isSavingPhd || !isPhdValid}>{isSavingPhd ? "Saving..." : "Save"}</button>
             </div>
           </div>
         </div>
@@ -295,7 +538,7 @@ export default function AppChat() {
       {/* 🔹 Sidebar (Gemini Style) */}
       <aside className={`appchat-sidebar ${isSidebarOpen ? "open" : ""}`}>
         <div className="sidebar-header">
-          <div className="brand-info" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <div className="brand-info">
             <img src={logo} alt="NEM AI Logo" className="sidebar-logo" />
             <div className="brand-title">NEM AI</div>
           </div>
@@ -319,7 +562,7 @@ export default function AppChat() {
               className={`history-item ${conv.id === conversationId ? "active" : ""}`}
               onClick={() => handleConversationClick(conv.id)}
             >
-              <span className="history-icon" style={{ display: "flex", alignItems: "center" }}>
+              <span className="history-icon">
                 <svg
                   width="18"
                   height="18"
@@ -343,7 +586,54 @@ export default function AppChat() {
         </div>
 
         <div className="sidebar-footer">
-          <div className="user-profile" onClick={toggleProfilePopup}>
+          <AnimatePresence>
+            {isProfileMenuOpen && (
+              <motion.div
+                initial="closed"
+                animate="open"
+                exit="closed"
+                variants={{
+                  open: {
+                    clipPath: "inset(0% 0% 0% 0% round 8px)",
+                    transition: {
+                      type: "spring",
+                      bounce: 0,
+                      duration: 0.5,
+                      delayChildren: 0.2,
+                      staggerChildren: 0.05
+                    }
+                  },
+                  closed: {
+                    clipPath: "inset(90% 50% 10% 50% round 8px)",
+                    transition: {
+                      type: "spring",
+                      bounce: 0,
+                      duration: 0.3
+                    }
+                  }
+                }}
+                className="profile-menu-popup"
+              >
+                <motion.div
+                  variants={{ open: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }, closed: { opacity: 0, y: 20, transition: { duration: 0.2 } } }}
+                  onClick={() => { setIsProfileMenuOpen(false); toggleProfilePopup(); }} className="profile-menu-item">
+                  Profile
+                </motion.div>
+                <motion.div
+                  variants={{ open: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }, closed: { opacity: 0, y: 20, transition: { duration: 0.2 } } }}
+                  onClick={() => { setIsProfileMenuOpen(false); openPhdPopup(); }} className="profile-menu-item">
+                  Personal Health Data (PHD)
+                </motion.div>
+                <motion.div
+                  variants={{ open: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }, closed: { opacity: 0, y: 20, transition: { duration: 0.2 } } }}
+                  onClick={() => { setIsProfileMenuOpen(false); logout(); }} className="profile-menu-item logout">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                  Log out
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <div className="user-profile" onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}>
             <div className="user-avatar">{displayName.charAt(0).toUpperCase()}</div>
             <span className="user-name">{displayName}</span>
           </div>
@@ -360,7 +650,7 @@ export default function AppChat() {
           <span className="mobile-title">NEM AI</span>
         </div>
 
-        <div className="chat-messages" style={{ display: isChatStarted ? "flex" : "none" }}>
+        <div className="chat-messages">
           {messages.map((msg) => (
             <Message key={msg.id} role={msg.role} content={msg.content} displayName={displayName} />
           ))}
@@ -402,6 +692,88 @@ export default function AppChat() {
     </div>
   );
 }
+
+const MultiSelectDropdown = ({ options, selectedValues, onChange, placeholder, name }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) setIsOpen(false);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const rawFilteredOptions = options.filter(opt => opt.label.toLowerCase().includes(searchTerm.toLowerCase()));
+  const filteredOptions = rawFilteredOptions.slice(0, 100);
+
+  const toggleSelection = (val) => {
+    const newValues = selectedValues.includes(String(val)) ? selectedValues.filter(v => v !== String(val)) : [...selectedValues, String(val)];
+    onChange({ target: { name, value: newValues } });
+  };
+
+  const removeValue = (e, val) => {
+    e.stopPropagation();
+    onChange({ target: { name, value: selectedValues.filter(v => v !== String(val)) } });
+  };
+
+  return (
+      <div className="custom-dropdown" ref={dropdownRef}>
+        <div className={`dropdown-header multi-select-header ${isOpen ? "open" : ""}`} onClick={() => { setIsOpen(!isOpen); setSearchTerm(""); }}>
+          <div className="chips-container">
+            {selectedValues.length > 0 ? (
+              selectedValues.map(val => {
+                const opt = options.find(o => o.value === String(val));
+                return opt ? (
+                  <div key={val} className="chip">
+                    {opt.label}
+                    <span className="chip-remove" onClick={(e) => removeValue(e, val)}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
+                  </div>
+                ) : null;
+              })
+            ) : (<span className="placeholder-text">{placeholder}</span>)}
+          </div>
+          <motion.svg animate={{ rotate: isOpen ? 180 : 0 }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="dropdown-chevron"><polyline points="6 9 12 15 18 9"></polyline></motion.svg>
+        </div>
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div className="dropdown-list-container" initial={{ opacity: 0, y: -10, scaleY: 0.95 }} animate={{ opacity: 1, y: 0, scaleY: 1 }} exit={{ opacity: 0, y: -10, scaleY: 0.95 }} transition={{ duration: 0.2, ease: "easeOut" }}>
+              <div className="dropdown-search-box">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onClick={(e) => e.stopPropagation()} autoFocus />
+              </div>
+              <div className="dropdown-list">
+                {filteredOptions.length > 0 ? (
+                  filteredOptions.map((opt) => {
+                    const isSelected = selectedValues.includes(String(opt.value));
+                    return (
+                      <div key={opt.value} className={`dropdown-item ${isSelected ? "selected" : ""}`} onClick={() => toggleSelection(opt.value)}>
+                        {opt.label}
+                        {isSelected && (<motion.svg className="dropdown-check" initial={{ scale: 0 }} animate={{ scale: 1 }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2187AA" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></motion.svg>)}
+                      </div>
+                    );
+                  })
+                ) : (<div className="dropdown-no-results">No results found</div>)}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+  );
+};
+
+const getAllergyPlaceholder = (categoryName) => {
+  if (!categoryName) return "e.g. Please specify details...";
+  const name = categoryName.toLowerCase();
+  if (name.includes("food")) return "e.g. Peanuts, Shellfish, Dairy...";
+  if (name.includes("respiratory") || name.includes("environmental")) return "e.g. Pollen, Dust mites, Pet dander...";
+  if (name.includes("skin") || name.includes("contact")) return "e.g. Latex, Nickel, Poison ivy...";
+  if (name.includes("drug")) return "e.g. Penicillin, Aspirin, Ibuprofen...";
+  if (name.includes("insect") || name.includes("venom")) return "e.g. Bee stings, Wasp venom...";
+  return "e.g. Please specify details...";
+};
 
 function Message({ role, content, displayName }) {
   const isUser = role === "user";
