@@ -2,7 +2,7 @@
 // File: src/components/Appchat/AppChat.jsx
 // =========================================
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo, memo } from "react";
 import { usePrivy, getAccessToken } from "@privy-io/react-auth";
 import ReactMarkdown from "react-markdown";
 import { motion, AnimatePresence } from "framer-motion";
@@ -17,7 +17,7 @@ const apiKey = import.meta.env.VITE_DIFY_API_KEY;
 const QUOTA_ERROR_MSG = "⚠️ **System is busy (Quota Exceeded)**\n\nThe system is currently handling many requests. Please wait a moment.";
 
 export default function AppChat() {
-  const { logout, user } = usePrivy();
+  const { ready, logout, user } = usePrivy();
 
   const [messages, setMessages] = useState([
     { id: 1, role: "assistant", content: "Hi, I'm NEM AI. How can I help you today?" }
@@ -41,6 +41,8 @@ export default function AppChat() {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isPhdPopupOpen, setIsPhdPopupOpen] = useState(false);
   const [phdFormData, setPhdFormData] = useState({
+    weight: "",
+    height: "",
     medicalConditionIds: [],
     drugIds: [],
     allergyCategoryIds: [],
@@ -172,8 +174,12 @@ export default function AppChat() {
       const mc = profileData.medical_conditions || profileData.profile?.medical_conditions || [];
       const dr = profileData.drugs || profileData.profile?.drugs || [];
       const al = profileData.user_allergies || profileData.allergies || profileData.profile?.allergies || [];
+      const w = profileData.weight || profileData.profile?.weight || "";
+      const h = profileData.height || profileData.profile?.height || "";
 
       setPhdFormData({
+        weight: w ? String(w) : "",
+        height: h ? String(h) : "",
         medicalConditionIds: mc.map(mc => String(mc.id)),
         drugIds: dr.map(d => String(d.id)),
         allergyCategoryIds: al.map(a => String(a.allergy_category_id || a.category_id)),
@@ -197,9 +203,17 @@ export default function AppChat() {
     setPhdFormData(prev => ({ ...prev, allergyDetails: { ...prev.allergyDetails, [categoryId]: value } }));
   };
 
-  const isPhdValid = phdFormData.allergyCategoryIds.every(
-    id => phdFormData.allergyDetails[id] && phdFormData.allergyDetails[id].trim() !== ""
-  );
+  const weightNum = Number(phdFormData.weight);
+  const heightNum = Number(phdFormData.height);
+  const isWeightOutOfBounds = phdFormData.weight !== "" && (weightNum < 2 || weightNum > 300);
+  const isHeightOutOfBounds = phdFormData.height !== "" && (heightNum < 30 || heightNum > 300);
+
+  const isPhdValid =
+    phdFormData.weight !== "" && !isWeightOutOfBounds &&
+    phdFormData.height !== "" && !isHeightOutOfBounds &&
+    phdFormData.allergyCategoryIds.every(
+      id => phdFormData.allergyDetails[id] && phdFormData.allergyDetails[id].trim() !== ""
+    );
 
   const handleSavePhd = async () => {
     setIsSavingPhd(true);
@@ -228,10 +242,11 @@ export default function AppChat() {
         birth_date: formattedBirthDate,
         country_id: Number(profileData?.country_id || profileData?.profile?.country_id || 0),
         drug_ids: phdFormData.drugIds.map(Number),
-        first_name: profileData?.first_name || profileData?.profile?.first_name || "",
+        name: profileData?.name || profileData?.profile?.name || "-",
         gender: profileData?.gender || profileData?.profile?.gender || "",
-        last_name: profileData?.last_name || profileData?.profile?.last_name || "",
-        medical_condition_ids: phdFormData.medicalConditionIds.map(Number)
+        medical_condition_ids: phdFormData.medicalConditionIds.map(Number),
+        weight: Number(phdFormData.weight),
+        height: Number(phdFormData.height)
       };
 
       console.log("Submit Payload:", payload);
@@ -367,12 +382,9 @@ export default function AppChat() {
   // เช็คว่าเริ่มแชทหรือยัง (ถ้ามีข้อความมากกว่า 1 หรือกำลังโหลด)
   const isChatStarted = messages.length > 1 || loading;
 
-  const mcData = profileData?.medical_conditions || profileData?.profile?.medical_conditions || [];
-  const drugData = profileData?.drugs || profileData?.profile?.drugs || [];
-  const allergyData = profileData?.user_allergies || profileData?.allergies || profileData?.profile?.allergies || [];
-
-  const combinedMcOptions = (() => {
+  const combinedMcOptions = useMemo(() => {
     const map = new Map();
+    const mcData = profileData?.medical_conditions || profileData?.profile?.medical_conditions || [];
     mcData.forEach(c => {
       if (c?.id) map.set(String(c.id), c.name);
     });
@@ -380,10 +392,11 @@ export default function AppChat() {
       if (c?.id) map.set(String(c.id), c.name);
     });
     return Array.from(map, ([value, label]) => ({ value, label }));
-  })();
+  }, [profileData, medicalConditions]);
 
-  const combinedDrugOptions = (() => {
+  const combinedDrugOptions = useMemo(() => {
     const map = new Map();
+    const drugData = profileData?.drugs || profileData?.profile?.drugs || [];
     drugData.forEach(c => {
       if (c?.id) map.set(String(c.id), c.name);
     });
@@ -391,10 +404,11 @@ export default function AppChat() {
       if (c?.id) map.set(String(c.id), c.name);
     });
     return Array.from(map, ([value, label]) => ({ value, label }));
-  })();
+  }, [profileData, drugs]);
 
-  const combinedAllergyOptions = (() => {
+  const combinedAllergyOptions = useMemo(() => {
     const map = new Map();
+    const allergyData = profileData?.user_allergies || profileData?.allergies || profileData?.profile?.allergies || [];
     allergyData.forEach(a => {
       const catId = a?.allergy_category_id || a?.category_id;
       if (catId) {
@@ -405,7 +419,18 @@ export default function AppChat() {
       if (c?.id) map.set(String(c.id), c.name);
     });
     return Array.from(map, ([value, label]) => ({ value, label }));
-  })();
+  }, [profileData, allergyCategories]);
+
+  // ป้องกันการ Re-render รัวๆ โดยโชว์ Loading จนกว่า Privy จะเตรียมสถานะ User เสร็จ
+  if (!ready) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor: "#f8fafc" }}>
+        <svg className="spinner" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#2187AA" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+        </svg>
+      </div>
+    );
+  }
 
   return (
     <div className="appchat-layout">
@@ -434,7 +459,7 @@ export default function AppChat() {
                   </div>
                   <div className="profile-input-box">
                     <span className="inner-label">Name</span>
-                    <input type="text" value={profileData?.profile?.first_name || profileData?.first_name || "-"} disabled readOnly />
+                    <input type="text" value={profileData?.profile?.name || profileData?.name || "-"} disabled readOnly />
                   </div>
                   <div className="profile-input-box">
                     <span className="inner-label">Email</span>
@@ -464,6 +489,23 @@ export default function AppChat() {
                 <div className="profile-modal-loading">Loading data...</div>
               ) : (
                 <div className="phd-form">
+                  <div style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
+                    <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                      <label className="phd-form-label">Weight (kg) <span style={{ color: "#e11d48" }}>*</span></label>
+                      <input type="number" name="weight" className="allergy-text-input" placeholder="e.g. 65" value={phdFormData.weight} onChange={handlePhdChange} min="2" max="300" required 
+                        style={isWeightOutOfBounds ? { borderColor: "#e11d48", backgroundColor: "#fff1f2", color: "#e11d48" } : {}}
+                      />
+                      {isWeightOutOfBounds && <span style={{ color: "#e11d48", fontSize: "0.75rem", marginTop: "4px", display: "block" }}>Valid range: 2 - 300 kg</span>}
+                    </div>
+                    <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                      <label className="phd-form-label">Height (cm) <span style={{ color: "#e11d48" }}>*</span></label>
+                      <input type="number" name="height" className="allergy-text-input" placeholder="e.g. 170" value={phdFormData.height} onChange={handlePhdChange} min="30" max="300" required 
+                        style={isHeightOutOfBounds ? { borderColor: "#e11d48", backgroundColor: "#fff1f2", color: "#e11d48" } : {}}
+                      />
+                      {isHeightOutOfBounds && <span style={{ color: "#e11d48", fontSize: "0.75rem", marginTop: "4px", display: "block" }}>Valid range: 30 - 300 cm</span>}
+                    </div>
+                  </div>
+
                   <div className="form-group">
                     <label className="phd-form-label">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
@@ -775,7 +817,7 @@ const getAllergyPlaceholder = (categoryName) => {
   return "e.g. Please specify details...";
 };
 
-function Message({ role, content, displayName }) {
+const Message = memo(function Message({ role, content, displayName }) {
   const isUser = role === "user";
   return (
     <div className={`message-row ${isUser ? "user" : "assistant"}`}>
@@ -791,4 +833,4 @@ function Message({ role, content, displayName }) {
       {isUser && <div className="avatar user">{displayName?.charAt(0).toUpperCase() || "U"}</div>}
     </div>
   );
-}
+});
