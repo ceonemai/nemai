@@ -420,12 +420,13 @@ export default function SetupProfile() {
   }, [getAccessToken]);
 
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    name: "",
     gender: "",
     birthDate: "",
     countryId: "",
     // Step 2 Data
+    weight: "",
+    height: "",
     medicalConditionIds: [],
     drugIds: [],
     allergyCategoryIds: [],
@@ -471,10 +472,11 @@ export default function SetupProfile() {
         birth_date: formattedBirthDate,
         country_id: Number(formData.countryId),
         drug_ids: formData.drugIds.map(Number),
-        first_name: formData.firstName,
+        name: formData.name || "-",
         gender: formData.gender,
-        last_name: formData.lastName,
-        medical_condition_ids: formData.medicalConditionIds.map(Number)
+        medical_condition_ids: formData.medicalConditionIds.map(Number),
+        weight: Number(formData.weight),
+        height: Number(formData.height)
       };
 
       console.log("Submit Payload:", payload);
@@ -512,16 +514,24 @@ export default function SetupProfile() {
 
   // ตรวจสอบว่าฟิลด์ที่จำเป็นใน Step 1 ถูกกรอกครบหรือยัง
   const isStep1Valid =
-    formData.firstName.trim() !== "" &&
-    formData.lastName.trim() !== "" &&
+    formData.name.trim() !== "" &&
     formData.gender !== "" &&
     formData.birthDate.length === 10 &&
     formData.countryId !== "";
 
+  // ตรวจสอบความถูกต้องของสัดส่วนร่างกาย
+  const weightNum = Number(formData.weight);
+  const heightNum = Number(formData.height);
+  const isWeightOutOfBounds = formData.weight !== "" && (weightNum < 2 || weightNum > 300);
+  const isHeightOutOfBounds = formData.height !== "" && (heightNum < 30 || heightNum > 300);
+
   // ตรวจสอบว่าฟิลด์ที่จำเป็นใน Step 2 ถูกกรอกครบหรือยัง
-  const isStep2Valid = formData.allergyCategoryIds.every(
-    id => formData.allergyDetails[id] && formData.allergyDetails[id].trim() !== ""
-  ); // ถ้าเลือก Allergy ต้องกรอกรายละเอียดด้วย
+  const isStep2Valid =
+    formData.weight !== "" && !isWeightOutOfBounds &&
+    formData.height !== "" && !isHeightOutOfBounds &&
+    formData.allergyCategoryIds.every(
+      id => formData.allergyDetails[id] && formData.allergyDetails[id].trim() !== ""
+    ); // ถ้าเลือก Allergy ต้องกรอกรายละเอียดด้วย
 
   // คำนวณเปอร์เซ็นต์ความคืบหน้า
   const progressPercent = Math.round((step / totalSteps) * 100);
@@ -554,15 +564,9 @@ export default function SetupProfile() {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
             >
-              <div className="form-row">
-                <div className="form-group">
-                  <label>First Name <span className="required">*</span></label>
-                  <input type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} required />
-                </div>
-                <div className="form-group">
-                  <label>Last Name <span className="required">*</span></label>
-                  <input type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} required />
-                </div>
+              <div className="form-group">
+                <label>Full Name <span className="required">*</span></label>
+                <input type="text" name="name" placeholder="Full Name" value={formData.name} onChange={handleChange} required />
               </div>
 
               <div className="form-row">
@@ -606,6 +610,33 @@ export default function SetupProfile() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
             >
+              <div className="form-row">
+                <div className="form-group">
+                  <label>
+                    <span className="label-icon">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z"></path><path d="M12 12l2.5-2.5"></path><circle cx="12" cy="12" r="2"></circle></svg>
+                    </span>
+                    <span>Weight (kg) <span className="required">*</span></span>
+                  </label>
+                <input type="number" name="weight" placeholder="e.g. 65" value={formData.weight} onChange={handleChange} min="2" max="300" required 
+                  style={isWeightOutOfBounds ? { borderColor: "#e11d48", backgroundColor: "#fff1f2", color: "#e11d48" } : {}}
+                />
+                {isWeightOutOfBounds && <span style={{ color: "#e11d48", fontSize: "0.75rem", marginTop: "4px", display: "block" }}>Please enter a valid weight (2 - 300 kg)</span>}
+                </div>
+                <div className="form-group">
+                  <label>
+                    <span className="label-icon">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="8 15 12 19 16 15"></polyline><polyline points="8 9 12 5 16 9"></polyline><line x1="12" y1="5" x2="12" y2="19"></line></svg>
+                    </span>
+                    <span>Height (cm) <span className="required">*</span></span>
+                  </label>
+                <input type="number" name="height" placeholder="e.g. 170" value={formData.height} onChange={handleChange} min="30" max="300" required 
+                  style={isHeightOutOfBounds ? { borderColor: "#e11d48", backgroundColor: "#fff1f2", color: "#e11d48" } : {}}
+                />
+                {isHeightOutOfBounds && <span style={{ color: "#e11d48", fontSize: "0.75rem", marginTop: "4px", display: "block" }}>Please enter a valid height (30 - 300 cm)</span>}
+                </div>
+              </div>
+
               <div className="form-group">
                 <label>
                   <span className="label-icon">
@@ -639,8 +670,6 @@ export default function SetupProfile() {
                   placeholder="Select drugs (Optional)"
                 />
               </div>
-
-              <div className="section-title">Allergies</div>
 
               <div className="form-group">
                 <label>
