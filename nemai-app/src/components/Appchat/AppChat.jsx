@@ -2,9 +2,10 @@
 // File: src/components/Appchat/AppChat.jsx
 // =========================================
 
-import { useState, useEffect, useRef, useMemo, memo } from "react";
+import { useState, useEffect, useRef, useMemo, memo, useCallback } from "react";
 import { usePrivy, getAccessToken } from "@privy-io/react-auth";
 import ReactMarkdown from "react-markdown";
+/* eslint-disable-next-line no-unused-vars */
 import { motion, AnimatePresence } from "framer-motion";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
@@ -55,7 +56,7 @@ export default function AppChat() {
   const [masterDataLoading, setMasterDataLoading] = useState(false);
 
   // Fetch conversations history
-  const fetchConversations = async () => {
+  const fetchConversations = useCallback(async () => {
     if (!user?.id) return;
     setHistoryLoading(true);
     try {
@@ -71,7 +72,7 @@ export default function AppChat() {
     } finally {
       setHistoryLoading(false);
     }
-  };
+  }, [user?.id]);
 
   // Load a specific conversation
   const loadConversation = async (id) => {
@@ -105,7 +106,7 @@ export default function AppChat() {
   // Fetch history on user load
   useEffect(() => {
     if (user?.id) fetchConversations();
-  }, [user?.id]);
+  }, [user?.id, fetchConversations]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
