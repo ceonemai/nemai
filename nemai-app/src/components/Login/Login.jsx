@@ -1,3 +1,4 @@
+/* eslint-disable-next-line no-unused-vars */
 import { motion } from "framer-motion";
 import { usePrivy } from "@privy-io/react-auth";
 import "./Login.css";
@@ -6,10 +7,17 @@ import logo from "../../../../nemai/src/assets/images/LogogramFullColor.png";
 export default function Login() {
   const { login, logout, authenticated, ready, user } = usePrivy();
 
-  if (!ready) return null;
-
   return (
     <div className="login-page">
+      {!ready && (
+        <div className="login-loading-overlay">
+          <div className="login-loading-card">
+            <img src={logo} alt="NEM AI Logo" className="login-loading-logo" />
+            <div className="login-loading-text">Loading...</div>
+          </div>
+        </div>
+      )}
+
       <div className="login-bg" />
 
       <div className="login-center">
@@ -49,7 +57,7 @@ export default function Login() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
           >
-        Log in / Sign up
+            Log in / Sign up
           </motion.button>
         ) : (
           <>
@@ -59,10 +67,7 @@ export default function Login() {
               <b>{user?.email?.address || user?.twitter?.username}</b>
             </div>
 
-            <motion.button
-              className="login-btn secondary"
-              onClick={logout}
-            >
+            <motion.button className="login-btn secondary" onClick={logout}>
               Log out
             </motion.button>
           </>
