@@ -470,14 +470,16 @@ export default function SetupProfile() {
           allergy: formData.allergyDetails[id] || "",
           category_id: Number(id)
         })),
-        birth_date: formattedBirthDate,
-        country_id: Number(formData.countryId),
         drug_ids: formData.drugIds.map(Number),
-        name: formData.name || "-",
-        gender: formData.gender,
         medical_condition_ids: formData.medicalConditionIds.map(Number),
-        weight: Number(formData.weight),
-        height: Number(formData.height)
+        profile: {
+          birth_date: formattedBirthDate,
+          country_id: Number(formData.countryId),
+          gender: formData.gender,
+          height: Number(formData.height),
+          name: formData.name || "-",
+          weight: Number(formData.weight)
+        }
       };
 
       console.log("Submit Payload:", payload);
@@ -486,7 +488,7 @@ export default function SetupProfile() {
       try {
         const token = await getAccessToken();
         const response = await fetch("https://customer-api.nemai.io/api/v1/users/profile", {
-          method: "POST",
+          method: "PATCH",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`

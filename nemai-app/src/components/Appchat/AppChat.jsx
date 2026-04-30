@@ -231,29 +231,26 @@ export default function AppChat() {
       const token = await getAccessToken();
       
       const payload = {
-        id: user?.id || profileData?.id || "", // ยัด ID นอกสุดบังคับให้ Backend รู้ตัว
-        user_id: user?.id || profileData?.id || "",
         allergies: phdFormData.allergyCategoryIds.map(id => ({
           allergy: phdFormData.allergyDetails[id] || "",
-          category_id: Number(id),
-          allergy_category_id: Number(id), // ดักชื่อคอลัมน์เผื่อ Backend รับค่านี้
-          user_id: user?.id || profileData?.id || "" // บังคับผูก ID เข้ากับแต่ละ Allergy
+          category_id: Number(id)
         })),
-        user_allergies: phdFormData.allergyCategoryIds.map(id => ({ allergy: phdFormData.allergyDetails[id] || "", category_id: Number(id), allergy_category_id: Number(id), user_id: user?.id || profileData?.id || "" })), // ดักชื่อ Array
-        birth_date: formattedBirthDate,
-        country_id: Number(profileData?.country_id || profileData?.profile?.country_id || 0),
         drug_ids: phdFormData.drugIds.map(Number),
-        name: profileData?.name || profileData?.profile?.name || "-",
-        gender: profileData?.gender || profileData?.profile?.gender || "",
         medical_condition_ids: phdFormData.medicalConditionIds.map(Number),
-        weight: Number(phdFormData.weight),
-        height: Number(phdFormData.height)
+        profile: {
+          birth_date: formattedBirthDate,
+          country_id: Number(profileData?.country_id || profileData?.profile?.country_id || 0),
+          gender: profileData?.gender || profileData?.profile?.gender || "",
+          height: Number(phdFormData.height),
+          name: profileData?.name || profileData?.profile?.name || "-",
+          weight: Number(phdFormData.weight)
+        }
       };
 
       console.log("Submit Payload:", payload);
 
       const response = await fetch("https://customer-api.nemai.io/api/v1/users/profile", {
-        method: "POST",
+        method: "PATCH",
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
         body: JSON.stringify(payload)
       });
