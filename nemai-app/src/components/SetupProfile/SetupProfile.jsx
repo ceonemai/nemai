@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import "./SetupProfile.css";
 import { usePrivy } from "@privy-io/react-auth";
 
-const apiUrl = import.meta.env.VITE_CHAT_AI_SERVICE_URL ?? "https://customer-api.nemai.io";
+const customerApiUrl = "https://customer-api.nemai.io";
 
 // Component สำหรับ Dropdown แบบค้นหาได้ สไตล์ AI (Glassmorphism & Animated)
 const SearchableDropdown = ({ options, value, onChange, placeholder, name, hideSearch = false }) => {
@@ -404,10 +404,10 @@ export default function SetupProfile() {
         const headers = { Authorization: `Bearer ${token}` };
 
         const [countriesRes, medRes, drugsRes, allergyCatsRes] = await Promise.all([
-          fetch(`${apiUrl}/api/v1/master/countries`, { headers }),
-          fetch(`${apiUrl}/api/v1/master/medical-conditions`, { headers }),
-          fetch(`${apiUrl}/api/v1/master/drugs`, { headers }),
-          fetch(`${apiUrl}/api/v1/master/allergy-categories`, { headers })
+          fetch(`${customerApiUrl}/api/v1/master/countries`, { headers }),
+          fetch(`${customerApiUrl}/api/v1/master/medical-conditions`, { headers }),
+          fetch(`${customerApiUrl}/api/v1/master/drugs`, { headers }),
+          fetch(`${customerApiUrl}/api/v1/master/allergy-categories`, { headers })
         ]);
 
         if (countriesRes.ok) { const d = await countriesRes.json(); setCountries(d.data || d || []); }
@@ -489,7 +489,7 @@ export default function SetupProfile() {
       setIsSubmitting(true);
       try {
         const token = await getAccessToken();
-        const response = await fetch(`${apiUrl}/api/v1/users/profile`, {
+        const response = await fetch(`${customerApiUrl}/api/v1/users/profile`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
