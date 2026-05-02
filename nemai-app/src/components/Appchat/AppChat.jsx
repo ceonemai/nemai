@@ -13,6 +13,7 @@ import "./AppChat.css";
 import logo from "../../../../nemai/src/assets/images/LogogramFullColor.png";
 
 const apiUrl = import.meta.env.VITE_CHAT_AI_SERVICE_URL ?? "https://customer-api.nemai.io";
+const customerApiUrl = "https://customer-api.nemai.io";
 
 const GENERIC_ERROR_MSG = "Sorry, something went wrong. Please try again later.";
 const VALIDATION_ERROR_MSG = "Please check your message and try again.";
@@ -138,7 +139,7 @@ export default function AppChat() {
     setProfileLoading(true);
     try {
       const token = await getAccessToken();
-      const response = await fetch(`${apiUrl}/api/v1/users`, {
+      const response = await fetch(`${customerApiUrl}/api/v1/users`, {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -173,9 +174,9 @@ export default function AppChat() {
       const headers = { Authorization: `Bearer ${token}` };
 
       const [medRes, drugsRes, allergyCatsRes] = await Promise.all([
-        fetch(`${apiUrl}/api/v1/master/medical-conditions`, { headers }),
-        fetch(`${apiUrl}/api/v1/master/drugs`, { headers }),
-        fetch(`${apiUrl}/api/v1/master/allergy-categories`, { headers })
+        fetch(`${customerApiUrl}/api/v1/master/medical-conditions`, { headers }),
+        fetch(`${customerApiUrl}/api/v1/master/drugs`, { headers }),
+        fetch(`${customerApiUrl}/api/v1/master/allergy-categories`, { headers })
       ]);
 
       if (medRes.ok) { const d = await medRes.json(); setMedicalConditions(d.data || d || []); }
@@ -267,7 +268,7 @@ export default function AppChat() {
 
       console.log("Submit Payload:", payload);
 
-      const response = await fetch(`${apiUrl}/api/v1/users/profile`, {
+      const response = await fetch(`${customerApiUrl}/api/v1/users/profile`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
         body: JSON.stringify(payload)
@@ -464,7 +465,9 @@ export default function AppChat() {
   };
 
   const displayName =
-    user?.email?.address ||
+    profileData?.profile?.name ||
+    profileData?.name ||
+    user?.name ||
     user?.twitter?.username ||
     "User";
 
@@ -845,7 +848,7 @@ export default function AppChat() {
 
         {!isChatStarted && (
           <div className="welcome-text">
-            <h1>Hello, {displayName.split('@')[0]}</h1>
+            <h1>Hello, {displayName}</h1>
             <p>How can I help you today?</p>
           </div>
         )}
