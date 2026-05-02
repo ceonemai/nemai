@@ -12,10 +12,19 @@ import remarkGfm from "remark-gfm";
 import "./AppChat.css";
 import logo from "../../../../nemai/src/assets/images/LogogramFullColor.png";
 
-const apiUrl = import.meta.env.VITE_DIFY_API_URL || "https://api.dify.ai/v1";
-const apiKey = import.meta.env.VITE_DIFY_API_KEY;
+const apiUrl = import.meta.env.VITE_CHAT_AI_SERVICE_URL;
 
-const QUOTA_ERROR_MSG = "⚠️ **System is busy (Quota Exceeded)**\n\nThe system is currently handling many requests. Please wait a moment.";
+const GENERIC_ERROR_MSG = "Sorry, something went wrong. Please try again later.";
+const VALIDATION_ERROR_MSG = "Please check your message and try again.";
+const AUTH_ERROR_MSG = "Your session has expired. Please log in again.";
+const QUOTA_ERROR_MSG = "⚠️ **Daily limit reached**\n\nYou’ve reached today’s usage limit for chat messages. Please try again later.";
+const UPSTREAM_ERROR_MSG = "The AI service is temporarily unavailable. Please try again later.";
+const SYSTEM_BUSY_MSG = "⚠️ **System is busy**\n\nThe system is currently handling many requests. Please try again later.";
+const SYSTEM_BUSY_PATTERNS = [
+  "sorry, system is busy",
+  "system is busy",
+  "handling many requests"
+];
 
 export default function AppChat() {
   const { ready, logout, user } = usePrivy();
@@ -36,6 +45,8 @@ export default function AppChat() {
   const [isProfilePopupOpen, setIsProfilePopupOpen] = useState(false);
   const [profileData, setProfileData] = useState(null);
   const [profileLoading, setProfileLoading] = useState(false);
+  const [deleteTargetConversation, setDeleteTargetConversation] = useState(null);
+  const [isDeletingConversation, setIsDeletingConversation] = useState(false);
   const messagesEndRef = useRef(null);
   
   // Profile Menu & PHD State
@@ -56,23 +67,31 @@ export default function AppChat() {
   const [masterDataLoading, setMasterDataLoading] = useState(false);
 
   // Fetch conversations history
+  const getChatAuthHeaders = useCallback(async () => {
+    const token = await getAccessToken();
+    const headers = { "Content-Type": "application/json" };
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+    return headers;
+  }, []);
+
   const fetchConversations = useCallback(async () => {
     if (!user?.id) return;
     setHistoryLoading(true);
     try {
-      const response = await fetch(`${apiUrl}/conversations?user=${user.id}&limit=20`, {
-        headers: {
-          "Authorization": `Bearer ${apiKey}`
-        }
+      const response = await fetch(`${apiUrl}/conversations?limit=20`, {
+        headers: await getChatAuthHeaders()
       });
       const data = await response.json();
-      setConversations(data.data || []);
+      const conversationList = data.data?.data || data.data || [];
+      setConversations(conversationList);
     } catch (error) {
       console.error("Fetch history error:", error);
     } finally {
       setHistoryLoading(false);
     }
-  }, [user?.id]);
+  }, [user?.id, getChatAuthHeaders]);
 
   // Load a specific conversation
   const loadConversation = async (id) => {
@@ -80,18 +99,17 @@ export default function AppChat() {
     setLoading(true);
     setConversationId(id);
     try {
-      const response = await fetch(`${apiUrl}/messages?conversation_id=${id}&user=${user.id}`, {
-        headers: {
-          "Authorization": `Bearer ${apiKey}`
-        }
+      const response = await fetch(`${apiUrl}/chat-history?conversation_id=${id}`, {
+        headers: await getChatAuthHeaders()
       });
       const data = await response.json();
 
-      // Transform Dify messages to our format
-      const formattedMessages = data.data.map(m => ([
+      // API returns messages from oldest to newest, so render directly in order
+      const historyList = data.data?.data || data.data?.conversations || [];
+      const formattedMessages = historyList.flatMap(m => ([
         { id: m.id + "_u", role: "user", content: m.query },
         { id: m.id + "_a", role: "assistant", content: m.answer || QUOTA_ERROR_MSG }
-      ])).reverse().flat();
+      ]));
 
       setMessages(formattedMessages.length > 0 ? formattedMessages : [
         { id: 1, role: "assistant", content: "Hi, I'm NEM AI. How can I help you today?" }
@@ -272,41 +290,55 @@ export default function AppChat() {
   };
 
   const sendMessageToBackend = async (text) => {
-    try {
-      const response = await fetch(`${apiUrl}/chat-messages`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-          inputs: {},
-          query: text,
-          user: user?.id || "anonymous-user",
-          response_mode: "blocking",
-          conversation_id: conversationId
-        })
-      });
+    const response = await fetch(`${apiUrl}/chat-messages`, {
+      method: "POST",
+      headers: await getChatAuthHeaders(),
+      body: JSON.stringify({
+        inputs: {},
+        query: text,
+        response_mode: "blocking",
+        conversation_id: conversationId
+      })
+    });
 
-      const data = await response.json();
+    const data = await response.json().catch(() => ({}));
+    const responseData = data.data || {};
 
-      if (!response.ok) {
-        // ส่ง error object ออกไปเพื่อให้ handleSend จัดการต่อ
-        throw {
-          status: response.status,
-          message: data.message || "Unknown error",
-          code: data.code
-        };
+    if (!response.ok) {
+      const error = {
+        status: response.status,
+        message: data.message || data.error || "Unknown error",
+        error: data.error || "",
+        data: responseData
+      };
+
+      if (response.status === 401) {
+        await logout();
       }
 
-      if (data.conversation_id) {
-        setConversationId(data.conversation_id);
-      }
-      return { answer: data.answer, conversation_id: data.conversation_id };
-    } catch (error) {
-      console.error("Dify Error:", error);
       throw error;
     }
+
+    if (responseData.answer && isSystemBusyAnswer(responseData.answer)) {
+      return {
+        answer: SYSTEM_BUSY_MSG,
+        conversation_id: responseData.conversation_id || ""
+      };
+    }
+
+    if (responseData.conversation_id) {
+      setConversationId(responseData.conversation_id);
+    }
+
+    return {
+      answer: responseData.answer || "",
+      conversation_id: responseData.conversation_id || ""
+    };
+  };
+
+  const isSystemBusyAnswer = (answer) => {
+    const normalized = String(answer || "").toLowerCase();
+    return SYSTEM_BUSY_PATTERNS.some((pattern) => normalized.includes(pattern));
   };
 
   const handleSend = async () => {
@@ -330,19 +362,36 @@ export default function AppChat() {
         };
         setConversations(prev => [newConv, ...prev]);
 
-        // รอ Dify ประมวลผลชื่อจริงๆ สักครู่แล้วค่อยดึงประวัติมาทับ
+        // รอ service ประมวลผลชื่อจริงๆ สักครู่แล้วค่อยดึงประวัติมาทับ
         setTimeout(fetchConversations, 2000);
       }
     } catch (err) {
-      let errorMsg = "Sorry, something went wrong. Please try again later.";
+      let errorMsg = GENERIC_ERROR_MSG;
 
-      // Check for Dify or Gemini quota errors
-      const errorString = typeof err === 'string' ? err : JSON.stringify(err);
+      const errorStatus = err?.status;
+      const errorMessage = String(err?.message || "");
+      const errorDetail = String(err?.error || "");
+      const errorString = `${errorMessage} ${errorDetail} ${JSON.stringify(err || {})}`.toLowerCase();
 
-      if (err.status === 429 || errorString.includes("RESOURCE_EXHAUSTED") || errorString.includes("quota")) {
+      if (
+        errorStatus === 429 ||
+        errorMessage.includes("daily token limit exceeded") ||
+        errorDetail.includes("daily token limit exceeded") ||
+        errorString.includes("quota") ||
+        errorString.includes("limit exceeded") ||
+        errorString.includes("token limit")
+      ) {
         errorMsg = QUOTA_ERROR_MSG;
-      } else if (err.message && (err.message.includes("Run failed") || err.message.includes("PluginInvokeError"))) {
-        if (err.message.includes("429")) {
+      } else if (errorStatus === 400) {
+        errorMsg = VALIDATION_ERROR_MSG;
+      } else if (errorStatus === 401) {
+        errorMsg = AUTH_ERROR_MSG;
+      } else if (errorStatus === 502) {
+        errorMsg = UPSTREAM_ERROR_MSG;
+      } else if (errorStatus >= 500) {
+        errorMsg = GENERIC_ERROR_MSG;
+      } else if (errorMessage.includes("Run failed") || errorMessage.includes("PluginInvokeError")) {
+        if (errorMessage.includes("429") || errorString.includes("quota") || errorString.includes("limit")) {
           errorMsg = QUOTA_ERROR_MSG;
         }
       }
@@ -370,6 +419,48 @@ export default function AppChat() {
     if (id === conversationId) return;
     loadConversation(id);
     setIsSidebarOpen(false);
+  };
+
+  const handleDeleteConversation = (id, event) => {
+    event?.stopPropagation();
+    const targetConversation = conversations.find((conv) => conv.id === id) || { id, name: "Untitled Chat" };
+    setDeleteTargetConversation(targetConversation);
+  };
+
+  const closeDeleteConfirm = () => {
+    if (isDeletingConversation) return;
+    setDeleteTargetConversation(null);
+  };
+
+  const confirmDeleteConversation = async () => {
+    if (!deleteTargetConversation?.id || isDeletingConversation) return;
+
+    setIsDeletingConversation(true);
+    try {
+      const response = await fetch(`${apiUrl}/conversations/${deleteTargetConversation.id}`, {
+        method: "DELETE",
+        headers: await getChatAuthHeaders()
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.message || `Failed to delete conversation (${response.status})`);
+      }
+
+      const deletedId = deleteTargetConversation.id;
+      setConversations((prev) => prev.filter((conv) => conv.id !== deletedId));
+
+      if (deletedId === conversationId) {
+        handleNewChat();
+      }
+
+      setDeleteTargetConversation(null);
+    } catch (error) {
+      console.error("Delete conversation error:", error);
+      alert("Failed to delete chat history.");
+    } finally {
+      setIsDeletingConversation(false);
+    }
   };
 
   const displayName =
@@ -575,6 +666,38 @@ export default function AppChat() {
         </div>
       )}
 
+      {deleteTargetConversation && (
+        <div className="profile-modal-overlay delete-confirm-overlay" onClick={closeDeleteConfirm}>
+          <div className="delete-confirm-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="delete-confirm-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 6h18"></path>
+                <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"></path>
+                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+                <path d="M10 11v6"></path>
+                <path d="M14 11v6"></path>
+              </svg>
+            </div>
+            <div className="delete-confirm-content">
+              <h3>Delete chat history?</h3>
+              <p>
+                This will permanently remove{" "}
+                <strong>{deleteTargetConversation.name || "Untitled Chat"}</strong>{" "}
+                from your history.
+              </p>
+            </div>
+            <div className="delete-confirm-actions">
+              <button type="button" className="delete-confirm-cancel" onClick={closeDeleteConfirm} disabled={isDeletingConversation}>
+                Cancel
+              </button>
+              <button type="button" className="delete-confirm-delete" onClick={confirmDeleteConversation} disabled={isDeletingConversation}>
+                {isDeletingConversation ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* 🔹 Sidebar (Gemini Style) */}
       <aside className={`appchat-sidebar ${isSidebarOpen ? "open" : ""}`}>
         <div className="sidebar-header">
@@ -621,6 +744,20 @@ export default function AppChat() {
                 </svg>
               </span>
               <span className="history-name">{conv.name || "Untitled Chat"}</span>
+              <button
+                type="button"
+                className="history-delete-btn"
+                aria-label={`Delete ${conv.name || "Untitled Chat"}`}
+                onClick={(e) => handleDeleteConversation(conv.id, e)}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 6h18"></path>
+                  <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"></path>
+                  <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+                  <path d="M10 11v6"></path>
+                  <path d="M14 11v6"></path>
+                </svg>
+              </button>
             </div>
           ))}
         </div>
