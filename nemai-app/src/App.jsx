@@ -7,6 +7,8 @@ import AppChat from "./components/Appchat/AppChat";
 import SetupProfile from "./components/SetupProfile/SetupProfile";
 import logo from "./assets/images/LogogramFullColor.png";
 
+const apiUrl = import.meta.env.VITE_CHAT_AI_SERVICE_URL ?? "https://customer-api.nemai.io";
+
 // Add CSS for the error popup (assuming App.css is the correct place)
 // You might need to add these styles to your App.css file manually.
 
@@ -36,7 +38,7 @@ function MainRoute() {
         hasSynced.current = true; // มาร์คไว้ว่ากำลัง/ได้ซิงค์แล้ว เพื่อป้องกันการยิงซ้ำ
         try {
           const token = await getAccessToken();
-          const response = await fetch("https://customer-api.nemai.io/api/v1/auth/sync", {
+          const response = await fetch(`${apiUrl}/api/v1/auth/sync`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
