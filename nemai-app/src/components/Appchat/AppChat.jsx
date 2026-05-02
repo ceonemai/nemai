@@ -49,7 +49,7 @@ export default function AppChat() {
   const [deleteTargetConversation, setDeleteTargetConversation] = useState(null);
   const [isDeletingConversation, setIsDeletingConversation] = useState(false);
   const messagesEndRef = useRef(null);
-  
+
   // Profile Menu & PHD State
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isPhdPopupOpen, setIsPhdPopupOpen] = useState(false);
@@ -248,7 +248,7 @@ export default function AppChat() {
       }
 
       const token = await getAccessToken();
-      
+
       const payload = {
         allergies: phdFormData.allergyCategoryIds.map(id => ({
           allergy: phdFormData.allergyDetails[id] || "",
@@ -273,7 +273,7 @@ export default function AppChat() {
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
         body: JSON.stringify(payload)
       });
-      
+
       if (response.ok) { setIsPhdPopupOpen(false); fetchUserProfile(); }
       else { alert("Failed to save PHD."); }
     } catch (error) {
@@ -469,6 +469,7 @@ export default function AppChat() {
     profileData?.name ||
     user?.name ||
     user?.twitter?.username ||
+    user?.email?.address ||
     "User";
 
   // เช็คว่าเริ่มแชทหรือยัง (ถ้ามีข้อความมากกว่า 1 หรือกำลังโหลด)
@@ -584,14 +585,14 @@ export default function AppChat() {
                   <div style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
                     <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
                       <label className="phd-form-label">Weight (kg) <span style={{ color: "#e11d48" }}>*</span></label>
-                      <input type="number" name="weight" className="allergy-text-input" placeholder="e.g. 65" value={phdFormData.weight} onChange={handlePhdChange} min="2" max="300" required 
+                      <input type="number" name="weight" className="allergy-text-input" placeholder="e.g. 65" value={phdFormData.weight} onChange={handlePhdChange} min="2" max="300" required
                         style={isWeightOutOfBounds ? { borderColor: "#e11d48", backgroundColor: "#fff1f2", color: "#e11d48" } : {}}
                       />
                       {isWeightOutOfBounds && <span style={{ color: "#e11d48", fontSize: "0.75rem", marginTop: "4px", display: "block" }}>Valid range: 2 - 300 kg</span>}
                     </div>
                     <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
                       <label className="phd-form-label">Height (cm) <span style={{ color: "#e11d48" }}>*</span></label>
-                      <input type="number" name="height" className="allergy-text-input" placeholder="e.g. 170" value={phdFormData.height} onChange={handlePhdChange} min="30" max="300" required 
+                      <input type="number" name="height" className="allergy-text-input" placeholder="e.g. 170" value={phdFormData.height} onChange={handlePhdChange} min="30" max="300" required
                         style={isHeightOutOfBounds ? { borderColor: "#e11d48", backgroundColor: "#fff1f2", color: "#e11d48" } : {}}
                       />
                       {isHeightOutOfBounds && <span style={{ color: "#e11d48", fontSize: "0.75rem", marginTop: "4px", display: "block" }}>Valid range: 30 - 300 cm</span>}
@@ -848,7 +849,7 @@ export default function AppChat() {
 
         {!isChatStarted && (
           <div className="welcome-text">
-            <h1>Hello, {displayName}</h1>
+            <h1>Hello, {displayName.split('@')[0]}</h1>
             <p>How can I help you today?</p>
           </div>
         )}
@@ -900,47 +901,47 @@ const MultiSelectDropdown = ({ options, selectedValues, onChange, placeholder, n
   };
 
   return (
-      <div className="custom-dropdown" ref={dropdownRef}>
-        <div className={`dropdown-header multi-select-header ${isOpen ? "open" : ""}`} onClick={() => { setIsOpen(!isOpen); setSearchTerm(""); }}>
-          <div className="chips-container">
-            {selectedValues.length > 0 ? (
-              selectedValues.map(val => {
-                const opt = options.find(o => o.value === String(val));
-                return opt ? (
-                  <div key={val} className="chip">
-                    {opt.label}
-                    <span className="chip-remove" onClick={(e) => removeValue(e, val)}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
-                  </div>
-                ) : null;
-              })
-            ) : (<span className="placeholder-text">{placeholder}</span>)}
-          </div>
-          <motion.svg animate={{ rotate: isOpen ? 180 : 0 }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="dropdown-chevron"><polyline points="6 9 12 15 18 9"></polyline></motion.svg>
+    <div className="custom-dropdown" ref={dropdownRef}>
+      <div className={`dropdown-header multi-select-header ${isOpen ? "open" : ""}`} onClick={() => { setIsOpen(!isOpen); setSearchTerm(""); }}>
+        <div className="chips-container">
+          {selectedValues.length > 0 ? (
+            selectedValues.map(val => {
+              const opt = options.find(o => o.value === String(val));
+              return opt ? (
+                <div key={val} className="chip">
+                  {opt.label}
+                  <span className="chip-remove" onClick={(e) => removeValue(e, val)}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
+                </div>
+              ) : null;
+            })
+          ) : (<span className="placeholder-text">{placeholder}</span>)}
         </div>
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div className="dropdown-list-container" initial={{ opacity: 0, y: -10, scaleY: 0.95 }} animate={{ opacity: 1, y: 0, scaleY: 1 }} exit={{ opacity: 0, y: -10, scaleY: 0.95 }} transition={{ duration: 0.2, ease: "easeOut" }}>
-              <div className="dropdown-search-box">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <input type="text" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onClick={(e) => e.stopPropagation()} autoFocus />
-              </div>
-              <div className="dropdown-list">
-                {filteredOptions.length > 0 ? (
-                  filteredOptions.map((opt) => {
-                    const isSelected = selectedValues.includes(String(opt.value));
-                    return (
-                      <div key={opt.value} className={`dropdown-item ${isSelected ? "selected" : ""}`} onClick={() => toggleSelection(opt.value)}>
-                        {opt.label}
-                        {isSelected && (<motion.svg className="dropdown-check" initial={{ scale: 0 }} animate={{ scale: 1 }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2187AA" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></motion.svg>)}
-                      </div>
-                    );
-                  })
-                ) : (<div className="dropdown-no-results">No results found</div>)}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <motion.svg animate={{ rotate: isOpen ? 180 : 0 }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="dropdown-chevron"><polyline points="6 9 12 15 18 9"></polyline></motion.svg>
       </div>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div className="dropdown-list-container" initial={{ opacity: 0, y: -10, scaleY: 0.95 }} animate={{ opacity: 1, y: 0, scaleY: 1 }} exit={{ opacity: 0, y: -10, scaleY: 0.95 }} transition={{ duration: 0.2, ease: "easeOut" }}>
+            <div className="dropdown-search-box">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <input type="text" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onClick={(e) => e.stopPropagation()} autoFocus />
+            </div>
+            <div className="dropdown-list">
+              {filteredOptions.length > 0 ? (
+                filteredOptions.map((opt) => {
+                  const isSelected = selectedValues.includes(String(opt.value));
+                  return (
+                    <div key={opt.value} className={`dropdown-item ${isSelected ? "selected" : ""}`} onClick={() => toggleSelection(opt.value)}>
+                      {opt.label}
+                      {isSelected && (<motion.svg className="dropdown-check" initial={{ scale: 0 }} animate={{ scale: 1 }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2187AA" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></motion.svg>)}
+                    </div>
+                  );
+                })
+              ) : (<div className="dropdown-no-results">No results found</div>)}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 };
 
