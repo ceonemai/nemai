@@ -54,7 +54,7 @@ function MainRoute() {
             }
           } else if (response.status === 403) {
             // 🔹 เช็คจาก Status Code 403 (Forbidden) โดยตรง
-            setErrorPopupMessage("You are not eligible to participate in Alpha Testing Session 1.\n\nStay tuned for updates on Sessions 2 and 3.");
+            setErrorPopupMessage("You are not eligible to participate in Alpha Testing Session 2.\n\nStay tuned for updates on Sessions 3.");
             setIsErrorPopupClosing(false);
             setIsErrorPopupDismissing(false);
             setShowErrorPopup(true);
