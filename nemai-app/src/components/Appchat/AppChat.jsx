@@ -472,6 +472,12 @@ export default function AppChat() {
     user?.email?.address ||
     "User";
 
+  const displayEmail =
+    profileData?.email ||
+    user?.email?.address ||
+    user?.email ||
+    "User";
+
   // เช็คว่าเริ่มแชทหรือยัง (ถ้ามีข้อความมากกว่า 1 หรือกำลังโหลด)
   const isChatStarted = messages.length > 1 || loading;
 
@@ -816,7 +822,7 @@ export default function AppChat() {
           </AnimatePresence>
           <div className="user-profile" onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}>
             <div className="user-avatar">{displayName.charAt(0).toUpperCase()}</div>
-            <span className="user-name">{displayName}</span>
+            <span className="user-name">{displayEmail}</span>
           </div>
         </div>
       </aside>
