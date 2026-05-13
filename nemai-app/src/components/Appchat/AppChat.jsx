@@ -27,6 +27,40 @@ const SYSTEM_BUSY_PATTERNS = [
   "handling many requests"
 ];
 
+// rehype plugin: add className to <p> that starts with "Disclaimer"
+const rehypeDisclaimerClass = () => (tree) => {
+  const getTextContent = (node) => {
+    if (!node || typeof node !== "object") return "";
+    if (node.type === "text" && typeof node.value === "string") return node.value;
+    if (!Array.isArray(node.children)) return "";
+    return node.children.map(getTextContent).join("");
+  };
+
+  const walk = (node) => {
+    if (!node || typeof node !== "object") return;
+
+    if (node.type === "element" && node.tagName === "p") {
+      const text = getTextContent(node).trim();
+      if (text.startsWith("⚠️Disclaimer")) {
+        node.properties = node.properties || {};
+        const existing = node.properties.className;
+        const classes = Array.isArray(existing)
+          ? existing
+          : existing
+            ? [existing]
+            : [];
+
+        if (!classes.includes("chat-disclaimer-note")) classes.push("chat-disclaimer-note");
+        node.properties.className = classes;
+      }
+    }
+
+    if (Array.isArray(node.children)) node.children.forEach(walk);
+  };
+
+  walk(tree);
+};
+
 export default function AppChat() {
   const { ready, logout, user } = usePrivy();
 
@@ -969,7 +1003,7 @@ const Message = memo(function Message({ role, content, displayName }) {
       {!isUser && <img src={logo} alt="NEM AI Logo" className="avatar bot-img" />}
       <div className={`bubble ${isUser ? "user" : "assistant"}`}>
         <ReactMarkdown
-          rehypePlugins={[rehypeRaw]}
+          rehypePlugins={[rehypeRaw, rehypeDisclaimerClass]}
           remarkPlugins={[remarkGfm]}
         >
           {content?.replace(/\n{3,}/g, '\n\n')}

@@ -473,6 +473,7 @@
   border: 1px solid #DCEBFA;
 }
 
+
 /* Markdown inside bubbles */
 .bubble p {
   margin: 0 0 10px 0;
@@ -480,6 +481,13 @@
 
 .bubble p:last-child {
   margin: 0;
+}
+
+/* Disclaimer note (เฉพาะ <p> ที่ขึ้นต้นด้วย "Disclaimer") */
+.bubble .chat-disclaimer-note {
+  font-size: 12px;
+  opacity: 0.45;
+  margin: 0 0 8px 0;
 }
 
 .bubble pre {
