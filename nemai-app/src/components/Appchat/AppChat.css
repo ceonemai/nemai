@@ -47,7 +47,8 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   line-height: 1;
-  transform: translateY(2px); /* ขยับข้อความลงชดเชยระยะสายตาให้ตรงกับโลโก้พอดี */
+  transform: translateY(2px);
+  /* ขยับข้อความลงชดเชยระยะสายตาให้ตรงกับโลโก้พอดี */
 }
 
 .new-chat-btn {
@@ -103,7 +104,8 @@
   gap: 12px;
   cursor: pointer;
   padding: 8px 12px;
-  margin: -8px -12px; /* compensate for padding */
+  margin: -8px -12px;
+  /* compensate for padding */
   border-radius: 12px;
   transition: background-color 0.2s;
 }
@@ -138,7 +140,10 @@
 /* ===== Profile Modal ===== */
 .profile-modal-overlay {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: rgba(15, 23, 32, 0.4);
   backdrop-filter: blur(3px);
   z-index: 2000;
@@ -161,8 +166,15 @@
 }
 
 @keyframes modalSlideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .profile-modal-header {
@@ -464,6 +476,10 @@
   border-bottom-left-radius: 4px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
   border: 1px solid #eef6ff;
+
+  position: relative;
+  padding-right: 52px;
+  /* space for copy button */
 }
 
 .bubble.user {
@@ -473,6 +489,86 @@
   border: 1px solid #DCEBFA;
 }
 
+/* ============================= */
+/* ChatGPT-style message actions */
+/* ============================= */
+
+.message-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 75%;
+}
+
+.message-content.user {
+  align-items: flex-end;
+}
+
+.message-content.assistant {
+  align-items: flex-start;
+}
+
+/* remove old forced padding */
+.bubble.assistant {
+  padding-right: 18px;
+}
+
+/* copy button under assistant message */
+.copy-message-btn {
+  margin-top: 8px;
+  margin-left: 6px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 6px 10px;
+  border-radius: 10px;
+
+  border: 1px solid transparent;
+  background: transparent;
+  color: #64748B;
+
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+
+  opacity: 0;
+  transition: all 0.2s ease;
+}
+
+/* show only when hovering message */
+.message-row.assistant:hover .copy-message-btn {
+  opacity: 1;
+}
+
+.copy-message-btn:hover {
+  background: #EEF6FF;
+  color: #2187AA;
+  border-color: #DCEBFA;
+}
+
+.copy-message-btn.copied {
+  opacity: 1;
+  background: #E6F9F3;
+  color: #1FA97A;
+  border-color: #B8F0D7;
+}
+
+.copy-icon {
+  flex-shrink: 0;
+}
+
+/* mobile always visible */
+@media (max-width: 768px) {
+  .copy-message-btn {
+    opacity: 1;
+  }
+
+  .message-content {
+    max-width: 100%;
+  }
+}
 
 /* Markdown inside bubbles */
 .bubble p {
@@ -505,7 +601,8 @@
   border-radius: 4px;
 }
 
-.bubble ol, .bubble ul {
+.bubble ol,
+.bubble ul {
   margin: 10px 0;
   padding-left: 24px;
 }
@@ -682,9 +779,11 @@
 .mobile-header {
   display: none;
 }
+
 .sidebar-overlay {
   display: none;
 }
+
 .mobile-close-btn {
   display: none;
 }
@@ -696,7 +795,8 @@
   }
 
   .appchat-main {
-    min-height: 0; /* บังคับให้ขนาดไม่ทะลุจอ เพื่อให้ช่องแชท Scroll ได้ */
+    min-height: 0;
+    /* บังคับให้ขนาดไม่ทะลุจอ เพื่อให้ช่องแชท Scroll ได้ */
     height: 100%;
   }
 
@@ -723,7 +823,7 @@
     justify-content: center;
     border-radius: 8px;
   }
-  
+
   .menu-btn:hover {
     background: #EEF6FF;
   }
@@ -748,9 +848,11 @@
     transition: left 0.3s ease-in-out;
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
     padding: 20px;
-    background-color: #EEF6FF; /* คุมโทนสีหลัก */
+    background-color: #EEF6FF;
+    /* คุมโทนสีหลัก */
     border-right: 1px solid #DCEBFA;
-    flex-direction: column; /* เรียงจากบนลงล่างเหมือน Desktop */
+    flex-direction: column;
+    /* เรียงจากบนลงล่างเหมือน Desktop */
   }
 
   .appchat-sidebar.open {
@@ -771,7 +873,7 @@
     border-radius: 8px;
     cursor: pointer;
   }
-  
+
   .mobile-close-btn:hover {
     background: #DCEBFA;
   }
@@ -780,7 +882,10 @@
   .sidebar-overlay {
     display: block;
     position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background: rgba(15, 23, 32, 0.4);
     z-index: 1000;
     backdrop-filter: blur(2px);
@@ -791,7 +896,7 @@
   .sidebar-history {
     display: flex;
   }
-  
+
   .sidebar-footer .user-name {
     display: block;
   }
@@ -832,7 +937,8 @@
 
   .chat-input-container {
     padding: 12px 16px 20px;
-    flex-shrink: 0; /* ป้องกันกล่องพิมพ์ข้อความถูกบีบผิดรูป */
+    flex-shrink: 0;
+    /* ป้องกันกล่องพิมพ์ข้อความถูกบีบผิดรูป */
   }
 }
 
@@ -962,7 +1068,7 @@
   width: 100%;
   background-color: #fff;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   margin-bottom: 8px;
   overflow: hidden;
   z-index: 100;
@@ -1000,7 +1106,7 @@
   color: #dc2626;
   background: linear-gradient(135deg, #fee2e2, #fff1f2);
   border: 1px solid #fecaca;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .delete-confirm-content {
@@ -1130,24 +1236,127 @@
 }
 
 /* Multi Select Dropdown */
-.custom-dropdown { position: relative; width: 100%; font-family: inherit; }
-.multi-select-header { display: flex; align-items: center; justify-content: space-between; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer; background: #fff; min-height: 46px; }
-.chips-container { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; min-width: 0; }
-.chip { 
-  display: inline-flex; align-items: center; gap: 6px; background: #f1f5f9; 
-  padding: 4px 8px; border-radius: 6px; font-size: 13px; color: #334155;
+.custom-dropdown {
+  position: relative;
+  width: 100%;
+  font-family: inherit;
+}
+
+.multi-select-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #fff;
+  min-height: 46px;
+}
+
+.chips-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f1f5f9;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #334155;
   white-space: normal;
   word-break: break-word;
 }
-.chip-remove { cursor: pointer; color: #94a3b8; display: flex; align-items: center; justify-content: center; }
-.chip-remove:hover { color: #ef4444; }
-.dropdown-list-container { position: absolute; top: 100%; left: 0; width: 100%; background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 4px; z-index: 100; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); overflow: hidden; transform-origin: top; }
-.dropdown-search-box { display: flex; align-items: center; padding: 10px 12px; border-bottom: 1px solid #f1f5f9; gap: 8px; color: #94a3b8; }
-.dropdown-search-box input { border: none; outline: none; width: 100%; font-size: 14px; }
-.dropdown-list { max-height: 250px; overflow-y: auto; }
-.dropdown-item { padding: 10px 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: #334155; }
-.dropdown-item:hover { background: #f8fafc; }
-.dropdown-item.selected { background: #f0f9ff; color: #0369a1; font-weight: normal; }
-.dropdown-no-results { padding: 12px; text-align: center; color: #94a3b8; font-size: 14px; }
-.placeholder-text { color: #94a3b8; font-size: 14px; }
-.dropdown-chevron, .dropdown-check { flex-shrink: 0; margin-left: 8px; }
+
+.chip-remove {
+  cursor: pointer;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chip-remove:hover {
+  color: #ef4444;
+}
+
+.dropdown-list-container {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  margin-top: 4px;
+  z-index: 100;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transform-origin: top;
+}
+
+.dropdown-search-box {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  border-bottom: 1px solid #f1f5f9;
+  gap: 8px;
+  color: #94a3b8;
+}
+
+.dropdown-search-box input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+}
+
+.dropdown-list {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.dropdown-item {
+  padding: 10px 12px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: #334155;
+}
+
+.dropdown-item:hover {
+  background: #f8fafc;
+}
+
+.dropdown-item.selected {
+  background: #f0f9ff;
+  color: #0369a1;
+  font-weight: normal;
+}
+
+.dropdown-no-results {
+  padding: 12px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.placeholder-text {
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.dropdown-chevron,
+.dropdown-check {
+  flex-shrink: 0;
+  margin-left: 8px;
+}

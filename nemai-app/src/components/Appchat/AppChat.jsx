@@ -998,16 +998,122 @@ const getAllergyPlaceholder = (categoryName) => {
 
 const Message = memo(function Message({ role, content, displayName }) {
   const isUser = role === "user";
+  const [copied, setCopied] = useState(false);
+
+  const getPlainTextFromMarkdown = (markdown) => {
+    const text = String(markdown ?? "");
+
+    // remove fenced code markers (keep content)
+    const withoutFences = text.replace(/```[\s\S]*?\n([\s\S]*?)```/g, "$1");
+
+    // links: [text](url) -> text
+    const withoutLinks = withoutFences.replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1");
+
+    // inline code: `code` -> code
+    const withoutInlineCode = withoutLinks.replace(/`([^`]+)`/g, "$1");
+
+    // bold/italic/underline-ish: **x** *x* _x_ -> x
+    let plain = withoutInlineCode
+      .replace(/\*\*([^*]+)\*\*/g, "$1")
+      .replace(/\*([^*]+)\*/g, "$1")
+      .replace(/_([^_]+)_/g, "$1");
+
+    // normalize multiple newlines
+    plain = plain.replace(/\n{3,}/g, "\n\n");
+    return plain.trim();
+  };
+
+  const handleCopy = async () => {
+    if (copied) return;
+
+    const textToCopy = getPlainTextFromMarkdown(content);
+
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(textToCopy);
+      } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = textToCopy;
+        textarea.setAttribute("readonly", "");
+        textarea.style.position = "fixed";
+        textarea.style.left = "-9999px";
+        textarea.style.top = "-9999px";
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+      }
+
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1200);
+    } catch (e) {
+      console.error("Copy message failed:", e);
+    }
+  };
+
   return (
     <div className={`message-row ${isUser ? "user" : "assistant"}`}>
       {!isUser && <img src={logo} alt="NEM AI Logo" className="avatar bot-img" />}
-      <div className={`bubble ${isUser ? "user" : "assistant"}`}>
-        <ReactMarkdown
-          rehypePlugins={[rehypeRaw, rehypeDisclaimerClass]}
-          remarkPlugins={[remarkGfm]}
-        >
-          {content?.replace(/\n{3,}/g, '\n\n')}
-        </ReactMarkdown>
+      <div className={`message-content ${isUser ? "user" : "assistant"}`}>
+        <div className={`bubble ${isUser ? "user" : "assistant"}`}>
+          <ReactMarkdown
+            rehypePlugins={[rehypeRaw, rehypeDisclaimerClass]}
+            remarkPlugins={[remarkGfm]}
+          >
+            {content?.replace(/\n{3,}/g, "\n\n")}
+          </ReactMarkdown>
+        </div>
+
+        {!isUser && (
+          <button
+            type="button"
+            className={`copy-message-btn ${copied ? "copied" : ""}`}
+            onClick={handleCopy}
+            aria-label={copied ? "Copied bot reply" : "Copy bot reply"}
+          >
+            <svg
+              className="copy-icon"
+              viewBox="0 0 24 24"
+              width="16"
+              height="16"
+              fill="none"
+            >
+              {!copied ? (
+                <>
+                  <rect
+                    x="8"
+                    y="8"
+                    width="10"
+                    height="10"
+                    rx="2"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  />
+                  <rect
+                    x="5"
+                    y="5"
+                    width="10"
+                    height="10"
+                    rx="2"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  />
+                </>
+              ) : (
+                <path
+                  d="M20 6L9 17l-5-5"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              )}
+            </svg>
+
+            <span>{copied ? "Copied" : "Copy"}</span>
+          </button>
+        )}
       </div>
       {isUser && <div className="avatar user">{displayName?.charAt(0).toUpperCase() || "U"}</div>}
     </div>
