@@ -61,6 +61,175 @@ const rehypeDisclaimerClass = () => (tree) => {
   walk(tree);
 };
 
+const ProfileDOBDropdown = ({ value, onChange }) => {
+  const pad2 = (n) => String(n).padStart(2, "0");
+
+  const parseValue = (raw) => {
+    const str = String(raw ?? "").trim();
+    if (!str) return { year: "", month: "", day: "" };
+
+    const m = str.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!m) return { year: "", month: "", day: "" };
+
+    const year = String(m[1]);
+    const month = String(Number(m[2]));
+    const day = String(Number(m[3]));
+    return { year, month, day };
+  };
+
+  const [parts, setParts] = useState(() => parseValue(value));
+
+  useEffect(() => {
+    setParts(parseValue(value));
+  }, [value]);
+
+  const yearNum = Number(parts.year);
+  const monthNum = Number(parts.month);
+  const dayNum = Number(parts.day);
+
+  const isYearValid = Number.isFinite(yearNum) && String(parts.year).length === 4;
+  const isMonthValid = Number.isFinite(monthNum) && monthNum >= 1 && monthNum <= 12;
+  const isDayValid = Number.isFinite(dayNum) && dayNum >= 1 && dayNum <= 31;
+
+  const daysInMonth = (() => {
+    if (!isYearValid || !isMonthValid) return 31;
+    // monthNum: 1..12 => Date(year, month, 0) => last day of previous month
+    return new Date(yearNum, monthNum, 0).getDate();
+  })();
+
+  useEffect(() => {
+    // If current day exceeds daysInMonth after month/year change, clamp it.
+    if (!parts.day) return;
+    if (!isYearValid || !isMonthValid) return;
+
+    const currentDay = Number(parts.day);
+    if (!Number.isFinite(currentDay)) return;
+
+    if (currentDay > daysInMonth) {
+      setParts((prev) => ({ ...prev, day: String(daysInMonth) }));
+    }
+  }, [daysInMonth, isYearValid, isMonthValid]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const years = (() => {
+    const now = new Date().getFullYear();
+    const start = now - 120;
+    const arr = [];
+    for (let y = now; y >= start; y -= 1) arr.push(String(y));
+    return arr;
+  })();
+
+  const months = Array.from({ length: 12 }, (_, i) => String(i + 1));
+
+  const selectedDay = parts.day ? Number(parts.day) : 0;
+
+  const emitIfComplete = (nextParts) => {
+    const y = nextParts.year;
+    const m = nextParts.month;
+    const d = nextParts.day;
+
+    if (!y || !m || !d) {
+      onChange("");
+      return;
+    }
+
+    const yN = Number(y);
+    const mN = Number(m);
+    const dN = Number(d);
+
+    if (!Number.isFinite(yN) || yN <= 0) {
+      onChange("");
+      return;
+    }
+    if (!Number.isFinite(mN) || mN < 1 || mN > 12) {
+      onChange("");
+      return;
+    }
+    const dim = new Date(yN, mN, 0).getDate();
+    if (!Number.isFinite(dN) || dN < 1 || dN > dim) {
+      onChange("");
+      return;
+    }
+
+    onChange(`${yN}-${pad2(mN)}-${pad2(dN)}`);
+  };
+
+  const handlePartChange = (key, nextValue) => {
+    const nextParts = { ...parts, [key]: nextValue };
+
+    // when month changes, clear day if it becomes invalid (will also be clamped by effect)
+    if (key === "month" && nextValue) {
+      const yN = Number(nextParts.year);
+      const mN = Number(nextValue);
+      if (Number.isFinite(yN) && Number.isFinite(mN)) {
+        const dim = new Date(yN, mN, 0).getDate();
+        const dN = Number(nextParts.day);
+        if (nextParts.day && (Number.isNaN(dN) || dN > dim)) {
+          nextParts.day = String(dim);
+        }
+      }
+    }
+
+    setParts(nextParts);
+    emitIfComplete(nextParts);
+  };
+
+  const dayOptions = Array.from({ length: daysInMonth }, (_, i) => String(i + 1));
+
+  return (
+    <div className="profile-dob-dropdown">
+      <div className="profile-dob-row">
+        <select
+          className="profile-dob-select"
+          value={parts.day || ""}
+          onChange={(e) => handlePartChange("day", e.target.value)}
+          aria-label="Day"
+          disabled={!isYearValid || !isMonthValid}
+        >
+          <option value="">DD</option>
+          {dayOptions.map((d) => (
+            <option key={d} value={d}>
+              {d}
+            </option>
+          ))}
+        </select>
+
+        <span className="profile-dob-sep">/</span>
+
+        <select
+          className="profile-dob-select"
+          value={parts.month || ""}
+          onChange={(e) => handlePartChange("month", e.target.value)}
+          aria-label="Month"
+        >
+          <option value="">MM</option>
+          {months.map((m) => (
+            <option key={m} value={m}>
+              {pad2(Number(m))}
+            </option>
+          ))}
+        </select>
+
+        <span className="profile-dob-sep">/</span>
+
+        <select
+          className="profile-dob-select"
+          value={parts.year || ""}
+          onChange={(e) => handlePartChange("year", e.target.value)}
+          aria-label="Year"
+        >
+          <option value="">YYYY</option>
+          {years.map((y) => (
+            <option key={y} value={y}>
+              {y}
+            </option>
+          ))}
+        </select>
+      </div>
+
+    </div>
+  );
+};
+
 export default function AppChat() {
   const { ready, logout, user } = usePrivy();
 
@@ -80,10 +249,13 @@ export default function AppChat() {
   const [isProfilePopupOpen, setIsProfilePopupOpen] = useState(false);
   const [profileData, setProfileData] = useState(null);
   const [profileLoading, setProfileLoading] = useState(false);
+
+  const [profileFormData, setProfileFormData] = useState({ name: "", birthDate: "" }); // birthDate = YYYY-MM-DD
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
+
   const [deleteTargetConversation, setDeleteTargetConversation] = useState(null);
   const [isDeletingConversation, setIsDeletingConversation] = useState(false);
   const messagesEndRef = useRef(null);
-
   // Profile Menu & PHD State
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isPhdPopupOpen, setIsPhdPopupOpen] = useState(false);
@@ -241,6 +413,86 @@ export default function AppChat() {
       });
     }
   }, [profileData, isPhdPopupOpen]);
+
+  useEffect(() => {
+    if (profileData && isProfilePopupOpen) {
+      const pName = profileData?.profile?.name || profileData?.name || "";
+      let bd = profileData?.birth_date || profileData?.profile?.birth_date || "";
+
+      if (bd.includes("/")) {
+        const [day, month, year] = bd.split("/");
+        bd = `${year}-${month}-${day}`;
+      } else if (bd.includes("T")) {
+        bd = bd.split("T")[0];
+      }
+
+      setProfileFormData({
+        name: String(pName),
+        birthDate: String(bd)
+      });
+    }
+  }, [profileData, isProfilePopupOpen]);
+
+  const handleProfileChange = (e) => {
+    const { name, value } = e.target;
+    setProfileFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const normalizeToYYYYMMDD = (raw) => {
+    const value = String(raw ?? "").trim();
+    if (!value) return "";
+    if (value.includes("/")) {
+      const [day, month, year] = value.split("/");
+      if (day && month && year) return `${year}-${month}-${day}`;
+    }
+    if (value.includes("T")) return value.split("T")[0];
+    return value;
+  };
+
+  const handleSaveProfile = async () => {
+    if (isSavingProfile) return;
+
+    const name = String(profileFormData.name ?? "").trim();
+    const birth_date = normalizeToYYYYMMDD(profileFormData.birthDate);
+
+    if (!name || !birth_date) {
+      alert("Please provide both Name and Date of Birth.");
+      return;
+    }
+
+    setIsSavingProfile(true);
+    try {
+      const token = await getAccessToken();
+      const payload = {
+        profile: {
+          name,
+          birth_date
+        }
+      };
+
+      const response = await fetch(`${customerApiUrl}/api/v1/users/profile`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        setIsProfilePopupOpen(false);
+        fetchUserProfile();
+      } else {
+        console.error("Failed to save profile:", response.status);
+        alert("Failed to save profile. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error saving profile:", error);
+      alert("An error occurred. Please connect to the internet and try again.");
+    } finally {
+      setIsSavingProfile(false);
+    }
+  };
 
   const openPhdPopup = () => {
     setIsPhdPopupOpen(true);
@@ -590,10 +842,27 @@ export default function AppChat() {
                   <div className="profile-modal-avatar">
                     {profileData?.email?.charAt(0).toUpperCase() || displayName.charAt(0).toUpperCase() || "U"}
                   </div>
+
                   <div className="profile-input-box">
                     <span className="inner-label">Name</span>
-                    <input type="text" value={profileData?.profile?.name || profileData?.name || "-"} disabled readOnly />
+                    <input
+                      type="text"
+                      name="name"
+                      value={profileFormData.name}
+                      onChange={handleProfileChange}
+                    />
                   </div>
+
+                  <div className="profile-input-box">
+                    <span className="inner-label">Date of Birth</span>
+                    <ProfileDOBDropdown
+                      value={profileFormData.birthDate}
+                      onChange={(yyyyMMdd) =>
+                        setProfileFormData((prev) => ({ ...prev, birthDate: yyyyMMdd }))
+                      }
+                    />
+                  </div>
+
                   <div className="profile-input-box">
                     <span className="inner-label">Email</span>
                     <input type="text" value={profileData?.email || "-"} disabled readOnly />
@@ -602,6 +871,29 @@ export default function AppChat() {
               ) : (
                 <div className="profile-modal-error">Could not load profile.</div>
               )}
+            </div>
+
+            <div className="profile-modal-footer phd-modal-footer">
+              <button
+                className="phd-cancel-btn"
+                type="button"
+                onClick={() => setIsProfilePopupOpen(false)}
+                disabled={isSavingProfile}
+              >
+                Cancel
+              </button>
+              <button
+                className="phd-save-btn"
+                type="button"
+                onClick={handleSaveProfile}
+                disabled={
+                  isSavingProfile ||
+                  !String(profileFormData.name ?? "").trim() ||
+                  !String(profileFormData.birthDate ?? "").trim()
+                }
+              >
+                {isSavingProfile ? "Saving..." : "Save"}
+              </button>
             </div>
           </div>
         </div>
