@@ -283,6 +283,24 @@ export default function AppChat() {
     return headers;
   }, []);
 
+  // Robust JSON parser: handles malformed responses with prefixes or HTML
+  const safeParseJson = async (response) => {
+    const text = await response.text();
+    try {
+      return JSON.parse(text);
+    } catch (err) {
+      // try to strip common anti-XSSI prefix like ")]}'," or any leading non-json chars
+      const cleaned = text.replace(/^[^\[\{]*/u, "");
+      try {
+        return JSON.parse(cleaned);
+      } catch (err2) {
+        console.error("safeParseJson: failed to parse JSON", err2, "original body:", text.slice(0, 1000));
+        // return a wrapper so callers can gracefully handle missing fields
+        return { _raw: text };
+      }
+    }
+  };
+
   const fetchConversations = useCallback(async () => {
     if (!user?.id) return;
     setHistoryLoading(true);
@@ -290,7 +308,7 @@ export default function AppChat() {
       const response = await fetch(`${apiUrl}/conversations?limit=20`, {
         headers: await getChatAuthHeaders()
       });
-      const data = await response.json();
+      const data = await safeParseJson(response);
       const conversationList = data.data?.data || data.data || [];
       setConversations(conversationList);
     } catch (error) {
@@ -309,7 +327,7 @@ export default function AppChat() {
       const response = await fetch(`${apiUrl}/chat-history?conversation_id=${id}`, {
         headers: await getChatAuthHeaders()
       });
-      const data = await response.json();
+      const data = await safeParseJson(response);
 
       // API returns messages from oldest to newest, so render directly in order
       const historyList = data.data?.data || data.data?.conversations || [];
@@ -1349,12 +1367,17 @@ const Message = memo(function Message({ role, content, displayName }) {
       {!isUser && <img src={logo} alt="NEM AI Logo" className="avatar bot-img" />}
       <div className={`message-content ${isUser ? "user" : "assistant"}`}>
         <div className={`bubble ${isUser ? "user" : "assistant"}`}>
-          <ReactMarkdown
-            rehypePlugins={[rehypeRaw, rehypeDisclaimerClass]}
-            remarkPlugins={[remarkGfm]}
-          >
-            {content?.replace(/\n{3,}/g, "\n\n")}
-          </ReactMarkdown>
+          {isUser ? (
+            // Render user content as plain text to preserve exact newlines/spaces
+            <div className="user-plain-text">{String(content ?? "")}</div>
+          ) : (
+            <ReactMarkdown
+              rehypePlugins={[rehypeRaw, rehypeDisclaimerClass]}
+              remarkPlugins={[remarkGfm]}
+            >
+              {content?.replace(/\n{3,}/g, "\n\n")}
+            </ReactMarkdown>
+          )}
         </div>
 
         {!isUser && (
