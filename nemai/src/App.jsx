@@ -5,7 +5,7 @@ import Footer from "./components/Footer/Footer";
 import WhyNEM from "./components/WhyNEM/WhyNEM";
 import Mission from "./components/Mission/Mission";
 import Backbone from "./components/Backbone/Backbone";
-import Blockchain from "./components/Blockchain/Blockchain";
+import HealthInsights from "./components/HealthInsights/HealthInsights";
 import NumiPFP from "./components/NumiPFP/NumiPFP";
 import PrivacyPolicies from "./components/Footer/PrivacyPolicies";
 import TermsOfService from "./components/Footer/TermsOfService";
@@ -32,7 +32,7 @@ function HomePage() {
       </section>
 
       <section id="blockchain">
-        <Blockchain />
+        <HealthInsights />
       </section>
 
       <Footer />

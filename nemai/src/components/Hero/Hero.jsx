@@ -15,18 +15,21 @@ function Hero() {
 
       <div className="hero-content">
         <h1>
-          First Personalized Health AI Support
+          Your Personal AI<br />
+          <span className="hero-subtitle">for Health & Emergencies</span>
         </h1>
 
         <p className="hero-tagline">
-          <span className="act">Act Smart. Save Countless Lives </span>
+          <span className="act"> We give you clear steps in emergencies and everyday health answers tailored exactly to your body. </span>
         </p>
-
+      
+        {/*
         <div className="hero-buttons">
           <button className="primary" onClick={() => setShowPopup(true)}>
             Get Early Access
           </button>
         </div>
+        */}
       </div>
 
       {/* Nem Background Mascot */}
