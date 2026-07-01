@@ -63,7 +63,7 @@
   transform: translateX(-50%);
 
   display: flex;
-  gap: 44px;
+  gap: 24px;
 
   list-style: none;
   align-items: center;
@@ -226,6 +226,33 @@
   transition: all 0.25s ease;
 }
 
+.mobile-blog {
+
+  display: none;
+
+  padding: 10px 20px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  border-radius: 999px;
+
+  border: 1px solid var(--primary-teal);
+
+  color: var(--primary-teal);
+
+  text-decoration: none;
+
+  transition: all 0.25s ease;
+}
+
+.mobile-blog:hover {
+
+  background: var(--primary-teal);
+  color: white;
+
+}
+
 .mobile-docs:hover {
 
   background: var(--primary-teal);
@@ -240,7 +267,11 @@
 @media (max-width: 1024px) {
 
   .nav-links {
-    gap: 28px;
+    gap: 14px;
+  }
+
+  .nav-links li {
+    font-size: 14px;
   }
 
 }
@@ -253,6 +284,10 @@
 
   .navbar {
     padding: 14px 5%;
+  }
+
+  .nav-links {
+    display: none;
   }
 
   /* ลดขนาด logo */
@@ -283,6 +318,12 @@
   /* Docs button */
 
   .mobile-docs {
+    display: block;
+    padding: 7px 12px;
+    font-size: 12px;
+  }
+
+  .mobile-blog {
     display: block;
     padding: 7px 12px;
     font-size: 12px;
