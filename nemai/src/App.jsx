@@ -9,6 +9,8 @@ import HealthInsights from "./components/HealthInsights/HealthInsights";
 import NumiPFP from "./components/NumiPFP/NumiPFP";
 import PrivacyPolicies from "./components/Footer/PrivacyPolicies";
 import TermsOfService from "./components/Footer/TermsOfService";
+import BlogListPage from "./components/Blog/BlogListPage";
+import BlogDetailPage from "./components/Blog/BlogDetailPage";
 
 function HomePage() {
   return (
@@ -64,6 +66,26 @@ function App() {
             <Footer />
           </>
         } 
+      />
+      <Route
+        path="/blog"
+        element={
+          <>
+            <Navbar />
+            <BlogListPage />
+            <Footer />
+          </>
+        }
+      />
+      <Route
+        path="/blog/:id"
+        element={
+          <>
+            <Navbar />
+            <BlogDetailPage />
+            <Footer />
+          </>
+        }
       />
     </Routes>
   );

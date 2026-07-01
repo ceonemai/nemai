@@ -33,46 +33,6 @@ function Navbar() {
 
   }, []);
 
-  /* =========================
-     HANDLE CROSS-PAGE SCROLL
-  ========================= */
-
-  useEffect(() => {
-    // ตรวจสอบว่าถ้ากลับมาหน้า Home และมี hash (เช่น /#why) ให้เลื่อนไปที่ section นั้น
-    if (location.pathname === "/" && location.hash) {
-      setTimeout(() => {
-        const id = location.hash.replace("#", "");
-        const element = document.getElementById(id);
-        if (element) {
-          element.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      }, 100); // ดีเลย์เล็กน้อยเพื่อให้ Component ของหน้า Home เรนเดอร์เสร็จก่อน
-    }
-  }, [location]);
-
-  /* =========================
-     SMOOTH SCROLL
-  ========================= */
-
-  const scrollToSection = (id) => {
-
-    // ถ้าไม่ได้อยู่หน้า Home ให้เปลี่ยนหน้าไป Home ก่อน
-    if (location.pathname !== "/") {
-      navigate(`/#${id}`);
-      return;
-    }
-
-    const element = document.getElementById(id);
-
-    if (!element) return;
-
-    element.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-
-  };
-
   return (
 
     <nav className={`navbar ${scrolled ? "scrolled" : ""}`}>
@@ -96,13 +56,13 @@ function Navbar() {
       {/* NAV LINKS (DESKTOP) */}
 
       <ul className="nav-links">
-
         <li>
           <a
             href="#"
             onClick={(e) => {
               e.preventDefault();
-              scrollToSection("why");
+              navigate("/");
+              window.scrollTo({ top: 0, behavior: "smooth" });
             }}
           >
             About
@@ -114,22 +74,10 @@ function Navbar() {
             href="#"
             onClick={(e) => {
               e.preventDefault();
-              scrollToSection("mission");
+              navigate("/blog");
             }}
           >
-            Mission
-          </a>
-        </li>
-
-        <li>
-          <a
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              scrollToSection("backbone");
-            }}
-          >
-            Goal
+            Blog
           </a>
         </li>
 
@@ -168,6 +116,17 @@ function Navbar() {
         </a>
 
         {/* MOBILE DOCS */}
+        <a
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            navigate("/blog");
+          }}
+          className="mobile-blog"
+        >
+          Blog
+        </a>
+
         <a
           href="https://nem-ai.gitbook.io/doc#"
           target="_blank"
