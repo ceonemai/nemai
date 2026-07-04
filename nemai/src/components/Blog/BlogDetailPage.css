@@ -179,6 +179,7 @@
 .blog-detail-header h1 {
   margin: 0;
   font-family: "Prometo", sans-serif;
+  font-weight: 600;
   font-size: clamp(2.35rem, 4.2vw, 4rem);
   line-height: 1.06;
   letter-spacing: -0.8px;
@@ -222,6 +223,9 @@
   border: 1px solid rgba(33, 135, 170, 0.12);
   background: rgba(255, 255, 255, 0.58);
   padding: 24px;
+  font-family: "AllumiSTD", sans-serif;
+  font-weight: 500;
+  line-height: 1.86;
   color: rgba(20, 45, 53, 0.84);
 }
 
@@ -235,28 +239,52 @@
 
 .blog-markdown h1,
 .blog-markdown h2,
-.blog-markdown h3 {
-  font-family: "Prometo", sans-serif;
+.blog-markdown h3,
+.blog-markdown h4 {
+  font-family: "AllumiSTD", sans-serif;
+  font-weight: 700;
+  line-height: 1.24;
   color: var(--primary-teal, #2187aa);
   letter-spacing: -0.2px;
 }
 
 .blog-markdown h1 {
-  font-size: 1.9rem;
+  font-size: 2.3rem;
 }
 
 .blog-markdown h2 {
-  font-size: 1.45rem;
+  font-size: 1.88rem;
 }
 
 .blog-markdown h3 {
-  font-size: 1.2rem;
+  font-size: 1.52rem;
+}
+
+.blog-markdown h4 {
+  font-size: 1.22rem;
 }
 
 .blog-markdown p,
 .blog-markdown li {
-  font-size: 16px;
-  line-height: 1.82;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.86;
+}
+
+.blog-markdown strong,
+.blog-markdown b {
+  font-weight: 500;
+}
+
+.blog-markdown h1 strong,
+.blog-markdown h2 strong,
+.blog-markdown h3 strong,
+.blog-markdown h4 strong,
+.blog-markdown h1 b,
+.blog-markdown h2 b,
+.blog-markdown h3 b,
+.blog-markdown h4 b {
+  font-weight: 700;
 }
 
 .blog-markdown ul,
@@ -545,7 +573,8 @@
 
   .blog-markdown p,
   .blog-markdown li {
-    font-size: 15px;
+    font-size: 16px;
+    line-height: 1.8;
   }
 
   .blog-detail-content {
