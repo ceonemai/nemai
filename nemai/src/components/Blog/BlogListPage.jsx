@@ -49,8 +49,8 @@ export default function BlogListPage() {
         <main className="blog-page">
             <section className="blog-shell">
                 <header className="blog-header">
-                    <h1>NEM AI's Blog</h1>
-                    <p>Latest research/product updates, announcements and events</p>
+                    <h1>NEM AI’s Blogs</h1>
+                    <p>Insights and Updates from the Future of Health AI</p>
                 </header>
 
                 {status === "loading" && (

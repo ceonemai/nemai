@@ -210,6 +210,7 @@
 .blog-card-body h2 {
   margin: 0;
   font-family: "Prometo", sans-serif;
+  font-weight: 600;
   font-size: clamp(1.28rem, 1.95vw, 1.7rem);
   line-height: 1.22;
   color: #1f4652;
@@ -217,6 +218,8 @@
 
 .blog-card-body p {
   margin: 0;
+  font-family: "AllumiSTD", sans-serif;
+  font-weight: 500;
   font-size: 15px;
   line-height: 1.7;
   color: rgba(20, 45, 53, 0.74);
