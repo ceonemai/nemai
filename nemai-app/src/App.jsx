@@ -178,7 +178,7 @@ export default function App() {
             {/* หน้า Setup Profile สำหรับ User ใหม่ */}
             <Route path="/setup-profile" element={<SetupProfile />} />
 
-            {/* Fallback (ป้องกันแอปพังหากหลุดไป Path อื่น) */}
+            {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
