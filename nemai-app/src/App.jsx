@@ -1,13 +1,15 @@
 import "./App.css";
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, Outlet, useNavigate } from "react-router-dom";
 import { usePrivy } from "@privy-io/react-auth";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, lazy, Suspense } from "react";
 import Login from "./components/Login/Login";
 import AppChat from "./components/Appchat/AppChat";
 import SetupProfile from "./components/SetupProfile/SetupProfile";
 import logo from "./assets/images/LogogramFullColor.png";
 
-const apiUrl = import.meta.env.VITE_CHAT_AI_SERVICE_URL ?? "https://customer-api.nemai.io";
+const Dashboard = lazy(() => import("./components/Dashboard/Dashboard"));
+const CheckoutMembership = lazy(() => import("./components/Checkout/CheckoutMembership"));
+const CheckoutPaymentFailed = lazy(() => import("./components/Checkout/CheckoutPaymentFailed"));
 
 // Add CSS for the error popup (assuming App.css is the correct place)
 // You might need to add these styles to your App.css file manually.
@@ -144,23 +146,42 @@ function MainRoute() {
   }
 
   // เลือกว่าจะแสดงหน้าไหนตามสถานะการ Login
-  return authenticated ? <AppChat /> : <Login />; // Render Login if not authenticated
+  return authenticated ? <Outlet /> : <Login />; // Render Login if not authenticated
+}
+
+function RouteLoadingFallback() {
+  return (
+    <div className="loading-screen">
+      <div className="loading-container">
+        <div className="spinner-ring"></div>
+        <img src={logo} alt="Loading" className="loading-logo" />
+      </div>
+      <div className="loading-text">Loading...</div>
+    </div>
+  );
 }
 
 export default function App() {
   return (
     <div className="app-root">
       <BrowserRouter>
-        <Routes>
-          {/* หน้าหลัก: จัดการ Login และ Chat ใน Path เดียวกัน */}
-          <Route path="/" element={<MainRoute />} />
+        <Suspense fallback={<RouteLoadingFallback />}>
+          <Routes>
+            {/* Protected app routes */}
+            <Route element={<MainRoute />}>
+              <Route path="/" element={<AppChat />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/membership/checkout" element={<CheckoutMembership />} />
+              <Route path="/membership/checkout/failure" element={<CheckoutPaymentFailed />} />
+            </Route>
 
-          {/* หน้า Setup Profile สำหรับ User ใหม่ */}
-          <Route path="/setup-profile" element={<SetupProfile />} />
+            {/* หน้า Setup Profile สำหรับ User ใหม่ */}
+            <Route path="/setup-profile" element={<SetupProfile />} />
 
-          {/* Fallback (ป้องกันแอปพังหากหลุดไป Path อื่น) */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+            {/* Fallback (ป้องกันแอปพังหากหลุดไป Path อื่น) */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </div>
   );
