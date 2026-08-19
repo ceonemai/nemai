@@ -3075,9 +3075,15 @@
   color: #1D7A9E;
   font-size: 14px;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .leaderboard-user {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   color: #102532;
   font-size: 14px;
   font-weight: 600;
@@ -3090,6 +3096,7 @@
   font-weight: 700;
   justify-self: center;
   text-align: center;
+  white-space: nowrap;
 }
 
 .leaderboard-row-empty .leaderboard-user {
@@ -4158,10 +4165,14 @@
 
   .leaderboard-table-head,
   .leaderboard-row {
-    grid-template-columns: 64px minmax(0, 1fr) 82px;
+    grid-template-columns: 48px minmax(0, 1fr) auto;
     gap: 8px;
     padding: 10px 12px;
     font-size: 13px;
+  }
+
+  .leaderboard-points {
+    justify-self: end;
   }
 
   .leaderboard-layout {
@@ -4170,6 +4181,8 @@
   }
 
   .leaderboard-section-top {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
     gap: 10px;
   }
 
@@ -4191,6 +4204,18 @@
   .leaderboard-podium-grid,
   .leaderboard-top-users-list {
     grid-template-columns: 1fr;
+  }
+
+  .leaderboard-top-user-item {
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 8px;
+    padding: 10px 12px;
+  }
+
+  .leaderboard-top-user-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .dashboard-section-divider {
