@@ -400,7 +400,7 @@ export default function CheckoutMembership() {
                   aria-hidden={!isActive}
                   inert={!isActive || undefined}
                   animate={{
-                    scale: isActive ? 1.035 : 0.9 - (stackDepth - 1) * 0.04,
+                    scale: isActive ? 1 : 0.9 - (stackDepth - 1) * 0.04,
                     y: isActive ? 0 : 30 + (stackDepth - 1) * 12,
                     x: isActive ? 0 : carouselDirection * -22 * stackDepth,
                     rotate: isActive ? 0 : carouselDirection * -3 * stackDepth,

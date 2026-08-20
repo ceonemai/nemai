@@ -44,6 +44,8 @@
 .membership-checkout-topbar {
   display: flex;
   justify-content: flex-start;
+  position: relative;
+  z-index: 3;
 }
 
 .membership-back-btn {
@@ -535,6 +537,7 @@
     grid-template-columns: 42px minmax(0, 1fr) 42px;
     column-gap: 8px;
     row-gap: 28px;
+    margin-top: 16px;
   }
 
   .membership-plan-carousel--upgrade {
