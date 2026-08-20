@@ -165,10 +165,28 @@
   grid-area: card;
   min-width: 0;
   display: grid;
+  overflow: visible;
+  perspective: 1400px;
 }
 
 .membership-carousel-stage > * {
   grid-area: 1 / 1;
+  transform-origin: 50% 85%;
+  will-change: transform;
+}
+
+.membership-plan-card.stacked {
+  filter: saturate(0.86) brightness(0.96);
+}
+
+.membership-plan-card.stacked::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  background: rgba(16, 42, 56, 0.16);
+  pointer-events: none;
 }
 
 .membership-carousel-arrow {

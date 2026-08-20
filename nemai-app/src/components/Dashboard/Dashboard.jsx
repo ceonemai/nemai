@@ -441,21 +441,23 @@ export default function Dashboard() {
   const activeUserId = loginUserId || currentUserId;
 
   const visibleLeaderboardRows = useMemo(() => {
-    if (!leaderboardRows.length) return [];
+    const WINDOW_SIZE = 5;
+    if (leaderboardRows.length <= WINDOW_SIZE) return leaderboardRows;
 
-    const shouldWindowAroundCurrentUser = leaderboardRows.length > 20 && Number.isFinite(currentUserRank);
-    if (!shouldWindowAroundCurrentUser) return leaderboardRows;
+    let currentUserIndex = activeUserId
+      ? leaderboardRows.findIndex((row) => row.userId === activeUserId)
+      : -1;
+    if (currentUserIndex < 0 && Number.isFinite(currentUserRank)) {
+      currentUserIndex = leaderboardRows.findIndex((row) => row.rank === currentUserRank);
+    }
+    if (currentUserIndex < 0) return leaderboardRows.slice(0, WINDOW_SIZE);
 
-    const currentUserIndex = leaderboardRows.findIndex((row) => {
-      if (activeUserId) return row.userId === activeUserId;
-      return row.rank === currentUserRank;
-    });
-
-    if (currentUserIndex < 0) return leaderboardRows.slice(0, 5);
-
-    const start = Math.max(0, currentUserIndex - 2);
-    const end = Math.min(leaderboardRows.length, currentUserIndex + 3);
-    return leaderboardRows.slice(start, end);
+    // Shift the window inward at the list edges so five rows always render.
+    const start = Math.min(
+      Math.max(0, currentUserIndex - 2),
+      leaderboardRows.length - WINDOW_SIZE
+    );
+    return leaderboardRows.slice(start, start + WINDOW_SIZE);
   }, [leaderboardRows, currentUserRank, activeUserId]);
 
   const earnedBadges = useMemo(

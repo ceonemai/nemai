@@ -845,14 +845,15 @@ export default function AppChat() {
     profileData?.profile?.name ||
     profileData?.name ||
     user?.name ||
-    user?.twitter?.username ||
     user?.email?.address ||
+    user?.google?.email ||
     "User";
 
   const displayEmail =
     profileData?.email ||
     user?.email?.address ||
     user?.email ||
+    user?.google?.email ||
     "User";
 
   // เช็คว่าเริ่มแชทหรือยัง (ถ้ามีข้อความมากกว่า 1 หรือกำลังโหลด)
@@ -1126,7 +1127,7 @@ export default function AppChat() {
       )}
 
       {/* 🔹 Sidebar (Gemini Style) */}
-      <aside className={`appchat-sidebar ${isSidebarOpen ? "open" : ""} ${keepSidebarExpanded ? "keep-expanded" : ""}`}>
+      <aside className={`appchat-sidebar ${isSidebarOpen ? "open" : ""} ${keepSidebarExpanded || isProfileMenuOpen ? "keep-expanded" : ""}`}>
         <div className="sidebar-header">
           <div className="brand-info">
             <img src={logo} alt="NEM AI Logo" className="sidebar-logo" />

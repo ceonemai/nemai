@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
 import { usePrivy } from "@privy-io/react-auth";
 import { getStripePaymentLinkForPlan, getStripePaymentLinkForUpgrade, updatePuffSubscription } from "./stripeCheckoutApi";
@@ -64,24 +64,6 @@ const GOLDEN_UPGRADE_PLAN = {
   name: "Upgrade to Golden Puff Priority Pass",
   price: "$5.99",
   tag: "Silver member upgrade"
-};
-
-const carouselCardVariants = {
-  enter: (direction) => ({
-    opacity: 0,
-    scale: 0.985,
-    x: direction > 0 ? 44 : -44
-  }),
-  center: {
-    opacity: 1,
-    scale: 1.035,
-    x: 0
-  },
-  exit: (direction) => ({
-    opacity: 0,
-    scale: 0.985,
-    x: direction > 0 ? -44 : 44
-  })
 };
 
 const MotionArticle = motion.article;
@@ -407,49 +389,60 @@ export default function CheckoutMembership() {
           ) : null}
 
           <div className="membership-carousel-stage">
-            <AnimatePresence initial={false} mode="sync" custom={carouselDirection}>
-              <MotionArticle
-                key={selectedPlan.code}
-                className={`membership-plan-card selected ${selectedPlan.accent}`}
-                aria-label={`${selectedPlan.name}, selected package`}
-                custom={carouselDirection}
-                variants={carouselCardVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <span className="membership-plan-tag">{selectedPlan.tag}</span>
-                <h2>{selectedPlan.name}</h2>
-                <img className="membership-plan-visual" src={selectedPlan.cardImage} alt={`${selectedPlan.name} card`} />
-                <p className="membership-plan-summary">{selectedPlan.summary}</p>
+            {availablePlans.map((plan, index) => {
+              const isActive = index === selectedPlanIndex;
+              const stackDepth = Math.abs(index - selectedPlanIndex);
+              return (
+                <MotionArticle
+                  key={plan.code}
+                  className={`membership-plan-card ${isActive ? "selected" : "stacked"} ${plan.accent}`}
+                  aria-label={`${plan.name}, ${isActive ? "selected package" : "package in deck"}`}
+                  aria-hidden={!isActive}
+                  inert={!isActive || undefined}
+                  animate={{
+                    scale: isActive ? 1.035 : 0.9 - (stackDepth - 1) * 0.04,
+                    y: isActive ? 0 : 30 + (stackDepth - 1) * 12,
+                    x: isActive ? 0 : carouselDirection * -22 * stackDepth,
+                    rotate: isActive ? 0 : carouselDirection * -3 * stackDepth,
+                    opacity: isActive ? 1 : 0.85,
+                    zIndex: availablePlans.length - stackDepth
+                  }}
+                  transition={shouldReduceMotion ? { duration: 0 } : { type: "spring", stiffness: 240, damping: 28, mass: 0.9 }}
+                  style={{ pointerEvents: isActive ? "auto" : "none" }}
+                >
+                  <span className="membership-plan-tag">{plan.tag}</span>
+                  <h2>{plan.name}</h2>
+                  <img className="membership-plan-visual" src={plan.cardImage} alt={`${plan.name} card`} />
+                  <p className="membership-plan-summary">{plan.summary}</p>
 
-                <div className="membership-plan-purchase">
-                  <p className="membership-plan-price"><strong>{selectedPlan.price}</strong><span> / {selectedPlan.period}</span></p>
+                  <div className="membership-plan-purchase">
+                    <p className="membership-plan-price"><strong>{plan.price}</strong><span> / {plan.period}</span></p>
 
-                  <div className="membership-plan-features">
-                    <h3>Package features</h3>
-                    <ul>
-                      {selectedPlan.features.map((feature) => (
-                        <li key={feature}>
-                          <span aria-hidden="true">&#10003;</span>
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
+                    <div className="membership-plan-features">
+                      <h3>Package features</h3>
+                      <ul>
+                        {plan.features.map((feature) => (
+                          <li key={feature}>
+                            <span aria-hidden="true">&#10003;</span>
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <button
+                      type="button"
+                      className="membership-primary-checkout-btn"
+                      onClick={() => handlePayWithStripe(plan.code)}
+                      disabled={Boolean(submittingPlanCode) || isCheckingMembershipAccess}
+                      tabIndex={isActive ? 0 : -1}
+                    >
+                      {submittingPlanCode ? "Preparing Stripe checkout..." : isUpgradeCheckout ? "Upgrade to Golden Pass" : "Continue to Checkout"}
+                    </button>
                   </div>
-
-                  <button
-                    type="button"
-                    className="membership-primary-checkout-btn"
-                    onClick={() => handlePayWithStripe(selectedPlan.code)}
-                    disabled={Boolean(submittingPlanCode) || isCheckingMembershipAccess}
-                  >
-                    {submittingPlanCode ? "Preparing Stripe checkout..." : isUpgradeCheckout ? "Upgrade to Golden Pass" : "Continue to Checkout"}
-                  </button>
-                </div>
-              </MotionArticle>
-            </AnimatePresence>
+                </MotionArticle>
+              );
+            })}
           </div>
 
           {!isUpgradeCheckout ? (

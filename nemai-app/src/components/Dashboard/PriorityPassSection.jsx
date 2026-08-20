@@ -8,14 +8,25 @@ const silverPriorityPassPlan = {
   description: "Permanent access to priority perks across the NEM AI ecosystem."
 };
 
-const premiumBenefitItems = [
-  "Priority AI Queue",
-  "Advanced Health Reports",
-  "Early Access to New AI Features",
-  "VIP Challenges",
-  "2x Mission Rewards",
-  "Premium Badge"
-];
+// Mirrors the package features shown on the membership checkout page.
+const premiumBenefitItemsByTier = {
+  silver: [
+    "1.5x Puff Point multiplier",
+    "Higher daily chat limit",
+    "Early access to new features",
+    "Exclusive Discord role",
+    "Silver Puff Priority Pass badge"
+  ],
+  gold: [
+    "2x Puff Point multiplier",
+    "Highest daily chat limit",
+    "Early access to new features",
+    "Exclusive Discord role and AMA sessions",
+    "Priority beta testing",
+    "Priority support",
+    "Golden Puff Priority Pass badge"
+  ]
+};
 
 function MembershipStatusBadge({ isActive, text }) {
   return <span className={`priority-pass-status ${isActive ? "active" : "inactive"}`}>{text}</span>;
@@ -92,8 +103,10 @@ function MembershipBenefits({ items, title, className = "" }) {
 }
 
 function ActiveMembershipCard({ membershipState, onUpgrade }) {
-  const activePassMedia = membershipState.priorityTier === "gold" ? goldPassGif : silverPassGif;
+  const isGoldMember = membershipState.priorityTier === "gold";
+  const activePassMedia = isGoldMember ? goldPassGif : silverPassGif;
   const isSilverMember = membershipState.planCode === "plus";
+  const benefitItems = isGoldMember ? premiumBenefitItemsByTier.gold : premiumBenefitItemsByTier.silver;
 
   return (
     <div className="priority-active-shell" aria-label="Premium member dashboard">
@@ -123,16 +136,18 @@ function ActiveMembershipCard({ membershipState, onUpgrade }) {
           </div>
 
           <MembershipBenefits
-            items={premiumBenefitItems}
+            items={benefitItems}
             title="Your Premium Benefits"
             className="priority-active-benefits--compact"
           />
 
-          <div className="priority-pass-offer-cta-wrap priority-pass-offer-cta-wrap--active">
-            <button type="button" className="priority-plan-cta gold priority-pass-offer-cta" onClick={isSilverMember ? onUpgrade : undefined}>
-              {isSilverMember ? "Upgrade to Golden Pass" : "Manage Membership"}
-            </button>
-          </div>
+          {isSilverMember ? (
+            <div className="priority-pass-offer-cta-wrap priority-pass-offer-cta-wrap--active">
+              <button type="button" className="priority-plan-cta gold priority-pass-offer-cta" onClick={onUpgrade}>
+                Upgrade to Golden Pass
+              </button>
+            </div>
+          ) : null}
         </aside>
       </article>
     </div>

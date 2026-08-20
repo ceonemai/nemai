@@ -64,7 +64,7 @@ export default function Login() {
             <div style={{ marginBottom: 16 }}>
               Logged in as:
               <br />
-              <b>{user?.email?.address || user?.twitter?.username}</b>
+              <b>{user?.email?.address || user?.google?.email || user?.twitter?.username}</b>
             </div>
 
             <motion.button className="login-btn secondary" onClick={logout}>

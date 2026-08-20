@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import nubieBadge from "../../assets/images/Nubie.png";
 import guardianBadge from "../../assets/images/Guardian.png";
@@ -12,14 +12,12 @@ const TIERS = [
   { key: "specialist", name: "Specialist", min: 501, max: Infinity, badge: specialistBadge }
 ];
 
-// Whole track scales from 0 to Specialist's threshold so badge spacing reflects real point distance.
-const SCALE_MAX = TIERS[TIERS.length - 1].min;
-
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
 export default function TierProgressSection({ points = 0 }) {
   const safePoints = Number.isFinite(points) ? Math.max(0, points) : 0;
   const currentBadgeRef = useRef(null);
+  const [hasAnimatedIn, setHasAnimatedIn] = useState(false);
 
   const currentTierIndex = useMemo(() => {
     const index = TIERS.findIndex((tier) => safePoints >= tier.min && safePoints <= tier.max);
@@ -31,8 +29,20 @@ export default function TierProgressSection({ points = 0 }) {
   const isMaxTier = !nextTier;
   const pointsToNext = isMaxTier ? 0 : Math.max(0, nextTier.min - safePoints);
 
-  // Real-distance progress: dot/fill position is the actual point value against the 0 -> Specialist scale.
-  const trackFillPct = useMemo(() => clamp((safePoints / SCALE_MAX) * 100, 0, 100), [safePoints]);
+  // Progress is measured against the badge row: each tier owns one equal slot, so the dot
+  // lands on the current badge and moves toward the next one as points accumulate.
+  const trackOffset = useMemo(() => {
+    const tierSpan = isMaxTier ? 0 : nextTier.min - currentTier.min;
+    const withinTier = tierSpan > 0 ? clamp((safePoints - currentTier.min) / tierSpan, 0, 1) : 0;
+    const slotUnits = currentTierIndex + 0.5 + withinTier;
+    const gapUnits = currentTierIndex + withinTier;
+    return `calc((100% - var(--tier-gap) * ${TIERS.length - 1}) * ${slotUnits / TIERS.length} + var(--tier-gap) * ${gapUnits})`;
+  }, [currentTier, currentTierIndex, isMaxTier, nextTier, safePoints]);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setHasAnimatedIn(true));
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   // Keep the current tier in view when the track scrolls horizontally on small screens.
   useEffect(() => {
@@ -51,17 +61,13 @@ export default function TierProgressSection({ points = 0 }) {
       <div className="tier-track-scroll">
         <div className="tier-track" role="list">
           <div className="tier-progress-line" aria-hidden="true">
-            <motion.div
+            <div
               className="tier-progress-line-fill"
-              initial={{ width: 0 }}
-              animate={{ width: `${trackFillPct}%` }}
-              transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+              style={{ width: hasAnimatedIn ? trackOffset : 0 }}
             />
-            <motion.div
+            <div
               className="tier-progress-glow-dot"
-              initial={{ left: "0%", opacity: 0 }}
-              animate={{ left: `${trackFillPct}%`, opacity: 1 }}
-              transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+              style={{ left: hasAnimatedIn ? trackOffset : 0, opacity: hasAnimatedIn ? 1 : 0 }}
             />
           </div>
 
