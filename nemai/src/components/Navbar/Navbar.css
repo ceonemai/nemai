@@ -312,6 +312,9 @@
   }
 
   .mobile-menu-toggle {
+    position: relative;
+    z-index: 102;
+
     width: 48px;
     height: 42px;
     padding: 0;
@@ -361,12 +364,15 @@
   /* ซ่อนเมนูไว้หลัง hamburger บน mobile */
 
   .nav-right {
-    position: absolute;
-    top: calc(100% + 8px);
-    right: 5%;
+    position: fixed;
+    top: 78px;
+    right: 14px;
+    bottom: 14px;
+    z-index: 101;
 
-    width: min(296px, 90vw);
-    padding: 12px;
+    width: min(300px, calc(100vw - 28px));
+    padding: 14px;
+    overflow-y: auto;
 
     background:
       radial-gradient(circle at 14% 4%, rgba(139,218,161,0.16), transparent 36%),
@@ -388,7 +394,7 @@
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transform: translateY(-8px);
+    transform: translateX(calc(100% + 24px));
 
     transition: opacity 0.2s ease-out, transform 0.2s ease-out, visibility 0.2s ease-out;
   }
@@ -397,7 +403,7 @@
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    transform: translateY(0);
+    transform: translateX(0);
   }
 
   /* Social icons inside mobile menu */
