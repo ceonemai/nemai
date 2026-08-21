@@ -1,8 +1,8 @@
 const customerApiUrl = "https://customer-api.nemai.io";
 
-const SILVER_PUFF_PRIO_PAYMENT_LINK = "https://buy.stripe.com/test_3cI9ASfNybAp7Qc6le4Ja00";
-const GOLDEN_PUFF_PRIO_PAYMENT_LINK = "https://buy.stripe.com/test_3cIfZg7h2cEt7QceRK4Ja01";
-const GOLDEN_PUFF_PRIO_UPGRADE_PAYMENT_LINK = "https://buy.stripe.com/test_cNicN4dFqbAp2vS4d64Ja02";
+const SILVER_PUFF_PRIO_PAYMENT_LINK = "https://buy.stripe.com/9B66oH6Gz1ze8Qwcn6ak001";
+const GOLDEN_PUFF_PRIO_PAYMENT_LINK = "https://buy.stripe.com/7sY3cv6Gzgu89UA1Isak000";
+const GOLDEN_PUFF_PRIO_UPGRADE_PAYMENT_LINK = "https://buy.stripe.com/4gMfZh5Cvfq43wc0Eoak002";
 
 const PAYMENT_LINKS_BY_PLAN = {
   plus: SILVER_PUFF_PRIO_PAYMENT_LINK,
