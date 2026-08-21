@@ -46,7 +46,7 @@ export default function Login() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.6 }}
         >
-          If you’re chosen to participate in the alpha test, join below.
+          Join the public alpha and help us shape the future of personal health intelligence.
         </motion.p>
 
         {!authenticated ? (
@@ -64,7 +64,7 @@ export default function Login() {
             <div style={{ marginBottom: 16 }}>
               Logged in as:
               <br />
-              <b>{user?.email?.address || user?.twitter?.username}</b>
+              <b>{user?.email?.address || user?.google?.email || user?.twitter?.username}</b>
             </div>
 
             <motion.button className="login-btn secondary" onClick={logout}>

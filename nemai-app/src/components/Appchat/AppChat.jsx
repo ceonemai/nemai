@@ -3,7 +3,8 @@
 // =========================================
 
 import { useState, useEffect, useRef, useMemo, memo, useCallback } from "react";
-import { usePrivy, getAccessToken } from "@privy-io/react-auth";
+import { usePrivy, getAccessToken as getAccessTokenFallback } from "@privy-io/react-auth";
+import { useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 /* eslint-disable-next-line no-unused-vars */
 import { motion, AnimatePresence } from "framer-motion";
@@ -26,6 +27,9 @@ const SYSTEM_BUSY_PATTERNS = [
   "system is busy",
   "handling many requests"
 ];
+
+const SIDEBAR_SMOOTH_STORAGE_KEY = "nemai-sidebar-smooth-until";
+const SIDEBAR_SMOOTH_DURATION_MS = 360;
 
 // rehype plugin: add className to <p> that starts with "Disclaimer"
 const rehypeDisclaimerClass = () => (tree) => {
@@ -231,7 +235,8 @@ const ProfileDOBDropdown = ({ value, onChange }) => {
 };
 
 export default function AppChat() {
-  const { ready, logout, user } = usePrivy();
+  const { ready, logout, user, getAccessToken: getAccessTokenFromHook } = usePrivy();
+  const navigate = useNavigate();
 
   const [messages, setMessages] = useState([
     { id: 1, role: "assistant", content: "Hi, I'm NEM AI. How can I help you today?" }
@@ -239,6 +244,7 @@ export default function AppChat() {
 
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [keepSidebarExpanded, setKeepSidebarExpanded] = useState(false);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [conversationId, setConversationId] = useState("");
@@ -273,14 +279,57 @@ export default function AppChat() {
   const [isSavingPhd, setIsSavingPhd] = useState(false);
   const [masterDataLoading, setMasterDataLoading] = useState(false);
 
+  const resolveAccessToken = useCallback(async () => {
+    if (typeof getAccessTokenFromHook === "function") {
+      const token = await getAccessTokenFromHook();
+      if (token) return token;
+    }
+
+    if (typeof getAccessTokenFallback === "function") {
+      const token = await getAccessTokenFallback();
+      if (token) return token;
+    }
+
+    return "";
+  }, [getAccessTokenFromHook]);
+
   // Fetch conversations history
   const getChatAuthHeaders = useCallback(async () => {
-    const token = await getAccessToken();
+    const token = await resolveAccessToken();
     const headers = { "Content-Type": "application/json" };
     if (token) {
       headers.Authorization = `Bearer ${token}`;
     }
     return headers;
+  }, [resolveAccessToken]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+
+    const rawUntil = window.sessionStorage.getItem(SIDEBAR_SMOOTH_STORAGE_KEY);
+    const until = Number(rawUntil || 0);
+    if (!Number.isFinite(until) || until <= Date.now()) {
+      window.sessionStorage.removeItem(SIDEBAR_SMOOTH_STORAGE_KEY);
+      return undefined;
+    }
+
+    setKeepSidebarExpanded(true);
+    const remainingMs = Math.max(0, until - Date.now());
+    const timerId = window.setTimeout(() => {
+      setKeepSidebarExpanded(false);
+      window.sessionStorage.removeItem(SIDEBAR_SMOOTH_STORAGE_KEY);
+    }, remainingMs);
+
+    return () => window.clearTimeout(timerId);
+  }, []);
+
+  const smoothSidebarDuringNavigation = useCallback(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(max-width: 768px)").matches) return;
+
+    const until = Date.now() + SIDEBAR_SMOOTH_DURATION_MS;
+    window.sessionStorage.setItem(SIDEBAR_SMOOTH_STORAGE_KEY, String(until));
+    setKeepSidebarExpanded(true);
   }, []);
 
   // Robust JSON parser: handles malformed responses with prefixes or HTML
@@ -362,7 +411,10 @@ export default function AppChat() {
   const fetchUserProfile = async () => {
     setProfileLoading(true);
     try {
-      const token = await getAccessToken();
+      const token = await resolveAccessToken();
+      if (!token) {
+        throw new Error("Missing access token for profile request");
+      }
       const response = await fetch(`${customerApiUrl}/api/v1/users`, {
         method: "GET",
         headers: {
@@ -394,7 +446,10 @@ export default function AppChat() {
   const fetchMasterData = async () => {
     setMasterDataLoading(true);
     try {
-      const token = await getAccessToken();
+      const token = await resolveAccessToken();
+      if (!token) {
+        throw new Error("Missing access token for master data request");
+      }
       const headers = { Authorization: `Bearer ${token}` };
 
       const [medRes, drugsRes, allergyCatsRes] = await Promise.all([
@@ -480,7 +535,10 @@ export default function AppChat() {
 
     setIsSavingProfile(true);
     try {
-      const token = await getAccessToken();
+      const token = await resolveAccessToken();
+      if (!token) {
+        throw new Error("Missing access token for profile update");
+      }
       const payload = {
         profile: {
           name,
@@ -551,7 +609,10 @@ export default function AppChat() {
         formattedBirthDate = formattedBirthDate.split("T")[0]; // ตัดเอาเฉพาะ YYYY-MM-DD
       }
 
-      const token = await getAccessToken();
+      const token = await resolveAccessToken();
+      if (!token) {
+        throw new Error("Missing access token for PHD update");
+      }
 
       const payload = {
         allergies: phdFormData.allergyCategoryIds.map(id => ({
@@ -720,6 +781,18 @@ export default function AppChat() {
     setIsSidebarOpen(false);
   };
 
+  const handleOpenPuffDashboard = () => {
+    smoothSidebarDuringNavigation();
+    setIsSidebarOpen(false);
+    navigate("/dashboard");
+  };
+
+  const handleOpenChatView = () => {
+    smoothSidebarDuringNavigation();
+    setIsSidebarOpen(false);
+    navigate("/");
+  };
+
   const handleConversationClick = (id) => {
     if (id === conversationId) return;
     loadConversation(id);
@@ -772,14 +845,15 @@ export default function AppChat() {
     profileData?.profile?.name ||
     profileData?.name ||
     user?.name ||
-    user?.twitter?.username ||
     user?.email?.address ||
+    user?.google?.email ||
     "User";
 
   const displayEmail =
     profileData?.email ||
     user?.email?.address ||
     user?.email ||
+    user?.google?.email ||
     "User";
 
   // เช็คว่าเริ่มแชทหรือยัง (ถ้ามีข้อความมากกว่า 1 หรือกำลังโหลด)
@@ -1053,7 +1127,7 @@ export default function AppChat() {
       )}
 
       {/* 🔹 Sidebar (Gemini Style) */}
-      <aside className={`appchat-sidebar ${isSidebarOpen ? "open" : ""}`}>
+      <aside className={`appchat-sidebar ${isSidebarOpen ? "open" : ""} ${keepSidebarExpanded || isProfileMenuOpen ? "keep-expanded" : ""}`}>
         <div className="sidebar-header">
           <div className="brand-info">
             <img src={logo} alt="NEM AI Logo" className="sidebar-logo" />
@@ -1064,9 +1138,27 @@ export default function AppChat() {
           </button>
         </div>
 
-        <button className="new-chat-btn" onClick={handleNewChat}>
-          <span className="plus-icon">+</span> New Chat
-        </button>
+        <div className="sidebar-primary-actions">
+          <button className="new-chat-btn sidebar-nav-btn sidebar-dashboard-btn" onClick={handleOpenPuffDashboard} aria-label="Open Puff Dashboard">
+            <span className="puff-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+                <rect x="14" y="3" width="7" height="4" rx="1.5"></rect>
+                <rect x="14" y="10" width="7" height="11" rx="1.5"></rect>
+                <rect x="3" y="13" width="7" height="8" rx="1.5"></rect>
+              </svg>
+            </span>
+            <span className="sidebar-text">Puff Dashboard</span>
+          </button>
+          <button className="new-chat-btn sidebar-nav-btn active" onClick={handleNewChat} aria-label="New Chat">
+            <span className="puff-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+            </span>
+            <span className="sidebar-text">New Chat</span>
+          </button>
+        </div>
 
         <div className="sidebar-history">
           <div className="history-label">Recent Chats</div>
@@ -1181,45 +1273,82 @@ export default function AppChat() {
           <span className="mobile-title">NEM AI</span>
         </div>
 
-        <div className="chat-messages">
-          {messages.map((msg) => (
-            <Message key={msg.id} role={msg.role} content={msg.content} displayName={displayName} />
-          ))}
+        <>
 
-          {loading && (
-            <div className="message-row assistant">
-              <img src={logo} alt="NEM AI Logo" className="avatar bot-img" />
-              <div className="bubble assistant">
-                <div className="typing"><span /><span /><span /></div>
+          <div className="chat-messages">
+            {messages.map((msg) => (
+              <Message key={msg.id} role={msg.role} content={msg.content} displayName={displayName} />
+            ))}
+
+            {loading && (
+              <div className="message-row assistant">
+                <img src={logo} alt="NEM AI Logo" className="avatar bot-img" />
+                <div className="bubble assistant">
+                  <div className="typing"><span /><span /><span /></div>
+                </div>
               </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+
+          {!isChatStarted && (
+            <div className="welcome-text">
+              <h1>Hello, {displayName.split('@')[0]}</h1>
+              <p>How can I help you today?</p>
             </div>
           )}
-          <div ref={messagesEndRef} />
-        </div>
 
-        {!isChatStarted && (
-          <div className="welcome-text">
-            <h1>Hello, {displayName.split('@')[0]}</h1>
-            <p>How can I help you today?</p>
+          <div className="chat-input-container">
+            <div className="input-box">
+              <textarea
+                placeholder="Type your message..."
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={onKeyDown}
+                rows={1}
+              />
+              <button onClick={handleSend} disabled={!input.trim() || loading}>
+                Send
+              </button>
+            </div>
+            <div className="disclaimer">NEM AI can make mistakes. Consider verifying critical information.</div>
           </div>
-        )}
-
-        <div className="chat-input-container">
-          <div className="input-box">
-            <textarea
-              placeholder="Type your message..."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={onKeyDown}
-              rows={1}
-            />
-            <button onClick={handleSend} disabled={!input.trim() || loading}>
-              Send
-            </button>
-          </div>
-          <div className="disclaimer">NEM AI can make mistakes. Consider verifying critical information.</div>
-        </div>
+        </>
       </main>
+
+      <nav className="appchat-footer-tabbar is-chat" aria-label="Primary actions">
+        <span className="footer-tab-indicator" aria-hidden="true"></span>
+        <button
+          type="button"
+          className="footer-tab-btn active"
+          onClick={handleOpenChatView}
+          aria-label="Open Chat"
+        >
+          <span className="puff-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </span>
+          <span className="footer-tab-label">Chat</span>
+        </button>
+
+        <button
+          type="button"
+          className="footer-tab-btn"
+          onClick={handleOpenPuffDashboard}
+          aria-label="Open Puff Dashboard"
+        >
+          <span className="puff-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+              <rect x="14" y="3" width="7" height="4" rx="1.5"></rect>
+              <rect x="14" y="10" width="7" height="11" rx="1.5"></rect>
+              <rect x="3" y="13" width="7" height="8" rx="1.5"></rect>
+            </svg>
+          </span>
+          <span className="footer-tab-label">Puff Dashboard</span>
+        </button>
+      </nav>
     </div>
   );
 }
