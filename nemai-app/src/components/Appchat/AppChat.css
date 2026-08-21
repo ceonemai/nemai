@@ -836,6 +836,7 @@
   gap: 18px;
   font-family: inherit;
   position: relative;
+  zoom: 0.9;
 }
 
 .puff-dashboard-page::before {
