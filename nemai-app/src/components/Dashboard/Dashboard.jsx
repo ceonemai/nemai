@@ -252,6 +252,7 @@ export default function Dashboard() {
   const [leaderboardItems, setLeaderboardItems] = useState([]);
   const [currentUserRank, setCurrentUserRank] = useState(null);
   const [currentUserId, setCurrentUserId] = useState("");
+  const [currentUserEntry, setCurrentUserEntry] = useState(null);
   const [leaderboardLoading, setLeaderboardLoading] = useState(true);
   const [leaderboardError, setLeaderboardError] = useState("");
   const [membershipState, setMembershipState] = useState(() => resolveMembershipFromPlanCode("free"));
@@ -368,6 +369,7 @@ export default function Dashboard() {
         setLeaderboardItems(leaderboard?.items || []);
         setCurrentUserRank(Number.isFinite(leaderboard?.current_user?.rank) ? leaderboard.current_user.rank : null);
         setCurrentUserId(String(leaderboard?.current_user?.user_id || ""));
+        setCurrentUserEntry(leaderboard?.current_user || null);
       } catch (error) {
         if (!isMounted) return;
 
@@ -424,16 +426,32 @@ export default function Dashboard() {
   );
 
   const leaderboardRows = useMemo(() => {
-    return [...leaderboardItems]
+    const rows = [...leaderboardItems]
       .map((item) => ({
         rank: Number(item?.rank ?? 0),
         userId: String(item?.user_id ?? ""),
         email: redactEmail(item?.email ?? item?.user_email ?? item?.display_name ?? ""),
         points: Number(item?.puff_point_total ?? 0)
       }))
-      .filter((item) => item.rank > 0 && item.userId)
-      .sort((a, b) => a.rank - b.rank);
-  }, [leaderboardItems]);
+      .filter((item) => item.rank > 0 && item.userId);
+
+    // The API only returns the top-N items, so splice in the current user's row
+    // (from current_user) when their rank falls outside that window.
+    const currentUserId = String(currentUserEntry?.user_id ?? "");
+    if (currentUserId && !rows.some((row) => row.userId === currentUserId)) {
+      const rank = Number(currentUserEntry?.rank ?? 0);
+      if (rank > 0) {
+        rows.push({
+          rank,
+          userId: currentUserId,
+          email: redactEmail(currentUserEntry?.email ?? currentUserEntry?.user_email ?? currentUserEntry?.display_name ?? ""),
+          points: Number(currentUserEntry?.puff_point_total ?? 0)
+        });
+      }
+    }
+
+    return rows.sort((a, b) => a.rank - b.rank);
+  }, [leaderboardItems, currentUserEntry]);
 
   const topFiveRows = useMemo(() => leaderboardRows.slice(0, 5), [leaderboardRows]);
 
