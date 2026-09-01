@@ -205,6 +205,7 @@
   flex-direction: column;
   gap: 13px;
   flex: 1;
+  min-width: 0;
 }
 
 .blog-card-body h2 {
@@ -214,6 +215,8 @@
   font-size: clamp(1.28rem, 1.95vw, 1.7rem);
   line-height: 1.22;
   color: #1f4652;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .blog-card-body p {
