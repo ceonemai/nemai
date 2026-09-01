@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
+import rehypeSanitize from "rehype-sanitize";
 import { fetchBlogPostById } from "../../services/blogApi";
 import {
   estimateReadMinutes,
@@ -144,7 +146,9 @@ export default function BlogDetailPage() {
             )}
 
             <section className="blog-markdown">
-              <ReactMarkdown>{post?.content || "No content available."}</ReactMarkdown>
+              <ReactMarkdown rehypePlugins={[rehypeRaw, rehypeSanitize]}>
+                {post?.content || "No content available."}
+              </ReactMarkdown>
             </section>
 
             <section className="blog-detail-share" aria-label="Share this article">
