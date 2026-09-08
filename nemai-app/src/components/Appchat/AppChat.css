@@ -329,7 +329,7 @@
   left: var(--tabbar-pad-x);
   top: var(--tabbar-pad-y);
   bottom: var(--tabbar-pad-y);
-  width: calc((100% - (var(--tabbar-pad-x) * 2) - var(--tabbar-gap)) / 2);
+  width: calc((100% - (var(--tabbar-pad-x) * 2) - (var(--tabbar-gap) * 2)) / 3);
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.36);
   background:
@@ -346,6 +346,10 @@
 
 .appchat-footer-tabbar.is-dashboard .footer-tab-indicator {
   transform: translateX(calc(100% + var(--tabbar-gap)));
+}
+
+.appchat-footer-tabbar.is-referrals .footer-tab-indicator {
+  transform: translateX(calc((100% + var(--tabbar-gap)) * 2));
 }
 
 .footer-tab-btn {

@@ -6,6 +6,9 @@ import type {
   PuffLeaderboard,
   PuffLeaderboardItem,
   PuffLeaderboardResponse,
+  PuffReferralItem,
+  PuffReferralStatus,
+  PuffReferralStatusResponse,
   PuffSummary,
   PuffSummaryResponse
 } from "./puff.types";
@@ -183,5 +186,69 @@ export const fetchPuffLeaderboard = async (
           puff_point_total: Number(source.current_user.puff_point_total ?? 0)
         }
       : null
+  };
+};
+
+const toReferralRecord = (item: unknown): Record<string, unknown> => {
+  return item && typeof item === "object" ? item as Record<string, unknown> : {};
+};
+
+const firstString = (record: Record<string, unknown>, keys: string[], fallback = "-"): string => {
+  for (const key of keys) {
+    const value = record[key];
+    if (value !== undefined && value !== null && String(value).trim()) {
+      return String(value);
+    }
+  }
+
+  return fallback;
+};
+
+const normalizeReferralItems = (items: unknown): PuffReferralItem[] => {
+  if (!Array.isArray(items)) return [];
+
+  return items.map((rawItem, index) => {
+    const item = toReferralRecord(rawItem);
+    const rewardValue = firstString(item, ["amount", "points", "reward_amount", "reward", "puff_points"], "-");
+
+    return {
+      id: firstString(item, ["id", "referral_id", "user_id", "invitee_id"], `referral-${index}`),
+      invitee: firstString(item, ["invitee", "display_name", "email", "user_email", "referred_email", "friend_email", "wallet_address"]),
+      date: firstString(item, ["date", "created_at", "completed_at", "updated_at", "used_at"]),
+      status: firstString(item, ["status", "state", "referral_status"], "Pending"),
+      amount: rewardValue === "-" ? rewardValue : `${rewardValue} pts`
+    };
+  });
+};
+
+export const fetchPuffReferralStatus = async (
+  getAccessToken: () => Promise<string>
+): Promise<PuffReferralStatus> => {
+  const token = await getAccessToken();
+
+  const response = await fetch(`${customerApiUrl}/api/v1/puff/referral`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to load puff referral status (status ${response.status})`);
+  }
+
+  const payload = (await response.json()) as PuffReferralStatusResponse;
+
+  if (!payload?.data) {
+    throw new Error("Puff referral response is missing data.");
+  }
+
+  return {
+    locked: Boolean(payload.data.locked),
+    unlock_at_points: Number(payload.data.unlock_at_points ?? 0),
+    code: payload.data.code ? String(payload.data.code) : undefined,
+    referrals_used: Number(payload.data.referrals_used ?? 0),
+    items: normalizeReferralItems(payload.data.items)
   };
 };

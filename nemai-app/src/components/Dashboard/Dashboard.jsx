@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { usePrivy } from "@privy-io/react-auth";
+/* eslint-disable-next-line no-unused-vars */
+import { motion, AnimatePresence } from "framer-motion";
 import "../Appchat/AppChat.css";
 import logo from "../../../../nemai/src/assets/images/LogogramFullColor.png";
 import PriorityPassSection from "./PriorityPassSection";
@@ -237,9 +239,25 @@ function DashboardPageSkeleton() {
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const { getAccessToken, user } = usePrivy();
+  const location = useLocation();
+  const { getAccessToken, user, logout } = usePrivy();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [keepSidebarExpanded, setKeepSidebarExpanded] = useState(false);
+  const [isLogoutMenuOpen, setIsLogoutMenuOpen] = useState(false);
+  const logoutMenuRef = useRef(null);
+
+  useEffect(() => {
+    if (!isLogoutMenuOpen) return undefined;
+
+    const handleClickOutside = (event) => {
+      if (logoutMenuRef.current && !logoutMenuRef.current.contains(event.target)) {
+        setIsLogoutMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isLogoutMenuOpen]);
   const [hasBootstrapped, setHasBootstrapped] = useState(false);
   const hasLoadedSummaryRef = useRef(false);
   const summaryCacheRef = useRef({});
@@ -567,6 +585,12 @@ export default function Dashboard() {
     navigate("/dashboard");
   };
 
+  const handleOpenReferrals = () => {
+    smoothSidebarDuringNavigation();
+    setIsSidebarOpen(false);
+    navigate("/referrals");
+  };
+
   return (
     <div className="appchat-layout">
       {isSidebarOpen && <div className="sidebar-overlay" onClick={() => setIsSidebarOpen(false)}></div>}
@@ -602,6 +626,41 @@ export default function Dashboard() {
               </svg>
             </span>
             <span className="sidebar-text">Chat</span>
+          </button>
+          <button className={`new-chat-btn sidebar-nav-btn ${location.pathname === "/referrals" ? "active" : ""}`} onClick={handleOpenReferrals} aria-label="Open Referrals">
+            <span className="puff-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            </span>
+            <span className="sidebar-text">Referrals</span>
+          </button>
+        </div>
+        <div className="sidebar-footer" ref={logoutMenuRef}>
+          <AnimatePresence>
+            {isLogoutMenuOpen && (
+              <motion.div
+                initial="closed"
+                animate="open"
+                exit="closed"
+                variants={{
+                  open: { clipPath: "inset(0% 0% 0% 0% round 8px)", transition: { type: "spring", bounce: 0, duration: 0.5, delayChildren: 0.2, staggerChildren: 0.05 } },
+                  closed: { clipPath: "inset(90% 50% 10% 50% round 8px)", transition: { type: "spring", bounce: 0, duration: 0.3 } }
+                }}
+                className="profile-menu-popup"
+              >
+                <motion.div
+                  variants={{ open: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }, closed: { opacity: 0, y: 20, transition: { duration: 0.2 } } }}
+                  onClick={() => { setIsLogoutMenuOpen(false); logout(); }} className="profile-menu-item logout">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                  Log out
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <button type="button" className="user-profile" onClick={() => setIsLogoutMenuOpen((open) => !open)} aria-label="Account menu">
+            <div className="user-avatar">{(user?.name || user?.email?.address || user?.google?.email || "User").charAt(0).toUpperCase()}</div>
+            <span className="user-name">{user?.name || user?.email?.address || user?.google?.email || "User"}</span>
           </button>
         </div>
       </aside>
@@ -796,7 +855,7 @@ export default function Dashboard() {
         )}
       </main>
 
-      <nav className="appchat-footer-tabbar is-dashboard" aria-label="Primary actions">
+      <nav className={`appchat-footer-tabbar ${location.pathname === "/referrals" ? "is-referrals" : "is-dashboard"}`} aria-label="Primary actions">
         <span className="footer-tab-indicator" aria-hidden="true"></span>
         <button
           type="button"
@@ -827,6 +886,14 @@ export default function Dashboard() {
             </svg>
           </span>
           <span className="footer-tab-label">Puff Dashboard</span>
+        </button>
+        <button type="button" className="footer-tab-btn" onClick={handleOpenReferrals} aria-label="Open Referrals">
+          <span className="puff-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          </span>
+          <span className="footer-tab-label">Referrals</span>
         </button>
       </nav>
     </div>

@@ -4,7 +4,7 @@
 
 import { useState, useEffect, useRef, useMemo, memo, useCallback } from "react";
 import { usePrivy, getAccessToken as getAccessTokenFallback } from "@privy-io/react-auth";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 /* eslint-disable-next-line no-unused-vars */
 import { motion, AnimatePresence } from "framer-motion";
@@ -237,6 +237,7 @@ const ProfileDOBDropdown = ({ value, onChange }) => {
 export default function AppChat() {
   const { ready, logout, user, getAccessToken: getAccessTokenFromHook } = usePrivy();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [messages, setMessages] = useState([
     { id: 1, role: "assistant", content: "Hi, I'm NEM AI. How can I help you today?" }
@@ -793,6 +794,12 @@ export default function AppChat() {
     navigate("/");
   };
 
+  const handleOpenReferrals = () => {
+    smoothSidebarDuringNavigation();
+    setIsSidebarOpen(false);
+    navigate("/referrals");
+  };
+
   const handleConversationClick = (id) => {
     if (id === conversationId) return;
     loadConversation(id);
@@ -1158,6 +1165,14 @@ export default function AppChat() {
             </span>
             <span className="sidebar-text">New Chat</span>
           </button>
+          <button className={`new-chat-btn sidebar-nav-btn ${location.pathname === "/referrals" ? "active" : ""}`} onClick={handleOpenReferrals} aria-label="Open Referrals">
+            <span className="puff-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            </span>
+            <span className="sidebar-text">Referrals</span>
+          </button>
         </div>
 
         <div className="sidebar-history">
@@ -1316,7 +1331,7 @@ export default function AppChat() {
         </>
       </main>
 
-      <nav className="appchat-footer-tabbar is-chat" aria-label="Primary actions">
+      <nav className={`appchat-footer-tabbar ${location.pathname === "/referrals" ? "is-referrals" : "is-chat"}`} aria-label="Primary actions">
         <span className="footer-tab-indicator" aria-hidden="true"></span>
         <button
           type="button"
@@ -1347,6 +1362,14 @@ export default function AppChat() {
             </svg>
           </span>
           <span className="footer-tab-label">Puff Dashboard</span>
+        </button>
+        <button type="button" className="footer-tab-btn" onClick={handleOpenReferrals} aria-label="Open Referrals">
+          <span className="puff-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          </span>
+          <span className="footer-tab-label">Referrals</span>
         </button>
       </nav>
     </div>

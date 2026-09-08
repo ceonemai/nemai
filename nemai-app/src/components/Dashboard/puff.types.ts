@@ -61,6 +61,26 @@ export interface PuffCheckInHistoryResponse {
   data: PuffCheckInHistory;
 }
 
+export interface PuffReferralItem {
+  id: string;
+  invitee: string;
+  date: string;
+  status: string;
+  amount: string;
+}
+
+export interface PuffReferralStatus {
+  locked: boolean;
+  unlock_at_points: number;
+  code?: string;
+  referrals_used: number;
+  items: PuffReferralItem[];
+}
+
+export interface PuffReferralStatusResponse {
+  data: PuffReferralStatus;
+}
+
 export type PriorityTier = "normal" | "silver" | "gold";
 
 export interface MembershipState {
