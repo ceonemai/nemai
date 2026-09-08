@@ -8,6 +8,7 @@ import SetupProfile from "./components/SetupProfile/SetupProfile";
 import logo from "./assets/images/LogogramFullColor.png";
 
 const Dashboard = lazy(() => import("./components/Dashboard/Dashboard"));
+const Referral = lazy(() => import("./components/Referral/Referral"));
 const CheckoutMembership = lazy(() => import("./components/Checkout/CheckoutMembership"));
 const CheckoutPaymentFailed = lazy(() => import("./components/Checkout/CheckoutPaymentFailed"));
 
@@ -40,16 +41,19 @@ function MainRoute() {
         hasSynced.current = true; // มาร์คไว้ว่ากำลัง/ได้ซิงค์แล้ว เพื่อป้องกันการยิงซ้ำ
         try {
           const token = await getAccessToken();
+          const referralCode = localStorage.getItem("nemai_referral_code");
           const response = await fetch(`https://customer-api.nemai.io/api/v1/auth/sync`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
               "Authorization": `Bearer ${token}`
             },
-            body: JSON.stringify({}) // 🔹 ใส่ body ว่างไปเพื่อป้องกัน API Server/Browser ตีตก Request
+            body: JSON.stringify(referralCode ? { referral_code: referralCode } : {})
           });
 
           if (response.ok) {
+            // ลบทิ้งเฉพาะตอน sync สำเร็จ เพื่อไม่ให้ code เดิมหลุดไปติดกับการ sync ครั้งถัดไป
+            localStorage.removeItem("nemai_referral_code");
             const data = await response.json();
             if (data.is_new) {
               navigate("/setup-profile", { replace: true });
@@ -171,6 +175,7 @@ export default function App() {
             <Route element={<MainRoute />}>
               <Route path="/" element={<AppChat />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/referrals" element={<Referral />} />
               <Route path="/membership/checkout" element={<CheckoutMembership />} />
               <Route path="/membership/checkout/failure" element={<CheckoutPaymentFailed />} />
             </Route>
