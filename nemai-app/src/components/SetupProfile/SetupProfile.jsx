@@ -4,8 +4,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import "./SetupProfile.css";
 import { usePrivy } from "@privy-io/react-auth";
+import { CUSTOMER_SERVICE_URL } from "../../config/serviceUrls";
 
-const customerApiUrl = "https://customer-api.nemai.io";
+const customerApiUrl = CUSTOMER_SERVICE_URL;
 
 // Component สำหรับ Dropdown แบบค้นหาได้ สไตล์ AI (Glassmorphism & Animated)
 const SearchableDropdown = ({ options, value, onChange, placeholder, name, hideSearch = false }) => {

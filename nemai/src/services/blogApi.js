@@ -1,4 +1,6 @@
-const BLOG_API_BASE = "https://customer-api.nemai.io/api/v1/blog-posts";
+import { CUSTOMER_SERVICE_URL } from "../config/serviceUrls";
+
+const BLOG_API_BASE = `${CUSTOMER_SERVICE_URL}/api/v1/blog-posts`;
 
 async function parseJsonResponse(response) {
   let payload = null;

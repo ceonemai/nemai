@@ -1,4 +1,6 @@
-const customerApiUrl = "https://customer-api.nemai.io";
+import { CUSTOMER_SERVICE_URL } from "../../config/serviceUrls";
+
+const customerApiUrl = CUSTOMER_SERVICE_URL;
 
 const SILVER_PUFF_PRIO_PAYMENT_LINK = "https://buy.stripe.com/9B66oH6Gz1ze8Qwcn6ak001";
 const GOLDEN_PUFF_PRIO_PAYMENT_LINK = "https://buy.stripe.com/7sY3cv6Gzgu89UA1Isak000";

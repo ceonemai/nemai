@@ -6,6 +6,7 @@ import Login from "./components/Login/Login";
 import AppChat from "./components/Appchat/AppChat";
 import SetupProfile from "./components/SetupProfile/SetupProfile";
 import logo from "./assets/images/LogogramFullColor.png";
+import { CUSTOMER_SERVICE_URL } from "./config/serviceUrls";
 
 const Dashboard = lazy(() => import("./components/Dashboard/Dashboard"));
 const Referral = lazy(() => import("./components/Referral/Referral"));
@@ -42,7 +43,7 @@ function MainRoute() {
         try {
           const token = await getAccessToken();
           const referralCode = localStorage.getItem("nemai_referral_code");
-          const response = await fetch(`https://customer-api.nemai.io/api/v1/auth/sync`, {
+          const response = await fetch(`${CUSTOMER_SERVICE_URL}/api/v1/auth/sync`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

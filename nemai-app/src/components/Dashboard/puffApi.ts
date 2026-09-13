@@ -12,8 +12,9 @@ import type {
   PuffSummary,
   PuffSummaryResponse
 } from "./puff.types";
+import { CUSTOMER_SERVICE_URL } from "../../config/serviceUrls";
 
-const customerApiUrl = "https://customer-api.nemai.io";
+const customerApiUrl = CUSTOMER_SERVICE_URL;
 const ALLOWED_DAYS = [7, 15, 30] as const;
 
 export type PuffDays = (typeof ALLOWED_DAYS)[number];
