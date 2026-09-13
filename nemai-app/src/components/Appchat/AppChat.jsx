@@ -12,9 +12,10 @@ import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import "./AppChat.css";
 import logo from "../../../../nemai/src/assets/images/LogogramFullColor.png";
+import { CHAT_AI_SERVICE_URL, CUSTOMER_SERVICE_URL } from "../../config/serviceUrls";
 
-const apiUrl = import.meta.env.VITE_CHAT_AI_SERVICE_URL ?? "https://customer-api.nemai.io";
-const customerApiUrl = "https://customer-api.nemai.io";
+const apiUrl = CHAT_AI_SERVICE_URL;
+const customerApiUrl = CUSTOMER_SERVICE_URL;
 
 const GENERIC_ERROR_MSG = "Sorry, something went wrong. Please try again later.";
 const VALIDATION_ERROR_MSG = "Please check your message and try again.";
