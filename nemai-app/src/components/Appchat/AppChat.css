@@ -551,8 +551,10 @@
   padding: 12px 18px;
   border-radius: 20px;
   max-width: 75%;
-  font-size: 16px;
-  line-height: 1.5;
+  font-size: 15.5px;
+  line-height: 1.55;
+  /* root sets a global 0.18px letter-spacing; ChatGPT-like text should be tight/normal */
+  letter-spacing: normal;
   word-wrap: break-word;
   /* preserve user's line breaks and allow wrapping within the bubble */
   white-space: pre-wrap;
@@ -670,7 +672,7 @@
 /* Markdown inside bubbles for user*/
 
 .bubble p {
-  margin: 0 0 10px 0;
+  margin: 0 0 8px 0;
   /* preserve newlines inside assistant markdown paragraphs */
   white-space: pre-wrap;
   word-wrap: break-word;
@@ -705,12 +707,13 @@
 
 .bubble ol,
 .bubble ul {
-  margin: 10px 0;
-  padding-left: 24px;
+  margin: 6px 0 10px;
+  padding-left: 22px;
 }
 
 .bubble li {
-  margin-bottom: 4px;
+  margin-bottom: 3px;
+  line-height: 1.5;
 }
 
 .bubble li p {
@@ -719,6 +722,25 @@
 
 .bubble li:last-child {
   margin-bottom: 0;
+}
+
+.bubble ol:last-child,
+.bubble ul:last-child {
+  margin-bottom: 0;
+}
+
+.bubble h1,
+.bubble h2,
+.bubble h3,
+.bubble h4 {
+  font-size: 1em;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0 0 6px 0;
+}
+
+.bubble strong {
+  font-weight: 700;
 }
 
 /* ===== Welcome Text ===== */
