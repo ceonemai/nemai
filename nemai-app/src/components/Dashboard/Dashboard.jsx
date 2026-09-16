@@ -619,14 +619,6 @@ export default function Dashboard() {
             <span className="sidebar-text">Puff Dashboard</span>
           </button>
 
-          <button className="new-chat-btn sidebar-nav-btn" onClick={handleOpenChatView} aria-label="Open Chat">
-            <span className="puff-icon" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-              </svg>
-            </span>
-            <span className="sidebar-text">Chat</span>
-          </button>
           <button className={`new-chat-btn sidebar-nav-btn ${location.pathname === "/referrals" ? "active" : ""}`} onClick={handleOpenReferrals} aria-label="Open Referrals">
             <span className="puff-icon" aria-hidden="true">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -634,6 +626,14 @@ export default function Dashboard() {
               </svg>
             </span>
             <span className="sidebar-text">Referrals</span>
+          </button>
+          <button className="new-chat-btn sidebar-nav-btn" onClick={handleOpenChatView} aria-label="Open Chat">
+            <span className="puff-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+            </span>
+            <span className="sidebar-text">Chat</span>
           </button>
         </div>
         <div className="sidebar-footer" ref={logoutMenuRef}>

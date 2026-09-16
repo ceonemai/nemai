@@ -206,17 +206,17 @@ function ReferralPage() {
             </span>
             <span className="sidebar-text">Puff Dashboard</span>
           </button>
-          <button className="new-chat-btn sidebar-nav-btn" onClick={() => { setIsSidebarOpen(false); navigate("/"); }} aria-label="Open Chat">
-            <span className="puff-icon" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
-            </span>
-            <span className="sidebar-text">Chat</span>
-          </button>
           <button className="new-chat-btn sidebar-nav-btn active" onClick={() => { setIsSidebarOpen(false); navigate("/referrals"); }} aria-label="Open Referrals">
             <span className="puff-icon" aria-hidden="true">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /></svg>
             </span>
             <span className="sidebar-text">Referrals</span>
+          </button>
+          <button className="new-chat-btn sidebar-nav-btn" onClick={() => { setIsSidebarOpen(false); navigate("/"); }} aria-label="Open Chat">
+            <span className="puff-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
+            </span>
+            <span className="sidebar-text">Chat</span>
           </button>
         </div>
         <div className="sidebar-footer" ref={logoutMenuRef}>
@@ -249,12 +249,12 @@ function ReferralPage() {
       </aside>
 
       <main className="appchat-main dashboard referral-main">
-        <header className="referral-mobile-header">
-          <button type="button" className="referral-menu-btn" onClick={() => setIsSidebarOpen(true)} aria-label="Open sidebar">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
+        <div className="mobile-header dashboard">
+          <button type="button" className="menu-btn" onClick={() => setIsSidebarOpen(true)} aria-label="Open sidebar">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
           </button>
-          <span>NEM AI</span>
-        </header>
+          <span className="mobile-title">NEM AI</span>
+        </div>
 
         <section className={`referral-panel ${isLocked ? "referral-panel-locked" : ""}`} aria-labelledby="referral-title">
           <div className="referral-heading-row">
@@ -349,11 +349,6 @@ function ReferralPage() {
           )}
         </section>
       </main>
-      <nav className="referral-mobile-nav" aria-label="Primary actions">
-        <button type="button" onClick={() => navigate("/")} aria-label="Open Chat"><span className="referral-nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg></span><small>Chat</small></button>
-        <button type="button" onClick={() => navigate("/dashboard")} aria-label="Open Puff Dashboard"><span className="referral-nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="4" rx="1.5" /><rect x="14" y="10" width="7" height="11" rx="1.5" /><rect x="3" y="13" width="7" height="8" rx="1.5" /></svg></span><small>Dashboard</small></button>
-        <button type="button" className="active" onClick={() => navigate("/referrals")} aria-label="Open Referrals"><span className="referral-nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /></svg></span><small>Referrals</small></button>
-      </nav>
     </div>
   );
 }
