@@ -16,7 +16,7 @@ function Hero() {
 
       <div className="hero-content">
         <h1>
-          Your Personal AI<br />
+           Your Personal AI<br />
           <span className="hero-subtitle">for Health & Emergencies</span>
         </h1>
 
