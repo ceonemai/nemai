@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./Hero.css";
 import mascot from "../../assets/images/mascots/Mascott NEM-85.png";
 import glassLogo from "../../assets/images/LogogramFullColor.png";
+import lineImage from "../../assets/images/line2.png";
 import EarlyAccessPopup from "../EarlyAccessPopup/EarlyAccessPopup";
 
 function Hero() {
@@ -15,7 +16,7 @@ function Hero() {
 
       <div className="hero-content">
         <h1>
-          Your Personal AI<br />
+           Your Personal AI<br />
           <span className="hero-subtitle">for Health & Emergencies</span>
         </h1>
 
@@ -30,6 +31,11 @@ function Hero() {
           </button>
         </div>
         */}
+      </div>
+
+      {/* Decorative Line */}
+      <div className="hero-line-wrap">
+        <img src={lineImage} alt="NEM AI Health Journey" className="hero-line" />
       </div>
 
       {/* Nem Background Mascot */}
