@@ -1,12 +1,10 @@
-import { useState } from "react";
 import "./Hero.css";
 import mascot from "../../assets/images/mascots/Mascott NEM-85.png";
 import glassLogo from "../../assets/images/LogogramFullColor.png";
 import lineImage from "../../assets/images/line2.png";
-import EarlyAccessPopup from "../EarlyAccessPopup/EarlyAccessPopup";
 
 function Hero() {
-  const [showPopup, setShowPopup] = useState(false);
+  const appUrl = import.meta.env.VITE_APP_URL || "http://localhost:5174";
 
   return (
     <section
@@ -23,14 +21,17 @@ function Hero() {
         <p className="hero-tagline">
           <span className="act"> We give you clear steps in emergencies and everyday health answers tailored exactly to your body. </span>
         </p>
-      
-        {/*
+
         <div className="hero-buttons">
-          <button className="primary" onClick={() => setShowPopup(true)}>
-            Get Early Access
-          </button>
+          <a
+            className="primary hero-app-button"
+            href={appUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Go To app
+          </a>
         </div>
-        */}
       </div>
 
       {/* Decorative Line */}
@@ -41,7 +42,6 @@ function Hero() {
       {/* Nem Background Mascot */}
       <img src={mascot} alt="Nemai Mascot" className="hero-mascot" />
 
-      {showPopup && <EarlyAccessPopup onClose={() => setShowPopup(false)} />}
     </section>
   );
 }
