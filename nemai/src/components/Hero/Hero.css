@@ -105,6 +105,30 @@
   display: flex;
   gap: 20px;
   justify-content: center;
+  margin-top: 24px;
+}
+
+.primary.hero-app-button {
+  display: inline-block;
+  text-decoration: none;
+  border: 1px solid var(--primary-teal);
+  background: var(--primary-teal);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(33, 135, 170, 0.2);
+  transition: all 0.25s ease;
+}
+
+.primary.hero-app-button:hover {
+  border-color: var(--primary-green);
+  background: var(--primary-green);
+  color: var(--brand-dark);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(33, 135, 170, 0.22);
+}
+
+.primary.hero-app-button:focus-visible {
+  outline: 3px solid var(--secondary-teal);
+  outline-offset: 3px;
 }
 
 .primary {
@@ -316,6 +340,7 @@
 
   .hero-buttons {
     flex-direction: column;
+    align-items: center;
   }
 
   .navbar {
