@@ -29,7 +29,7 @@ function Hero() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Go To app
+            Go to App
           </a>
         </div>
       </div>
