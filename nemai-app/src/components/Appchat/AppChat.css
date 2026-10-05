@@ -569,6 +569,7 @@
   border-bottom-left-radius: 4px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
   border: 1px solid #eef6ff;
+  white-space: normal;
 
   position: relative;
   padding-right: 52px;
@@ -673,8 +674,6 @@
 
 .bubble p {
   margin: 0 0 8px 0;
-  /* preserve newlines inside assistant markdown paragraphs */
-  white-space: pre-wrap;
   word-wrap: break-word;
   overflow-wrap: anywhere;
 }
@@ -707,12 +706,12 @@
 
 .bubble ol,
 .bubble ul {
-  margin: 6px 0 10px;
+  margin: 8px 0;
   padding-left: 22px;
 }
 
 .bubble li {
-  margin-bottom: 3px;
+  margin-bottom: 6px;
   line-height: 1.5;
 }
 
@@ -736,7 +735,7 @@
   font-size: 1em;
   font-weight: 700;
   line-height: 1.4;
-  margin: 0 0 6px 0;
+  margin: 0 0 8px 0;
 }
 
 .bubble strong {
@@ -4606,6 +4605,17 @@
 
 .profile-menu-item.logout:hover {
   background-color: #FFF0F0;
+}
+
+.profile-menu-popup-logout-only {
+  border: 1px solid #dce9f6;
+}
+
+.profile-menu-logout-button {
+  width: 100%;
+  border: 0;
+  background: #ffffff;
+  font-family: inherit;
 }
 
 /* Main Chat Display toggle */

@@ -10,6 +10,7 @@ import { CUSTOMER_SERVICE_URL } from "./config/serviceUrls";
 
 const Dashboard = lazy(() => import("./components/Dashboard/Dashboard"));
 const Referral = lazy(() => import("./components/Referral/Referral"));
+const Quests = lazy(() => import("./components/Quests/Quests"));
 const CheckoutMembership = lazy(() => import("./components/Checkout/CheckoutMembership"));
 const CheckoutPaymentFailed = lazy(() => import("./components/Checkout/CheckoutPaymentFailed"));
 
@@ -177,6 +178,7 @@ export default function App() {
               <Route path="/" element={<AppChat />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/referrals" element={<Referral />} />
+              <Route path="/quests" element={<Quests />} />
               <Route path="/membership/checkout" element={<CheckoutMembership />} />
               <Route path="/membership/checkout/failure" element={<CheckoutPaymentFailed />} />
             </Route>

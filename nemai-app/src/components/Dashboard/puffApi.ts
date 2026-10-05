@@ -6,6 +6,9 @@ import type {
   PuffLeaderboard,
   PuffLeaderboardItem,
   PuffLeaderboardResponse,
+  PuffMission,
+  PuffMissions,
+  PuffMissionsResponse,
   PuffReferralItem,
   PuffReferralStatus,
   PuffReferralStatusResponse,
@@ -141,6 +144,26 @@ export const postPuffCheckIn = async (
   }
 };
 
+export const claimPuffMission = async (
+  getAccessToken: () => Promise<string>,
+  code: string
+): Promise<void> => {
+  const token = await getAccessToken();
+
+  const response = await fetch(`${customerApiUrl}/api/v1/puff/missions/${code}/claim`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({ code })
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to claim mission (status ${response.status})`);
+  }
+};
+
 const normalizeLeaderboardItems = (items: unknown): PuffLeaderboardItem[] => {
   if (!Array.isArray(items)) return [];
 
@@ -220,6 +243,63 @@ const normalizeReferralItems = (items: unknown): PuffReferralItem[] => {
       amount: rewardValue === "-" ? rewardValue : `${rewardValue} pts`
     };
   });
+};
+
+const normalizeMissions = (items: unknown): PuffMission[] => {
+  if (!Array.isArray(items)) return [];
+
+  return items
+    .map((item) => ({
+      id: Number(item?.id ?? 0),
+      code: String(item?.code || ""),
+      name: String(item?.name || ""),
+      description: String(item?.description || ""),
+      type: String(item?.type || ""),
+      frequency: String(item?.frequency || ""),
+      base_points: Number(item?.base_points ?? 0),
+      link_url: String(item?.link_url || ""),
+      trigger: String(item?.trigger || ""),
+      active: Boolean(item?.active),
+      sort_order: Number(item?.sort_order ?? 0),
+      created_at: String(item?.created_at || ""),
+      updated_at: String(item?.updated_at || ""),
+      claimed: Boolean(item?.claimed),
+      claimable: Boolean(item?.claimable),
+      available_base_points: Number(item?.available_base_points ?? 0),
+      current_multiplier: Number(item?.current_multiplier ?? 1),
+      reward_points: Number(item?.reward_points ?? 0)
+    }))
+    .filter((item) => item.id && item.code)
+    .sort((a, b) => a.sort_order - b.sort_order);
+};
+
+export const fetchPuffMissions = async (
+  getAccessToken: () => Promise<string>
+): Promise<PuffMissions> => {
+  const token = await getAccessToken();
+
+  const response = await fetch(`${customerApiUrl}/api/v1/puff/missions`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to load puff missions (status ${response.status})`);
+  }
+
+  const payload = (await response.json()) as PuffMissionsResponse;
+
+  if (!payload?.data) {
+    throw new Error("Puff missions response is missing data.");
+  }
+
+  return {
+    reporting_day: String(payload.data.reporting_day || ""),
+    missions: normalizeMissions(payload.data.missions)
+  };
 };
 
 export const fetchPuffReferralStatus = async (

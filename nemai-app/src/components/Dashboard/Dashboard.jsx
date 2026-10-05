@@ -1,13 +1,12 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import { usePrivy } from "@privy-io/react-auth";
 /* eslint-disable-next-line no-unused-vars */
 import { motion, AnimatePresence } from "framer-motion";
 import "../Appchat/AppChat.css";
-import logo from "../../../../nemai/src/assets/images/LogogramFullColor.png";
 import PriorityPassSection from "./PriorityPassSection";
 import TierProgressSection from "./TierProgressSection";
 import { fetchPuffCheckIns, fetchPuffLeaderboard, fetchPuffSummary, postPuffCheckIn, resolveMembershipFromPlanCode } from "./puffApi";
+import AppShell from "../Navigation/AppShell";
 
 const RANGE_TO_DAYS = {
   "7D": 7,
@@ -17,8 +16,6 @@ const RANGE_TO_DAYS = {
 
 const RANGE_OPTIONS = ["7D", "15D", "1M"];
 const ALLOWED_RANGE_DAYS = [7, 15, 30];
-const SIDEBAR_SMOOTH_STORAGE_KEY = "nemai-sidebar-smooth-until";
-const SIDEBAR_SMOOTH_DURATION_MS = 360;
 
 const redactEmail = (rawEmail) => {
   const value = String(rawEmail || "").trim();
@@ -238,26 +235,7 @@ function DashboardPageSkeleton() {
 }
 
 export default function Dashboard() {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { getAccessToken, user, logout } = usePrivy();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [keepSidebarExpanded, setKeepSidebarExpanded] = useState(false);
-  const [isLogoutMenuOpen, setIsLogoutMenuOpen] = useState(false);
-  const logoutMenuRef = useRef(null);
-
-  useEffect(() => {
-    if (!isLogoutMenuOpen) return undefined;
-
-    const handleClickOutside = (event) => {
-      if (logoutMenuRef.current && !logoutMenuRef.current.contains(event.target)) {
-        setIsLogoutMenuOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isLogoutMenuOpen]);
+  const { getAccessToken, user } = usePrivy();
   const [hasBootstrapped, setHasBootstrapped] = useState(false);
   const hasLoadedSummaryRef = useRef(false);
   const summaryCacheRef = useRef({});
@@ -544,134 +522,8 @@ export default function Dashboard() {
     }
   };
 
-  useEffect(() => {
-    if (typeof window === "undefined") return undefined;
-
-    const rawUntil = window.sessionStorage.getItem(SIDEBAR_SMOOTH_STORAGE_KEY);
-    const until = Number(rawUntil || 0);
-    if (!Number.isFinite(until) || until <= Date.now()) {
-      window.sessionStorage.removeItem(SIDEBAR_SMOOTH_STORAGE_KEY);
-      return undefined;
-    }
-
-    setKeepSidebarExpanded(true);
-    const remainingMs = Math.max(0, until - Date.now());
-    const timerId = window.setTimeout(() => {
-      setKeepSidebarExpanded(false);
-      window.sessionStorage.removeItem(SIDEBAR_SMOOTH_STORAGE_KEY);
-    }, remainingMs);
-
-    return () => window.clearTimeout(timerId);
-  }, []);
-
-  const smoothSidebarDuringNavigation = () => {
-    if (typeof window === "undefined") return;
-    if (window.matchMedia("(max-width: 768px)").matches) return;
-
-    const until = Date.now() + SIDEBAR_SMOOTH_DURATION_MS;
-    window.sessionStorage.setItem(SIDEBAR_SMOOTH_STORAGE_KEY, String(until));
-    setKeepSidebarExpanded(true);
-  };
-
-  const handleOpenChatView = () => {
-    smoothSidebarDuringNavigation();
-    setIsSidebarOpen(false);
-    navigate("/");
-  };
-
-  const handleOpenDashboardView = () => {
-    smoothSidebarDuringNavigation();
-    setIsSidebarOpen(false);
-    navigate("/dashboard");
-  };
-
-  const handleOpenReferrals = () => {
-    smoothSidebarDuringNavigation();
-    setIsSidebarOpen(false);
-    navigate("/referrals");
-  };
-
   return (
-    <div className="appchat-layout">
-      {isSidebarOpen && <div className="sidebar-overlay" onClick={() => setIsSidebarOpen(false)}></div>}
-
-      <aside className={`appchat-sidebar ${isSidebarOpen ? "open" : ""} ${keepSidebarExpanded ? "keep-expanded" : ""}`}>
-        <div className="sidebar-header">
-          <div className="brand-info">
-            <img src={logo} alt="NEM AI Logo" className="sidebar-logo" />
-            <div className="brand-title">NEM AI</div>
-          </div>
-          <button className="mobile-close-btn" onClick={() => setIsSidebarOpen(false)} aria-label="Close sidebar">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-          </button>
-        </div>
-
-        <div className="sidebar-primary-actions">
-          <button className="new-chat-btn sidebar-nav-btn sidebar-dashboard-btn active" onClick={handleOpenDashboardView} aria-label="Open Puff Dashboard">
-            <span className="puff-icon" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
-                <rect x="14" y="3" width="7" height="4" rx="1.5"></rect>
-                <rect x="14" y="10" width="7" height="11" rx="1.5"></rect>
-                <rect x="3" y="13" width="7" height="8" rx="1.5"></rect>
-              </svg>
-            </span>
-            <span className="sidebar-text">Puff Dashboard</span>
-          </button>
-
-          <button className={`new-chat-btn sidebar-nav-btn ${location.pathname === "/referrals" ? "active" : ""}`} onClick={handleOpenReferrals} aria-label="Open Referrals">
-            <span className="puff-icon" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-              </svg>
-            </span>
-            <span className="sidebar-text">Referrals</span>
-          </button>
-          <button className="new-chat-btn sidebar-nav-btn" onClick={handleOpenChatView} aria-label="Open Chat">
-            <span className="puff-icon" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-              </svg>
-            </span>
-            <span className="sidebar-text">Chat</span>
-          </button>
-        </div>
-        <div className="sidebar-footer" ref={logoutMenuRef}>
-          <AnimatePresence>
-            {isLogoutMenuOpen && (
-              <motion.div
-                initial="closed"
-                animate="open"
-                exit="closed"
-                variants={{
-                  open: { clipPath: "inset(0% 0% 0% 0% round 8px)", transition: { type: "spring", bounce: 0, duration: 0.5, delayChildren: 0.2, staggerChildren: 0.05 } },
-                  closed: { clipPath: "inset(90% 50% 10% 50% round 8px)", transition: { type: "spring", bounce: 0, duration: 0.3 } }
-                }}
-                className="profile-menu-popup"
-              >
-                <motion.div
-                  variants={{ open: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }, closed: { opacity: 0, y: 20, transition: { duration: 0.2 } } }}
-                  onClick={() => { setIsLogoutMenuOpen(false); logout(); }} className="profile-menu-item logout">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                  Log out
-                </motion.div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-          <button type="button" className="user-profile" onClick={() => setIsLogoutMenuOpen((open) => !open)} aria-label="Account menu">
-            <div className="user-avatar">{(user?.name || user?.email?.address || user?.google?.email || "User").charAt(0).toUpperCase()}</div>
-            <span className="user-name">{user?.name || user?.email?.address || user?.google?.email || "User"}</span>
-          </button>
-        </div>
-      </aside>
-
-      <main className="appchat-main dashboard">
-        <div className="mobile-header dashboard">
-          <button className="menu-btn" onClick={() => setIsSidebarOpen(true)}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-          </button>
-          <span className="mobile-title">NEM AI</span>
-        </div>
+    <AppShell mainClassName="dashboard">
 
         {!hasBootstrapped ? (
           <DashboardPageSkeleton />
@@ -853,49 +705,6 @@ export default function Dashboard() {
           </section>
         </section>
         )}
-      </main>
-
-      <nav className={`appchat-footer-tabbar ${location.pathname === "/referrals" ? "is-referrals" : "is-dashboard"}`} aria-label="Primary actions">
-        <span className="footer-tab-indicator" aria-hidden="true"></span>
-        <button
-          type="button"
-          className="footer-tab-btn"
-          onClick={handleOpenChatView}
-          aria-label="Open Chat"
-        >
-          <span className="puff-icon" aria-hidden="true">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-            </svg>
-          </span>
-          <span className="footer-tab-label">Chat</span>
-        </button>
-
-        <button
-          type="button"
-          className="footer-tab-btn active"
-          onClick={handleOpenDashboardView}
-          aria-label="Open Puff Dashboard"
-        >
-          <span className="puff-icon" aria-hidden="true">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
-              <rect x="14" y="3" width="7" height="4" rx="1.5"></rect>
-              <rect x="14" y="10" width="7" height="11" rx="1.5"></rect>
-              <rect x="3" y="13" width="7" height="8" rx="1.5"></rect>
-            </svg>
-          </span>
-          <span className="footer-tab-label">Puff Dashboard</span>
-        </button>
-        <button type="button" className="footer-tab-btn" onClick={handleOpenReferrals} aria-label="Open Referrals">
-          <span className="puff-icon" aria-hidden="true">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-            </svg>
-          </span>
-          <span className="footer-tab-label">Referrals</span>
-        </button>
-      </nav>
-    </div>
+    </AppShell>
   );
 }

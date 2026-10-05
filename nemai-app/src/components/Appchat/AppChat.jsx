@@ -13,6 +13,7 @@ import remarkGfm from "remark-gfm";
 import "./AppChat.css";
 import logo from "../../../../nemai/src/assets/images/LogogramFullColor.png";
 import { CHAT_AI_SERVICE_URL, CUSTOMER_SERVICE_URL } from "../../config/serviceUrls";
+import { MobileNavigationHeader, PrimaryNavigation } from "../Navigation/AppShell";
 
 const apiUrl = CHAT_AI_SERVICE_URL;
 const customerApiUrl = CUSTOMER_SERVICE_URL;
@@ -801,6 +802,12 @@ export default function AppChat() {
     navigate("/referrals");
   };
 
+  const handleOpenQuests = () => {
+    smoothSidebarDuringNavigation();
+    setIsSidebarOpen(false);
+    navigate("/quests");
+  };
+
   const handleConversationClick = (id) => {
     if (id === conversationId) return;
     loadConversation(id);
@@ -1146,35 +1153,11 @@ export default function AppChat() {
           </button>
         </div>
 
-        <div className="sidebar-primary-actions">
-          <button className="new-chat-btn sidebar-nav-btn sidebar-dashboard-btn" onClick={handleOpenPuffDashboard} aria-label="Open Puff Dashboard">
-            <span className="puff-icon" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
-                <rect x="14" y="3" width="7" height="4" rx="1.5"></rect>
-                <rect x="14" y="10" width="7" height="11" rx="1.5"></rect>
-                <rect x="3" y="13" width="7" height="8" rx="1.5"></rect>
-              </svg>
-            </span>
-            <span className="sidebar-text">Puff Dashboard</span>
-          </button>
-          <button className={`new-chat-btn sidebar-nav-btn ${location.pathname === "/referrals" ? "active" : ""}`} onClick={handleOpenReferrals} aria-label="Open Referrals">
-            <span className="puff-icon" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-              </svg>
-            </span>
-            <span className="sidebar-text">Referrals</span>
-          </button>
-          <button className="new-chat-btn sidebar-nav-btn active" onClick={handleNewChat} aria-label="New Chat">
-            <span className="puff-icon" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-              </svg>
-            </span>
-            <span className="sidebar-text">New Chat</span>
-          </button>
-        </div>
+        <PrimaryNavigation
+          hiddenItemIds={["chat"]}
+          onNavigate={() => { smoothSidebarDuringNavigation(); setIsSidebarOpen(false); }}
+          trailingActions={<button className="new-chat-btn sidebar-nav-btn active" onClick={handleNewChat} aria-label="New Chat"><span className="puff-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg></span><span className="sidebar-text">New Chat</span></button>}
+        />
 
         <div className="sidebar-history">
           <div className="history-label">Recent Chats</div>
@@ -1282,12 +1265,7 @@ export default function AppChat() {
       {/* 🔹 Main Chat Area */}
       <main className={`appchat-main ${isChatStarted ? "started" : "empty"}`}>
         {/* Mobile Header (Hamburger Menu) */}
-        <div className="mobile-header">
-          <button className="menu-btn" onClick={() => setIsSidebarOpen(true)}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-          </button>
-          <span className="mobile-title">NEM AI</span>
-        </div>
+        <MobileNavigationHeader onOpen={() => setIsSidebarOpen(true)} />
 
         <>
 

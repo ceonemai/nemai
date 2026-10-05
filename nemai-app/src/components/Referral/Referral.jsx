@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePrivy } from "@privy-io/react-auth";
 /* eslint-disable-next-line no-unused-vars */
-import { motion, AnimatePresence } from "framer-motion";
 import "./Referral.css";
-import logo from "../../assets/images/LogogramFullColor.png";
 import { fetchPuffReferralStatus, fetchPuffSummary } from "../Dashboard/puffApi";
+import AppShell from "../Navigation/AppShell";
+import SuccessRequirements from "./SuccessRequirements";
 
 const REFERRAL_BASE_URL = "https://app.nemai.io/ref";
 
@@ -52,32 +52,14 @@ const GiftIcon = () => (
 
 function ReferralPage() {
   const navigate = useNavigate();
-  const { getAccessToken, user, logout } = usePrivy();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { getAccessToken, user } = usePrivy();
   const [referralStatus, setReferralStatus] = useState(null);
   const [currentPoints, setCurrentPoints] = useState(0);
   const [isLoadingReferral, setIsLoadingReferral] = useState(true);
   const [referralError, setReferralError] = useState("");
   const [copied, setCopied] = useState(false);
   const [shareMessage, setShareMessage] = useState("");
-  const [isLogoutMenuOpen, setIsLogoutMenuOpen] = useState(false);
-  const logoutMenuRef = useRef(null);
-
-  useEffect(() => {
-    if (!isLogoutMenuOpen) return undefined;
-
-    const handleClickOutside = (event) => {
-      if (logoutMenuRef.current && !logoutMenuRef.current.contains(event.target)) {
-        setIsLogoutMenuOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isLogoutMenuOpen]);
-
   const displayName = user?.email?.address || user?.google?.email || "your friends";
-  const sidebarUserName = user?.name || user?.email?.address || user?.google?.email || "User";
   const referralCode = referralStatus?.code || "";
   const referralLink = buildReferralLink(referralCode);
   const referralItems = referralStatus?.items || [];
@@ -189,72 +171,7 @@ function ReferralPage() {
   };
 
   return (
-    <div className="appchat-layout referral-layout">
-      {isSidebarOpen && <div className="sidebar-overlay referral-sidebar-overlay" onClick={() => setIsSidebarOpen(false)} />}
-      <aside className={`appchat-sidebar referral-sidebar ${isSidebarOpen ? "open" : ""}`}>
-        <div className="sidebar-header">
-          <div className="brand-info">
-            <img src={logo} alt="NEM AI Logo" className="sidebar-logo" />
-            <div className="brand-title">NEM AI</div>
-          </div>
-          <button className="mobile-close-btn" onClick={() => setIsSidebarOpen(false)} aria-label="Close sidebar">×</button>
-        </div>
-        <div className="sidebar-primary-actions">
-          <button className="new-chat-btn sidebar-nav-btn sidebar-dashboard-btn" onClick={() => { setIsSidebarOpen(false); navigate("/dashboard"); }} aria-label="Open Puff Dashboard">
-            <span className="puff-icon" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="4" rx="1.5" /><rect x="14" y="10" width="7" height="11" rx="1.5" /><rect x="3" y="13" width="7" height="8" rx="1.5" /></svg>
-            </span>
-            <span className="sidebar-text">Puff Dashboard</span>
-          </button>
-          <button className="new-chat-btn sidebar-nav-btn active" onClick={() => { setIsSidebarOpen(false); navigate("/referrals"); }} aria-label="Open Referrals">
-            <span className="puff-icon" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /></svg>
-            </span>
-            <span className="sidebar-text">Referrals</span>
-          </button>
-          <button className="new-chat-btn sidebar-nav-btn" onClick={() => { setIsSidebarOpen(false); navigate("/"); }} aria-label="Open Chat">
-            <span className="puff-icon" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
-            </span>
-            <span className="sidebar-text">Chat</span>
-          </button>
-        </div>
-        <div className="sidebar-footer" ref={logoutMenuRef}>
-          <AnimatePresence>
-            {isLogoutMenuOpen && (
-              <motion.div
-                initial="closed"
-                animate="open"
-                exit="closed"
-                variants={{
-                  open: { clipPath: "inset(0% 0% 0% 0% round 8px)", transition: { type: "spring", bounce: 0, duration: 0.5, delayChildren: 0.2, staggerChildren: 0.05 } },
-                  closed: { clipPath: "inset(90% 50% 10% 50% round 8px)", transition: { type: "spring", bounce: 0, duration: 0.3 } }
-                }}
-                className="profile-menu-popup"
-              >
-                <motion.div
-                  variants={{ open: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }, closed: { opacity: 0, y: 20, transition: { duration: 0.2 } } }}
-                  onClick={() => { setIsLogoutMenuOpen(false); logout(); }} className="profile-menu-item logout">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                  Log out
-                </motion.div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-          <button type="button" className="user-profile" onClick={() => setIsLogoutMenuOpen((open) => !open)} aria-label="Account menu">
-            <div className="user-avatar">{sidebarUserName.charAt(0).toUpperCase()}</div>
-            <span className="user-name">{sidebarUserName}</span>
-          </button>
-        </div>
-      </aside>
-
-      <main className="appchat-main dashboard referral-main">
-        <div className="mobile-header dashboard">
-          <button type="button" className="menu-btn" onClick={() => setIsSidebarOpen(true)} aria-label="Open sidebar">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
-          </button>
-          <span className="mobile-title">NEM AI</span>
-        </div>
+    <AppShell layoutClassName="referral-layout" mainClassName="dashboard referral-main">
 
         <section className={`referral-panel ${isLocked ? "referral-panel-locked" : ""}`} aria-labelledby="referral-title">
           <div className="referral-heading-row">
@@ -338,6 +255,8 @@ function ReferralPage() {
                 <article className="referral-stat-card"><GiftIcon /><span>Invite records</span><strong>{referralItems.length}</strong></article>
               </div>
 
+              <SuccessRequirements />
+
               <div className="referral-history">
                 <div className="referral-history-header"><h2>Referral history</h2><span>{referralItems.length} invites</span></div>
                 <div className="referral-history-table" role="table" aria-label="Referral history">
@@ -348,8 +267,7 @@ function ReferralPage() {
             </>
           )}
         </section>
-      </main>
-    </div>
+    </AppShell>
   );
 }
 
