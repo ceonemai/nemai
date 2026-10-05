@@ -81,6 +81,36 @@ export interface PuffReferralStatusResponse {
   data: PuffReferralStatus;
 }
 
+export interface PuffMission {
+  id: number;
+  code: string;
+  name: string;
+  description: string;
+  type: string;
+  frequency: string;
+  base_points: number;
+  link_url: string;
+  trigger: string;
+  active: boolean;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+  claimed: boolean;
+  claimable: boolean;
+  available_base_points: number;
+  current_multiplier: number;
+  reward_points: number;
+}
+
+export interface PuffMissions {
+  reporting_day: string;
+  missions: PuffMission[];
+}
+
+export interface PuffMissionsResponse {
+  data: PuffMissions;
+}
+
 export type PriorityTier = "normal" | "silver" | "gold";
 
 export interface MembershipState {

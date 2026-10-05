@@ -68,6 +68,8 @@ const GOLDEN_UPGRADE_PLAN = {
 
 const MotionArticle = motion.article;
 
+const PLAN_QUERY_PARAM_TO_CODE = { silver: "plus", gold: "pro" };
+
 export default function CheckoutMembership() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -76,7 +78,11 @@ export default function CheckoutMembership() {
   const isUpgradeCheckout = new URLSearchParams(location.search).get("mode") === UPGRADE_MODE;
   const availablePlans = isUpgradeCheckout ? [GOLDEN_UPGRADE_PLAN] : MEMBERSHIP_PLANS;
   const finalizationInFlightRef = useRef(false);
-  const [selectedPlanCode, setSelectedPlanCode] = useState(() => (isUpgradeCheckout ? "pro" : MEMBERSHIP_PLANS[0].code));
+  const [selectedPlanCode, setSelectedPlanCode] = useState(() => {
+    if (isUpgradeCheckout) return "pro";
+    const planFromQuery = PLAN_QUERY_PARAM_TO_CODE[new URLSearchParams(location.search).get("plan")];
+    return planFromQuery || MEMBERSHIP_PLANS[0].code;
+  });
   const [carouselDirection, setCarouselDirection] = useState(1);
   const [submittingPlanCode, setSubmittingPlanCode] = useState("");
   const [checkoutError, setCheckoutError] = useState("");
