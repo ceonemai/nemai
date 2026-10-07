@@ -33,7 +33,9 @@
 .quests-summary-points strong { display: block; font-size: 44px; line-height: 1.1; font-variant-numeric: tabular-nums; }
 .quests-summary-progress strong { display: block; margin-bottom: 12px; font-size: 20px; font-variant-numeric: tabular-nums; }
 .summary-icon { position: absolute; top: 18px; right: 18px; display: grid; width: 36px; height: 36px; place-items: center; border-radius: 10px; }
-.summary-icon.points { color: var(--nem-teal); background: var(--nem-teal-50); }
+.summary-icon.points { padding: 0; border: 0; color: var(--nem-teal); background: var(--nem-teal-50); cursor: pointer; }
+.summary-icon.points:hover { filter: brightness(.94); }
+.summary-icon.points:focus-visible { outline: 2px solid var(--nem-teal); outline-offset: 3px; }
 .summary-icon svg,.quests-header-badge svg,.quest-icon-tile svg,.quest-limit svg,.quest-completed-pill svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
 .quests-progress-bar { display: flex; gap: 4px; }
 .quests-progress-bar span { flex: 1; height: 6px; border-radius: 999px; background: var(--nem-border); }

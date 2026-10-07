@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { usePrivy } from "@privy-io/react-auth";
+import { useSearchParams } from "react-router-dom";
 /* eslint-disable-next-line no-unused-vars */
 import { motion, AnimatePresence } from "framer-motion";
 import "../Appchat/AppChat.css";
@@ -236,6 +237,8 @@ function DashboardPageSkeleton() {
 
 export default function Dashboard() {
   const { getAccessToken, user } = usePrivy();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const leaderboardSectionRef = useRef(null);
   const [hasBootstrapped, setHasBootstrapped] = useState(false);
   const hasLoadedSummaryRef = useRef(false);
   const summaryCacheRef = useRef({});
@@ -409,6 +412,30 @@ export default function Dashboard() {
       setHasBootstrapped(true);
     }
   }, [hasBootstrapped, priorityPassLoading, graphLoading, leaderboardLoading, checkInLoading]);
+
+  useEffect(() => {
+    if (!hasBootstrapped || searchParams.get("scroll") !== "leaderboard") return;
+
+    const frameId = window.requestAnimationFrame(() => {
+      const leaderboardSection = leaderboardSectionRef.current;
+      const scrollContainer = leaderboardSection?.closest(".appchat-main");
+      if (!leaderboardSection || !scrollContainer) return;
+
+      let scrollTop = 0;
+      let element = leaderboardSection;
+      while (element && element !== scrollContainer) {
+        scrollTop += element.offsetTop;
+        element = element.offsetParent;
+      }
+      scrollContainer.scrollTo({ top: scrollTop, behavior: "smooth" });
+
+      const nextSearchParams = new URLSearchParams(searchParams);
+      nextSearchParams.delete("scroll");
+      setSearchParams(nextSearchParams, { replace: true, preventScrollReset: true });
+    });
+
+    return () => window.cancelAnimationFrame(frameId);
+  }, [hasBootstrapped, searchParams, setSearchParams]);
 
   const chartPointSeries = useMemo(() => {
     const normalizedSeries = normalizePuffPointSeries(puffPointSeries);
@@ -615,7 +642,7 @@ export default function Dashboard() {
             </div>
           </section>
 
-          <section className="leaderboard-section">
+          <section className="leaderboard-section" ref={leaderboardSectionRef}>
             <div className="leaderboard-section-top">
               <div className="leaderboard-section-head">
                 <h2>Leaderboard</h2>
