@@ -232,7 +232,13 @@ function Quests() {
 
         <section className="quests-summary" aria-label="Quest summary">
           <article className="quests-summary-points">
-            <span className="summary-icon points"><TrophyIcon /></span>
+            <button
+              type="button"
+              className="summary-icon points"
+              aria-label="Go to the Puff leaderboard"
+              title="Go to the Puff leaderboard"
+              onClick={() => navigate("/dashboard?scroll=leaderboard")}
+            ><TrophyIcon /></button>
             <small>Total Puff Points</small>
             <strong aria-live="polite">
               {puffPointsLoading
