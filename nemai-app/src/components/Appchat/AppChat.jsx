@@ -936,8 +936,11 @@ export default function AppChat() {
         <div className="profile-modal-overlay" onClick={() => setIsProfilePopupOpen(false)}>
           <div className="profile-modal" onClick={(e) => e.stopPropagation()}>
             <div className="profile-modal-header">
-              <h3>Edit Profile</h3>
-              <button className="modal-close-btn" onClick={() => setIsProfilePopupOpen(false)}>
+              <div className="profile-modal-heading">
+                <h3>Edit Profile</h3>
+                <p className="profile-modal-subtitle">Keep your personal details up to date</p>
+              </div>
+              <button className="modal-close-btn" onClick={() => setIsProfilePopupOpen(false)} aria-label="Close">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
               </button>
             </div>
@@ -946,34 +949,61 @@ export default function AppChat() {
                 <div className="profile-modal-loading">Loading profile...</div>
               ) : profileData ? (
                 <div className="profile-modal-content">
-                  <div className="profile-modal-avatar">
-                    {profileData?.email?.charAt(0).toUpperCase() || displayName.charAt(0).toUpperCase() || "U"}
+                  <div className="profile-identity">
+                    <div className="profile-modal-avatar">
+                      {profileData?.email?.charAt(0).toUpperCase() || displayName.charAt(0).toUpperCase() || "U"}
+                    </div>
+                    <div className="profile-identity-text">
+                      <span className="profile-identity-name">
+                        {String(profileFormData.name ?? "").trim() || displayName}
+                      </span>
+                      <span className="profile-identity-email">{profileData?.email || "-"}</span>
+                    </div>
                   </div>
 
-                  <div className="profile-input-box">
-                    <span className="inner-label">Name</span>
-                    <input
-                      type="text"
-                      name="name"
-                      value={profileFormData.name}
-                      onChange={handleProfileChange}
-                    />
-                  </div>
+                  <section className="profile-section">
+                    <h4 className="profile-section-title">Personal information</h4>
 
-                  <div className="profile-input-box">
-                    <span className="inner-label">Date of Birth</span>
-                    <ProfileDOBDropdown
-                      value={profileFormData.birthDate}
-                      onChange={(yyyyMMdd) =>
-                        setProfileFormData((prev) => ({ ...prev, birthDate: yyyyMMdd }))
-                      }
-                    />
-                  </div>
+                    <div className="profile-field">
+                      <label className="profile-field-label" htmlFor="profile-name-input">
+                        Name <span className="profile-field-required">*</span>
+                      </label>
+                      <input
+                        id="profile-name-input"
+                        className="profile-field-input"
+                        type="text"
+                        name="name"
+                        placeholder="Your full name"
+                        value={profileFormData.name}
+                        onChange={handleProfileChange}
+                      />
+                    </div>
 
-                  <div className="profile-input-box">
-                    <span className="inner-label">Email</span>
-                    <input type="text" value={profileData?.email || "-"} disabled readOnly />
-                  </div>
+                    <div className="profile-field">
+                      <span className="profile-field-label">
+                        Date of birth <span className="profile-field-required">*</span>
+                      </span>
+                      <ProfileDOBDropdown
+                        value={profileFormData.birthDate}
+                        onChange={(yyyyMMdd) =>
+                          setProfileFormData((prev) => ({ ...prev, birthDate: yyyyMMdd }))
+                        }
+                      />
+                    </div>
+                  </section>
+
+                  <section className="profile-section">
+                    <h4 className="profile-section-title">Account</h4>
+
+                    <div className="profile-field">
+                      <label className="profile-field-label" htmlFor="profile-email-input">Email</label>
+                      <div className="profile-field-readonly">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        <input id="profile-email-input" type="text" value={profileData?.email || "-"} disabled readOnly />
+                      </div>
+                      <span className="profile-field-hint">Your email is linked to your login and can't be changed.</span>
+                    </div>
+                  </section>
                 </div>
               ) : (
                 <div className="profile-modal-error">Could not load profile.</div>
@@ -1011,8 +1041,11 @@ export default function AppChat() {
         <div className="profile-modal-overlay" onClick={() => setIsPhdPopupOpen(false)}>
           <div className="profile-modal phd-modal" onClick={(e) => e.stopPropagation()}>
             <div className="profile-modal-header">
-              <h3>Personal Health Data (PHD)</h3>
-              <button className="modal-close-btn" onClick={() => setIsPhdPopupOpen(false)}>
+              <div className="profile-modal-heading">
+                <h3>Personal Health Data</h3>
+                <p className="profile-modal-subtitle">Helps NEM give answers that fit your health profile</p>
+              </div>
+              <button className="modal-close-btn" onClick={() => setIsPhdPopupOpen(false)} aria-label="Close">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
               </button>
             </div>
@@ -1021,83 +1054,105 @@ export default function AppChat() {
                 <div className="profile-modal-loading">Loading data...</div>
               ) : (
                 <div className="phd-form">
-                  <div style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
-                    <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
-                      <label className="phd-form-label">Weight (kg) <span style={{ color: "#e11d48" }}>*</span></label>
-                      <input type="number" name="weight" className="allergy-text-input" placeholder="e.g. 65" value={phdFormData.weight} onChange={handlePhdChange} min="2" max="300" required
-                        style={isWeightOutOfBounds ? { borderColor: "#e11d48", backgroundColor: "#fff1f2", color: "#e11d48" } : {}}
-                      />
-                      {isWeightOutOfBounds && <span style={{ color: "#e11d48", fontSize: "0.75rem", marginTop: "4px", display: "block" }}>Valid range: 2 - 300 kg</span>}
+                  <section className="phd-section">
+                    <div className="phd-section-head">
+                      <h4 className="phd-section-title">Body measurements</h4>
+                      <span className="phd-section-tag required">Required</span>
                     </div>
-                    <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
-                      <label className="phd-form-label">Height (cm) <span style={{ color: "#e11d48" }}>*</span></label>
-                      <input type="number" name="height" className="allergy-text-input" placeholder="e.g. 170" value={phdFormData.height} onChange={handlePhdChange} min="30" max="300" required
-                        style={isHeightOutOfBounds ? { borderColor: "#e11d48", backgroundColor: "#fff1f2", color: "#e11d48" } : {}}
-                      />
-                      {isHeightOutOfBounds && <span style={{ color: "#e11d48", fontSize: "0.75rem", marginTop: "4px", display: "block" }}>Valid range: 30 - 300 cm</span>}
+
+                    <div className="phd-measure-grid">
+                      <div className="phd-field">
+                        <label className="phd-field-label" htmlFor="phd-weight">Weight</label>
+                        <div className={`phd-unit-input ${isWeightOutOfBounds ? "has-error" : ""}`}>
+                          <input id="phd-weight" type="number" inputMode="decimal" name="weight" placeholder="65" value={phdFormData.weight} onChange={handlePhdChange} min="2" max="300" required aria-invalid={isWeightOutOfBounds || undefined} />
+                          <span className="phd-unit">kg</span>
+                        </div>
+                        {isWeightOutOfBounds && <span className="phd-field-error">Valid range: 2 - 300 kg</span>}
+                      </div>
+                      <div className="phd-field">
+                        <label className="phd-field-label" htmlFor="phd-height">Height</label>
+                        <div className={`phd-unit-input ${isHeightOutOfBounds ? "has-error" : ""}`}>
+                          <input id="phd-height" type="number" inputMode="decimal" name="height" placeholder="170" value={phdFormData.height} onChange={handlePhdChange} min="30" max="300" required aria-invalid={isHeightOutOfBounds || undefined} />
+                          <span className="phd-unit">cm</span>
+                        </div>
+                        {isHeightOutOfBounds && <span className="phd-field-error">Valid range: 30 - 300 cm</span>}
+                      </div>
                     </div>
-                  </div>
+                  </section>
 
-                  <div className="form-group">
-                    <label className="phd-form-label">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
-                      Medical Conditions
-                    </label>
-                    <MultiSelectDropdown
-                      name="medicalConditionIds"
-                      value={phdFormData.medicalConditionIds}
-                      selectedValues={phdFormData.medicalConditionIds}
-                      onChange={handlePhdChange}
-                      options={combinedMcOptions}
-                      placeholder="Select conditions (Optional)"
-                    />
-                  </div>
+                  <section className="phd-section">
+                    <div className="phd-section-head">
+                      <h4 className="phd-section-title">Medical history</h4>
+                      <span className="phd-section-tag">Optional</span>
+                    </div>
 
-                  <div className="form-group">
-                    <label className="phd-form-label">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 2a2 2 0 0 0-2 2v5H4a2 2 0 0 0-2 2v2c0 1.1.9 2 2 2h5v5c0 1.1.9 2 2 2h2a2 2 0 0 0 2-2v-5h5a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-5V4a2 2 0 0 0-2-2h-2z"></path></svg>
-                      Current Medications (Drugs)
-                    </label>
-                    <MultiSelectDropdown
-                      name="drugIds"
-                      value={phdFormData.drugIds}
-                      selectedValues={phdFormData.drugIds}
-                      onChange={handlePhdChange}
-                      options={combinedDrugOptions}
-                      placeholder="Select drugs (Optional)"
-                    />
-                  </div>
+                    <div className="phd-field">
+                      <div className="phd-field-label-row">
+                        <span className="phd-field-icon" aria-hidden="true">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                        </span>
+                        <span className="phd-field-label">Medical conditions</span>
+                      </div>
+                      <MultiSelectDropdown
+                        name="medicalConditionIds"
+                        selectedValues={phdFormData.medicalConditionIds}
+                        onChange={handlePhdChange}
+                        options={combinedMcOptions}
+                        placeholder="Select any conditions you have"
+                      />
+                    </div>
 
-                  <div className="form-group">
-                    <label className="phd-form-label">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"></path><path d="m8.5 8.5 7 7"></path></svg>
-                      Allergies
-                    </label>
-                    <MultiSelectDropdown
-                      name="allergyCategoryIds"
-                      value={phdFormData.allergyCategoryIds}
-                      selectedValues={phdFormData.allergyCategoryIds}
-                      onChange={handlePhdChange}
-                      options={combinedAllergyOptions}
-                      placeholder="Select allergies (Optional)"
-                    />
+                    <div className="phd-field">
+                      <div className="phd-field-label-row">
+                        <span className="phd-field-icon" aria-hidden="true">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"></path><path d="m8.5 8.5 7 7"></path></svg>
+                        </span>
+                        <span className="phd-field-label">Current medications</span>
+                      </div>
+                      <MultiSelectDropdown
+                        name="drugIds"
+                        selectedValues={phdFormData.drugIds}
+                        onChange={handlePhdChange}
+                        options={combinedDrugOptions}
+                        placeholder="Select medications you take"
+                      />
+                    </div>
 
-                    <AnimatePresence>
-                      {phdFormData.allergyCategoryIds.length > 0 && (
-                        <motion.div className="allergy-details-container" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}>
-                          {phdFormData.allergyCategoryIds.map(id => {
-                            const category = combinedAllergyOptions.find(c => String(c.value) === String(id));
-                            return (
-                              <div key={id} className="allergy-detail-input">
-                                <label className="allergy-detail-label">Specify {category?.label} <span className="required-asterisk">*</span></label>
-                                <input type="text" className="allergy-text-input" placeholder={getAllergyPlaceholder(category?.label)} value={phdFormData.allergyDetails[id] || ""} onChange={(e) => handleAllergyDetailChange(id, e.target.value)} required />
-                              </div>
-                            );
-                          })}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
+                    <div className="phd-field">
+                      <div className="phd-field-label-row">
+                        <span className="phd-field-icon" aria-hidden="true">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                        </span>
+                        <span className="phd-field-label">Allergies</span>
+                      </div>
+                      <MultiSelectDropdown
+                        name="allergyCategoryIds"
+                        selectedValues={phdFormData.allergyCategoryIds}
+                        onChange={handlePhdChange}
+                        options={combinedAllergyOptions}
+                        placeholder="Select allergy types"
+                      />
+
+                      <AnimatePresence>
+                        {phdFormData.allergyCategoryIds.length > 0 && (
+                          <motion.div className="allergy-details-container" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}>
+                            <p className="allergy-details-hint">Tell us what you&apos;re allergic to in each category</p>
+                            {phdFormData.allergyCategoryIds.map(id => {
+                              const category = combinedAllergyOptions.find(c => String(c.value) === String(id));
+                              return (
+                                <div key={id} className="allergy-detail-input">
+                                  <label className="allergy-detail-label" htmlFor={`allergy-detail-${id}`}>
+                                    {category?.label} <span className="required-asterisk">*</span>
+                                  </label>
+                                  <input id={`allergy-detail-${id}`} type="text" className="allergy-text-input" placeholder={getAllergyPlaceholder(category?.label)} value={phdFormData.allergyDetails[id] || ""} onChange={(e) => handleAllergyDetailChange(id, e.target.value)} required />
+                                </div>
+                              );
+                            })}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  </section>
                 </div>
               )}
             </div>
@@ -1381,17 +1436,51 @@ const MultiSelectDropdown = ({ options, selectedValues, onChange, placeholder, n
     onChange({ target: { name, value: selectedValues.filter(v => v !== String(val)) } });
   };
 
+  const clearAll = (e) => {
+    e.stopPropagation();
+    onChange({ target: { name, value: [] } });
+  };
+
+  const toggleOpen = () => {
+    setIsOpen((open) => !open);
+    setSearchTerm("");
+  };
+
+  const handleHeaderKeyDown = (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      toggleOpen();
+    } else if (e.key === "Escape") {
+      setIsOpen(false);
+    }
+  };
+
+  const handleItemKeyDown = (e, val) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      toggleSelection(val);
+    }
+  };
+
   return (
-    <div className="custom-dropdown" ref={dropdownRef}>
-      <div className={`dropdown-header multi-select-header ${isOpen ? "open" : ""}`} onClick={() => { setIsOpen(!isOpen); setSearchTerm(""); }}>
+    <div className={`custom-dropdown ${isOpen ? "is-open" : ""}`} ref={dropdownRef}>
+      <div
+        className={`dropdown-header multi-select-header ${isOpen ? "open" : ""} ${selectedValues.length ? "has-value" : ""}`}
+        role="button"
+        tabIndex={0}
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+        onClick={toggleOpen}
+        onKeyDown={handleHeaderKeyDown}
+      >
         <div className="chips-container">
           {selectedValues.length > 0 ? (
             selectedValues.map(val => {
               const opt = options.find(o => o.value === String(val));
               return opt ? (
                 <div key={val} className="chip">
-                  {opt.label}
-                  <span className="chip-remove" onClick={(e) => removeValue(e, val)}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
+                  <span className="chip-label">{opt.label}</span>
+                  <button type="button" className="chip-remove" aria-label={`Remove ${opt.label}`} onClick={(e) => removeValue(e, val)}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
                 </div>
               ) : null;
             })
@@ -1401,24 +1490,40 @@ const MultiSelectDropdown = ({ options, selectedValues, onChange, placeholder, n
       </div>
       <AnimatePresence>
         {isOpen && (
-          <motion.div className="dropdown-list-container" initial={{ opacity: 0, y: -10, scaleY: 0.95 }} animate={{ opacity: 1, y: 0, scaleY: 1 }} exit={{ opacity: 0, y: -10, scaleY: 0.95 }} transition={{ duration: 0.2, ease: "easeOut" }}>
+          <motion.div className="dropdown-list-container" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.18, ease: "easeOut" }}>
             <div className="dropdown-search-box">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-              <input type="text" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onClick={(e) => e.stopPropagation()} autoFocus />
+              <input type="text" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onClick={(e) => e.stopPropagation()} onKeyDown={(e) => { if (e.key === "Escape") setIsOpen(false); }} autoFocus />
             </div>
-            <div className="dropdown-list">
+            <div className="dropdown-list" role="listbox" aria-multiselectable="true">
               {filteredOptions.length > 0 ? (
                 filteredOptions.map((opt) => {
                   const isSelected = selectedValues.includes(String(opt.value));
                   return (
-                    <div key={opt.value} className={`dropdown-item ${isSelected ? "selected" : ""}`} onClick={() => toggleSelection(opt.value)}>
-                      {opt.label}
-                      {isSelected && (<motion.svg className="dropdown-check" initial={{ scale: 0 }} animate={{ scale: 1 }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2187AA" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></motion.svg>)}
+                    <div
+                      key={opt.value}
+                      className={`dropdown-item ${isSelected ? "selected" : ""}`}
+                      role="option"
+                      aria-selected={isSelected}
+                      tabIndex={0}
+                      onClick={() => toggleSelection(opt.value)}
+                      onKeyDown={(e) => handleItemKeyDown(e, opt.value)}
+                    >
+                      <span className="dropdown-checkbox" aria-hidden="true">
+                        {isSelected && (<motion.svg initial={{ scale: 0 }} animate={{ scale: 1 }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></motion.svg>)}
+                      </span>
+                      <span className="dropdown-item-label">{opt.label}</span>
                     </div>
                   );
                 })
               ) : (<div className="dropdown-no-results">No results found</div>)}
             </div>
+            {selectedValues.length > 0 && (
+              <div className="dropdown-footer">
+                <span>{selectedValues.length} selected</span>
+                <button type="button" className="dropdown-clear-btn" onClick={clearAll}>Clear</button>
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

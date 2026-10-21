@@ -6,8 +6,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import "../Appchat/AppChat.css";
 import PriorityPassSection from "./PriorityPassSection";
 import TierProgressSection from "./TierProgressSection";
+import DashboardBadges from "./DashboardBadges";
 import { fetchPuffCheckIns, fetchPuffLeaderboard, fetchPuffSummary, postPuffCheckIn, resolveMembershipFromPlanCode } from "./puffApi";
 import AppShell from "../Navigation/AppShell";
+
+const BADGES_COMING_SOON = true;
 
 const RANGE_TO_DAYS = {
   "7D": 7,
@@ -501,15 +504,10 @@ export default function Dashboard() {
     return leaderboardRows.slice(start, start + WINDOW_SIZE);
   }, [leaderboardRows, currentUserRank, activeUserId]);
 
-  const earnedBadges = useMemo(
-    () => [
-      { icon: "🏅", name: "First Steps", desc: "Completed your first chat" },
-      { icon: "🔥", name: "7-Day Streak", desc: "Active for 7 days in a row" },
-      { icon: "⚡", name: "Fast Learner", desc: "Earned 100+ points in one week" },
-      { icon: "👑", name: "Top 10", desc: "Reached top 10 in leaderboard" }
-    ],
-    []
-  );
+  const summaryRank = Number(puffSummary?.leaderboard_rank);
+  const dashboardRank = Number.isFinite(currentUserRank)
+    ? currentUserRank
+    : Number.isFinite(summaryRank) && summaryRank > 0 ? summaryRank : null;
 
   const dailyCheckInDays = useMemo(() => {
     const todayIso = new Date().toISOString().slice(0, 10);
@@ -551,7 +549,6 @@ export default function Dashboard() {
 
   return (
     <AppShell mainClassName="dashboard">
-
         {!hasBootstrapped ? (
           <DashboardPageSkeleton />
         ) : (
@@ -712,24 +709,37 @@ export default function Dashboard() {
             </div>
           </section>
 
-          <section className="leaderboard-badges-card badges-disabled" aria-label="Badges feature coming soon">
-            <div className="leaderboard-badges-head">
-              <h2>Your Earned Badges</h2>
-              <p>Coming soon.</p>
+          <div className={`dashboard-coming-soon-wrap ${BADGES_COMING_SOON ? "is-locked" : ""}`}>
+            {BADGES_COMING_SOON && (
+              <div className="dashboard-coming-soon-overlay" role="status">
+                <div className="dashboard-coming-soon-card">
+                  <span className="dashboard-coming-soon-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="6"></circle><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path></svg>
+                  </span>
+                  <span className="dashboard-coming-soon-badge">Coming Soon</span>
+                  <h2>Badges are on their way</h2>
+                  <p>We&apos;re polishing your badges and achievements. Stay tuned!</p>
+                </div>
+              </div>
+            )}
+            <div
+              className="dashboard-coming-soon-content"
+              aria-hidden={BADGES_COMING_SOON || undefined}
+              inert={BADGES_COMING_SOON || undefined}
+            >
+              <DashboardBadges
+                checkInItems={checkInItems}
+                dailyPointSeries={puffPointSeries}
+                currentUserRank={dashboardRank}
+                checkInLoading={checkInLoading}
+                checkInError={checkInError}
+                pointsLoading={graphLoading}
+                pointsUnavailable={!puffSummary}
+                rankLoading={leaderboardLoading && !Number.isFinite(dashboardRank)}
+                rankUnavailable={!leaderboardLoading && !Number.isFinite(dashboardRank)}
+              />
             </div>
-
-            <div className="leaderboard-badges-grid">
-              {earnedBadges.map((badge) => (
-                <article className="leaderboard-badge-item" key={badge.name}>
-                  <div className="leaderboard-badge-icon" aria-hidden="true">{badge.icon}</div>
-                  <div className="leaderboard-badge-content">
-                    <strong>{badge.name}</strong>
-                    <span>{badge.desc}</span>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </section>
+          </div>
         </section>
         )}
     </AppShell>
