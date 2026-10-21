@@ -1,0 +1,309 @@
+.dashboard-badges {
+  border: 1px solid rgba(30, 126, 159, 0.2);
+  border-radius: 24px;
+  padding: 28px;
+  background:
+    radial-gradient(520px 220px at 10% -10%, rgba(31, 169, 122, 0.1), transparent 72%),
+    linear-gradient(180deg, #ffffff 0%, #f4fbff 100%);
+  box-shadow: 0 16px 34px rgba(16, 80, 106, 0.11);
+  text-align: left;
+}
+
+.dashboard-badges-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.dashboard-badges-head h2 {
+  position: relative;
+  display: inline-block;
+  flex: 0 1 auto;
+  margin: 0;
+  color: #0f2330;
+  font-family: "Prometo", sans-serif;
+  font-size: clamp(30px, 3.4vw, 39px);
+  font-weight: 700;
+  letter-spacing: 0.025em;
+  line-height: 1.08;
+  padding-bottom: 12px;
+}
+
+.dashboard-badges-head h2::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 110px;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #2187aa 0%, #1fa97a 100%);
+  opacity: 0.72;
+}
+
+.dashboard-badges-earned-count {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  flex: 0 0 auto;
+  padding: 9px 13px;
+  border-radius: 14px;
+  background: #e8fff4;
+  color: #245a66;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.dashboard-badges-earned-count strong {
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.dashboard-badges-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.dashboard-badges-tab {
+  min-height: 36px;
+  padding: 7px 14px;
+  border: 1px solid rgba(33, 135, 170, 0.2);
+  border-radius: 999px;
+  background: #fff;
+  color: #4e6f7f;
+  cursor: pointer;
+  font: 600 12px/1 "Prometo", sans-serif;
+  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+
+.dashboard-badges-tab:hover,
+.dashboard-badges-tab:focus-visible {
+  border-color: #2187aa;
+  outline: none;
+}
+
+.dashboard-badges-tab.active {
+  border-color: #2187aa;
+  background: #2187aa;
+  color: #fff;
+}
+
+.dashboard-badges-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 16px;
+  row-gap: 20px;
+}
+
+.dashboard-badge-card {
+  display: flex;
+  min-width: 0;
+  min-height: 132px;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 20px;
+  border: 1px solid rgba(30, 126, 159, 0.2);
+  border-radius: 20px;
+  background: #fff;
+  transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.dashboard-badge-card.earned {
+  background: linear-gradient(135deg, #e8fff4 0%, #f4fbf8 100%);
+}
+
+.dashboard-badge-card.not-started,
+.dashboard-badge-card.unavailable {
+  background: linear-gradient(135deg, #f4fbff 0%, #f8fcff 100%);
+}
+
+.dashboard-badge-ring {
+  position: relative;
+  display: grid;
+  width: 88px;
+  height: 94px;
+  flex: 0 0 88px;
+  place-items: start center;
+  color: #2187aa;
+}
+
+.dashboard-badge-ring.earned {
+  color: #1fa97a;
+}
+
+.dashboard-badge-ring.not-started,
+.dashboard-badge-ring.unavailable {
+  color: #5a7c8c;
+}
+
+.dashboard-badge-ring-svg {
+  display: block;
+  width: 88px;
+  height: 88px;
+  overflow: visible;
+}
+
+.dashboard-badge-ring-track,
+.dashboard-badge-ring-progress {
+  fill: none;
+  stroke-width: 6;
+}
+
+.dashboard-badge-ring-track {
+  stroke: rgba(33, 135, 170, 0.15);
+}
+
+.dashboard-badge-ring-progress {
+  stroke: currentColor;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 42px 42px;
+  transition: stroke-dashoffset 600ms ease-out;
+}
+
+.dashboard-badge-medallion {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  display: grid;
+  width: 60px;
+  height: 60px;
+  place-items: center;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(40, 90, 100, 0.12);
+}
+
+.dashboard-badge-medallion svg {
+  width: 28px;
+  height: 28px;
+}
+
+.dashboard-badge-ring-pill {
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  min-width: 42px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #2187aa;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+.dashboard-badge-ring.earned .dashboard-badge-ring-pill {
+  background: #1fa97a;
+}
+
+.dashboard-badge-ring.not-started .dashboard-badge-ring-pill,
+.dashboard-badge-ring.unavailable .dashboard-badge-ring-pill {
+  background: #5a7c8c;
+}
+
+.dashboard-badge-copy {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.dashboard-badge-copy h3 {
+  margin: 0;
+  color: #102632;
+  font-family: "Prometo", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.dashboard-badge-copy p {
+  margin: 0;
+  color: #587585;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.dashboard-badge-status {
+  display: inline-flex;
+  max-width: 100%;
+  margin-top: 2px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: #eaf4f8;
+  color: #245a66;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.dashboard-badge-status.earned {
+  background: #e8fff4;
+}
+
+.dashboard-badge-status.not-started,
+.dashboard-badge-status.unavailable {
+  background: #f1f6f7;
+}
+
+.dashboard-badges-tab:focus-visible,
+.dashboard-badges-grid:focus-visible {
+  outline: 2px solid #2187aa;
+  outline-offset: 3px;
+}
+
+@media (max-width: 1024px) {
+  .dashboard-badges {
+    padding: 24px 20px;
+  }
+}
+
+@media (max-width: 639px) {
+  .dashboard-badges {
+    padding: 22px 16px;
+    border-radius: 18px;
+  }
+
+  .dashboard-badges-head {
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .dashboard-badges-head h2 {
+    font-size: clamp(24px, 6.2vw, 32px);
+    padding-bottom: 10px;
+  }
+
+  .dashboard-badges-earned-count {
+    padding: 7px 9px;
+    font-size: 11px;
+  }
+
+  .dashboard-badges-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dashboard-badge-card {
+    gap: 14px;
+    padding: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-badge-ring-progress,
+  .dashboard-badges-tab,
+  .dashboard-badge-card {
+    transition: none;
+  }
+}
