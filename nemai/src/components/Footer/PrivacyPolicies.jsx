@@ -18,7 +18,9 @@ function PolicyTable({ headers, rows }) {
           {rows.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {row.map((cell, cellIndex) => (
-                <td key={cellIndex}>{cell}</td>
+                <td key={cellIndex} data-label={headers[cellIndex]}>
+                  {cell}
+                </td>
               ))}
             </tr>
           ))}
@@ -34,7 +36,7 @@ export default function PrivacyPolicies() {
   }, []);
 
   return (
-    <div className="legal-page">
+    <div className="legal-page privacy-policy-page">
       <div className="legal-content-wrapper">
         <div className="legal-header">
           <h1>Privacy Policy - Mobile App</h1>
