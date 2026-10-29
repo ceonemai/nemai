@@ -11,185 +11,255 @@ export default function TermsOfService() {
       <div className="legal-content-wrapper">
         <div className="legal-header">
           <h1>Terms of Service</h1>
-          <p className="last-updated">Last Updated: June 10, 2026</p>
+          <p className="last-updated">Last Updated: October 29, 2026</p>
         </div>
 
         <div className="legal-body">
-          <p>
-            Welcome to NEM AI! These Terms of Service ("Terms") govern your use of
-            the NEM AI website, mobile application, and related software
-            (collectively, the "Services").
-          </p>
-          <p>
-            Currently, NEM AI is an unregistered business project based in Bangkok,
-            Thailand. In these Terms, "Company", "we", "us", or "NEM AI" refers to
-            the individual founders and operators of the project. By accessing or
-            using our Services, you agree to be bound by these Terms. If you do not
-            agree, you must immediately stop using the Services.
-          </p>
+          <section className="legal-section">
+            <h2>1. Acceptance of Terms</h2>
+            <p>
+              Welcome to NEM AI. These Terms of Service (&quot;Terms&quot;)
+              govern your access to and use of the website, mobile applications,
+              AI features, and other online services (collectively, the
+              &quot;Services&quot;) provided by NEM AI (&quot;Company,&quot;
+              &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;), based in
+              Bangkok, Thailand.
+            </p>
+            <p>
+              By creating an account, accessing, or using our Services, you agree
+              to be bound by these Terms and our Privacy Policy incorporated
+              herein by reference. If you do not agree to these Terms or the
+              Privacy Policy, you must not access or use the Services.
+            </p>
+          </section>
 
           <section className="legal-section">
-            <h2>1. Medical Disclaimer & AI-Generated Content</h2>
-            <p>
-              NEM AI is an artificial intelligence platform focused on medical
-              emergency guidance and health intelligence. It is designed to act
-              strictly as a decision support tool to help guide you when you are
-              feeling unwell.
-            </p>
+            <h2>2. Eligibility and Age Restrictions</h2>
             <ul>
               <li>
-                Not Medical Advice: AI-generated content may contain errors and does
-                not constitute medical advice, diagnosis, or treatment.
+                <strong>Minimum Age:</strong> The Services are not intended for
+                or directed to children under 13 years of age. If you are under
+                13, you are strictly prohibited from using the Services.
               </li>
               <li>
-                No Doctor-Patient Relationship: Using NEM AI does not create a
-                healthcare professional relationship between you and us.
+                <strong>Minor Users (Ages 13–17):</strong> Users between the
+                ages of 13 and 17 may access only non-age-restricted features.
               </li>
               <li>
-                Emergency: Never disregard professional medical advice or delay
-                seeking it because of information provided by NEM AI. If you are
-                experiencing a medical emergency, dial 1669 (in Thailand) or your
-                local emergency number immediately.
+                <strong>Age-Restricted Features:</strong> Certain
+                features—including access to sensitive health metrics, financial
+                transactions, paid subscriptions, and advanced NEM AI
+                Intelligence capabilities—are restricted strictly to users who
+                are 18 years of age or older.
               </li>
             </ul>
           </section>
 
           <section className="legal-section">
-            <h2>2. Eligibility and Accounts</h2>
-            <p>By using our Services, you represent and warrant that:</p>
+            <h2>3. Medical Disclaimer – No Medical Advice</h2>
             <ul>
               <li>
-                You are at least 18 years of age. If you are between 13 and 17 years
-                old, you must have verifiable consent from a parent or legal guardian.
+                <strong>Informational Purposes Only:</strong> NEM AI and its AI
+                feature, NEM Intelligence, provide automated health guidance,
+                workout insights, and health scores for informational and
+                educational purposes only.
               </li>
               <li>
-                You are not located in a country subject to trade sanctions or
-                embargoes enforced by the United Nations or the Thai government.
+                <strong>Not Medical Advice:</strong> The Services do not
+                constitute medical advice, diagnosis, treatment, or clinical
+                recommendations, and do not establish a doctor-patient
+                relationship.
               </li>
               <li>
-                You are responsible for keeping your account credentials secure and
-                are liable for all activities under your account.
+                <strong>Emergency Situations:</strong> The Services must never
+                be used in emergency medical situations. If you experience a
+                medical emergency, immediately contact your local emergency
+                services or a qualified medical professional.
+              </li>
+              <li>
+                <strong>Consultation with Healthcare Providers:</strong> Always
+                seek the advice of a physician or licensed healthcare
+                professional regarding any medical condition, dietary plan, or
+                fitness program.
               </li>
             </ul>
           </section>
 
           <section className="legal-section">
-            <h2>3. Restrictions on Use</h2>
-            <p>You agree that you will not:</p>
+            <h2>4. NEM Intelligence & Generative AI Features</h2>
             <ul>
               <li>
-                Reverse engineer, decompile, copy, or create derivative works of the
-                Services.
+                <strong>Optional Feature:</strong> NEM Intelligence is an
+                optional generative AI feature that provides personalized health
+                coaching. You must actively enable this feature on your account.
               </li>
               <li>
-                Probe, breach, or circumvent any security or authentication measures.
+                <strong>AI Output Disclaimers:</strong> AI-generated responses
+                are derived from user inputs, activity history, and connected
+                health data. Generative AI outputs may occasionally be
+                inaccurate, incomplete, or delayed. You acknowledge and accept
+                that relying on AI guidance is at your sole risk.
               </li>
               <li>
-                Use automated tools, bots, or scripts to access the Services or
-                generate fake referrals.
-              </li>
-              <li>
-                Publish or share material that is unlawful, infringing, sexually
-                explicit, violent, or defamatory.
-              </li>
-              <li>
-                Use the Services for fraudulent activities or in violation of any
-                applicable laws, including Thailand's Computer-Related Crime Act.
+                <strong>Third-Party Providers:</strong> When enabled, minimized
+                and pseudonymized health information is processed via our
+                trusted AI inference partners (e.g., Google Vertex AI/Gemini,
+                Anthropic, OpenAI, etc.) strictly to generate coaching
+                responses. Our AI partners are contractually prohibited from
+                using your data to train public models.
               </li>
             </ul>
           </section>
 
           <section className="legal-section">
-            <h2>4. Privacy and Data</h2>
-            <p>
-              Your use of the Services is subject to our Privacy Policy, which
-              explains how we collect, use, and protect your data in accordance with
-              Thailand's Personal Data Protection Act (PDPA). By using the Services,
-              you consent to our data practices and the use of essential tracking
-              technologies.
-            </p>
-          </section>
-
-          <section className="legal-section">
-            <h2>5. Subscriptions and Payments</h2>
-            <p>
-              If you purchase a NEM AI Pro subscription through an external platform
-              (like the Apple App Store), that platform's terms will govern the
-              transaction. Subscriptions automatically renew unless canceled prior to
-              the renewal date. To cancel, you must manage your subscription directly
-              through the settings of the external platform you used to purchase it.
-            </p>
-          </section>
-
-          <section className="legal-section">
-            <h2>6. Referral and Rewards Program</h2>
-            <p>
-              We may offer a rewards program for inviting new users. Rewards have no
-              cash value and cannot be exchanged for cash. We reserve the right to
-              verify referrals, withhold rewards for suspected abuse, or terminate the
-              program at any time. You are solely responsible for any personal tax
-              obligations arising from rewards under Thai law.
-            </p>
-          </section>
-
-          <section className="legal-section">
-            <h2>7. Disclaimers and Limitation of Liability</h2>
+            <h2>5. Account Registration and Security</h2>
             <ul>
               <li>
-                "As Is" Service: The Services are provided "as is" without warranties
-                of any kind, whether express or implied, including accuracy,
-                reliability, or fitness for a particular purpose.
+                <strong>Account Creation:</strong> To access full features, you
+                must register an account and provide accurate, current profile
+                information.
               </li>
               <li>
-                Liability Limit: To the maximum extent permitted by law, NEM AI and
-                its operators shall not be liable for any indirect, incidental,
-                special, or consequential damages arising from your use of the
-                Services, including loss of data or physical/emotional harm. Our total
-                liability to you for any claims will not exceed the amount you paid to
-                us in the six (6) months preceding the claim.
+                <strong>Security & Credentials:</strong> You are responsible
+                for maintaining the confidentiality of your credentials and for
+                all activities that occur under your account. You agree to
+                notify us immediately at{" "}
+                <a href="mailto:info@nemai.io">info@nemai.io</a> if you suspect
+                unauthorized access.
               </li>
               <li>
-                Third-Party Services: We rely on third-party technology and services
-                (including AI models) to provide our Services. We are not responsible
-                for the availability, accuracy, or content provided by these third-
-                party service providers.
+                <strong>Account Deletion:</strong> You may terminate your
+                account and request data deletion at any time in the app via
+                Settings &gt; Account &gt; Delete Account or by contacting{" "}
+                <a href="mailto:info@nemai.io">info@nemai.io</a>.
               </li>
             </ul>
           </section>
 
           <section className="legal-section">
-            <h2>8. Term, Termination, and Modifications</h2>
+            <h2>6. Subscriptions, Payments, and Billing</h2>
+            <ul>
+              <li>
+                <strong>Paid Features & Billing:</strong> Certain aspects of
+                the Services require paid subscriptions. Subscription fees are
+                processed securely via third-party payment processors (such as
+                Stripe or App Store / Google Play billing).
+              </li>
+              <li>
+                <strong>Automatic Renewal:</strong> Subscriptions automatically
+                renew at the end of each billing cycle unless cancelled prior
+                to the renewal date.
+              </li>
+              <li>
+                <strong>Refunds:</strong> All payments are non-refundable
+                except where required by applicable law.
+              </li>
+            </ul>
+          </section>
+
+          <section className="legal-section">
+            <h2>7. Referral and Rewards Program</h2>
+            <ul>
+              <li>
+                <strong>Program Rules:</strong> NEM AI may offer a Referral and
+                Rewards Program allowing users to earn rewards or points by
+                inviting new users using unique referral codes.
+              </li>
+              <li>
+                <strong>Prohibited Conduct:</strong> Fraudulent referrals,
+                self-referrals, spamming, or abuse of the referral system will
+                result in immediate forfeiture of rewards and account
+                suspension.
+              </li>
+            </ul>
+          </section>
+
+          <section className="legal-section">
+            <h2>8. User Conduct and Acceptable Use</h2>
+            <p>You agree not to:</p>
+            <ul>
+              <li>
+                Use the Services for any unlawful purpose or in violation of
+                local laws (including Thailand laws).
+              </li>
+              <li>
+                Reverse engineer, decompile, scrape, or extract source code or
+                underlying AI models of the Services.
+              </li>
+              <li>
+                Impersonate any person or entity or misrepresent your
+                affiliation.
+              </li>
+              <li>
+                Upload or transmit viruses, malware, or harmful automated
+                scripts.
+              </li>
+            </ul>
+          </section>
+
+          <section className="legal-section">
+            <h2>9. Intellectual Property Rights</h2>
             <p>
-              We reserve the right to modify these Terms, change pricing, or
-              suspend/terminate your access to the Services at any time, for any
-              reason, without prior notice. Continued use of the Services after
-              modifications constitutes your acceptance of the updated Terms. We will
-              provide reasonable notice of any material changes to these Terms via our
-              website or email notification.
+              All content, software, branding, trademarks, algorithms, and
+              design elements within the Services are the exclusive intellectual
+              property of NEM AI or its licensors. Except for the limited
+              personal, non-exclusive license granted to you to use the app, no
+              rights or titles are transferred to you.
             </p>
           </section>
 
           <section className="legal-section">
-            <h2>9. Governing Law and Dispute Resolution</h2>
+            <h2>10. Privacy and Data Protection (PDPA)</h2>
             <p>
-              These Terms shall be governed by and construed in accordance with the
-              laws of Thailand. Any disputes arising under or in connection with these
-              Terms shall be subject to the exclusive jurisdiction of the courts
-              located in Bangkok, Thailand.
+              Your privacy is governed by our Privacy Policy. For users in
+              Thailand, Personal Data handling strictly complies with the
+              Thailand Personal Data Protection Act B.E. 2562 (2019) (PDPA).
+            </p>
+          </section>
+
+          <section className="legal-section">
+            <h2>11. Limitation of Liability and Disclaimers</h2>
+            <ul>
+              <li>
+                <strong>As-Is Basis:</strong> The Services are provided on an
+                &quot;AS IS&quot; and &quot;AS AVAILABLE&quot; basis without
+                warranties of any kind, whether express or implied.
+              </li>
+              <li>
+                <strong>Liability Cap:</strong> To the maximum extent permitted
+                by applicable law, NEM AI shall not be liable for any indirect,
+                incidental, special, consequential, or punitive damages, or
+                loss of health data, profits, or goodwill.
+              </li>
+            </ul>
+          </section>
+
+          <section className="legal-section">
+            <h2>12. Governing Law and Jurisdiction</h2>
+            <p>
+              These Terms are governed by and construed in accordance with the
+              laws of Thailand, without regard to conflict of law principles.
+              Any legal disputes or claims arising out of or in connection with
+              these Terms shall be subject to the exclusive jurisdiction of the
+              competent courts in Bangkok, Thailand.
             </p>
           </section>
 
           <section className="legal-section contact-section">
-            <h2>10. Contact Us</h2>
+            <h2>13. Contact Information</h2>
             <p>
-              For questions, support, or to report a violation of these Terms, please
-              contact us:
+              If you have questions or concerns regarding these Terms of
+              Service, please contact us at:
             </p>
             <ul>
               <li>
-                Email: <a href="mailto:info@nemai.io">info@nemai.io</a>
+                <strong>Email:</strong>{" "}
+                <a href="mailto:info@nemai.io">info@nemai.io</a>
               </li>
-              <li>Support Hours: Monday to Friday, 10:00 AM - 6:00 PM (GMT+7)</li>
+              <li>
+                <strong>Address:</strong> NEM AI 7/41-42, Bangkhen, Bangkok,
+                Thailand
+              </li>
             </ul>
           </section>
         </div>
