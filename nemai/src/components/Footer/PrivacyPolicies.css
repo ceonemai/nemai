@@ -147,7 +147,9 @@
 }
 
 .legal-body p {
-  font-size: 16px;
+  font-family: "Prometo", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
   line-height: 1.75;
   margin: 0 0 10px;
   color: rgba(21, 44, 52, 0.82);
@@ -167,8 +169,10 @@
   width: 100%;
   min-width: 560px;
   border-collapse: collapse;
+  font-family: "Prometo", sans-serif;
   color: rgba(21, 44, 52, 0.82);
   font-size: 14px;
+  font-weight: 400;
   line-height: 1.55;
 }
 
@@ -201,7 +205,9 @@
 }
 
 .legal-body li {
-  font-size: 16px;
+  font-family: "Prometo", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
   line-height: 1.65;
   color: rgba(21, 44, 52, 0.8);
   margin-bottom: 6px;
@@ -213,7 +219,7 @@
 
 .legal-body strong {
   color: #1b4958;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .legal-body a {
@@ -221,7 +227,7 @@
   text-decoration: underline;
   text-decoration-color: rgba(33, 135, 170, 0.45);
   text-underline-offset: 3px;
-  font-weight: 600;
+  font-weight: 400;
   transition: color 0.2s ease, text-decoration-color 0.2s ease;
 }
 
@@ -261,13 +267,8 @@
     font-size: 1.15rem;
   }
 
-  .legal-body p,
-  .legal-body li {
-    font-size: 15px;
-  }
-
   .legal-table {
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .legal-table th,
