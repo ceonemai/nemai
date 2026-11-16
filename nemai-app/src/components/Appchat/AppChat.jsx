@@ -12,7 +12,12 @@ import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import "./AppChat.css";
 import logo from "../../../../nemai/src/assets/images/LogogramFullColor.png";
-import { CHAT_AI_SERVICE_URL, CUSTOMER_SERVICE_URL } from "../../config/serviceUrls";
+import { buildChatMessagePayload } from "../../config/chatApi";
+import {
+  CHAT_AI_API_VERSION,
+  CHAT_AI_SERVICE_URL,
+  CUSTOMER_SERVICE_URL
+} from "../../config/serviceUrls";
 import { MobileNavigationHeader, PrimaryNavigation } from "../Navigation/AppShell";
 
 const apiUrl = CHAT_AI_SERVICE_URL;
@@ -662,12 +667,11 @@ export default function AppChat() {
     const response = await fetch(`${apiUrl}/chat-messages`, {
       method: "POST",
       headers: await getChatAuthHeaders(),
-      body: JSON.stringify({
-        inputs: {},
+      body: JSON.stringify(buildChatMessagePayload({
+        apiVersion: CHAT_AI_API_VERSION,
         query: text,
-        response_mode: "blocking",
-        conversation_id: conversationId
-      })
+        conversationId
+      }))
     });
 
     const data = await response.json().catch(() => ({}));

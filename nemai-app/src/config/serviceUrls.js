@@ -1,4 +1,4 @@
-import { ensureApiV1BaseUrl } from "./normalizeServiceUrl";
+import { ensureApiVersionBaseUrl, normalizeApiVersion } from "./normalizeServiceUrl";
 
 const requireServiceUrl = (value, variableName) => {
   const normalizedValue = value?.trim().replace(/\/+$/, "");
@@ -15,9 +15,14 @@ export const CUSTOMER_SERVICE_URL = requireServiceUrl(
   "VITE_CUSTOMER_SERVICE_URL"
 );
 
-export const CHAT_AI_SERVICE_URL = ensureApiV1BaseUrl(
+export const CHAT_AI_API_VERSION = normalizeApiVersion(
+  import.meta.env.VITE_CHAT_AI_API_VERSION || "v1"
+);
+
+export const CHAT_AI_SERVICE_URL = ensureApiVersionBaseUrl(
   requireServiceUrl(
     import.meta.env.VITE_CHAT_AI_SERVICE_URL,
     "VITE_CHAT_AI_SERVICE_URL"
-  )
+  ),
+  CHAT_AI_API_VERSION
 );
