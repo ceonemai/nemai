@@ -12,16 +12,19 @@ import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import "./AppChat.css";
 import logo from "../../../../nemai/src/assets/images/LogogramFullColor.png";
-import { buildChatMessagePayload } from "../../config/chatApi";
+import { buildChatMessagePayload, CHAT_IMAGE_TYPES, MAX_CHAT_IMAGE_BYTES, MAX_CHAT_IMAGES } from "../../config/chatApi";
 import {
   CHAT_AI_API_VERSION,
   CHAT_AI_SERVICE_URL,
   CUSTOMER_SERVICE_URL
 } from "../../config/serviceUrls";
 import { MobileNavigationHeader, PrimaryNavigation } from "../Navigation/AppShell";
+import { ChatImage, DraftChatImage, LocalChatImage } from "./ChatImages";
+import { rehypeChatReplyFormatting } from "./chatReplyFormatting";
 
 const apiUrl = CHAT_AI_SERVICE_URL;
 const customerApiUrl = CUSTOMER_SERVICE_URL;
+const chatImagesEnabled = CHAT_AI_API_VERSION === "v2";
 
 const GENERIC_ERROR_MSG = "Sorry, something went wrong. Please try again later.";
 const VALIDATION_ERROR_MSG = "Please check your message and try again.";
@@ -252,6 +255,15 @@ export default function AppChat() {
 
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [pendingMessage, setPendingMessage] = useState(null);
+  const [draftImages, setDraftImages] = useState([]);
+  const [chatSendError, setChatSendError] = useState("");
+  const uploadingImages = draftImages.some((image) => !image.attachment && !image.uploadError);
+  const attachmentsReady = draftImages.every((image) => image.attachment);
+  const draftUploads = useRef(new Map());
+  const imageInputRef = useRef(null);
+  const sendingChat = useRef(false);
+  const draftRequestID = useRef(null);
   const [keepSidebarExpanded, setKeepSidebarExpanded] = useState(false);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -302,14 +314,21 @@ export default function AppChat() {
   }, [getAccessTokenFromHook]);
 
   // Fetch conversations history
-  const getChatAuthHeaders = useCallback(async () => {
+  const getChatAuthHeaders = useCallback(async (asJson = true) => {
     const token = await resolveAccessToken();
-    const headers = { "Content-Type": "application/json" };
+    const headers = asJson ? { "Content-Type": "application/json" } : {};
     if (token) {
       headers.Authorization = `Bearer ${token}`;
     }
     return headers;
   }, [resolveAccessToken]);
+
+  const cancelDraftUploads = useCallback(() => {
+    for (const upload of draftUploads.current.values()) upload.abort();
+    draftUploads.current.clear();
+  }, []);
+
+  useEffect(() => cancelDraftUploads, [cancelDraftUploads]);
 
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
@@ -377,7 +396,8 @@ export default function AppChat() {
 
   // Load a specific conversation
   const loadConversation = async (id) => {
-    if (loading) return;
+    if (loading || sendingChat.current) return;
+    if (chatImagesEnabled) resetChatDraft();
     setLoading(true);
     setConversationId(id);
     try {
@@ -389,7 +409,7 @@ export default function AppChat() {
       // API returns messages from oldest to newest, so render directly in order
       const historyList = data.data?.data || data.data?.conversations || [];
       const formattedMessages = historyList.flatMap(m => ([
-        { id: m.id + "_u", role: "user", content: m.query },
+        { id: m.id + "_u", role: "user", content: m.query, attachments: m.attachments },
         { id: m.id + "_a", role: "assistant", content: m.answer || QUOTA_ERROR_MSG }
       ]));
 
@@ -663,14 +683,16 @@ export default function AppChat() {
     }
   };
 
-  const sendMessageToBackend = async (text) => {
+  const sendMessageToBackend = async (text, { attachmentIds, clientRequestId } = {}) => {
     const response = await fetch(`${apiUrl}/chat-messages`, {
       method: "POST",
       headers: await getChatAuthHeaders(),
       body: JSON.stringify(buildChatMessagePayload({
         apiVersion: CHAT_AI_API_VERSION,
         query: text,
-        conversationId
+        conversationId,
+        attachmentIds,
+        clientRequestId
       }))
     });
 
@@ -695,17 +717,19 @@ export default function AppChat() {
     if (responseData.answer && isSystemBusyAnswer(responseData.answer)) {
       return {
         answer: SYSTEM_BUSY_MSG,
-        conversation_id: responseData.conversation_id || ""
+        conversation_id: responseData.conversation_id || "",
+        message_id: responseData.message_id
       };
     }
 
-    if (responseData.conversation_id) {
+    if (!chatImagesEnabled && responseData.conversation_id) {
       setConversationId(responseData.conversation_id);
     }
 
     return {
       answer: responseData.answer || "",
-      conversation_id: responseData.conversation_id || ""
+      conversation_id: responseData.conversation_id || "",
+      message_id: responseData.message_id
     };
   };
 
@@ -714,7 +738,136 @@ export default function AppChat() {
     return SYSTEM_BUSY_PATTERNS.some((pattern) => normalized.includes(pattern));
   };
 
+  const resetChatDraft = () => {
+    cancelDraftUploads();
+    setInput("");
+    setDraftImages([]);
+    setChatSendError("");
+    draftRequestID.current = null;
+  };
+
+  const selectChatImages = (event) => {
+    const files = Array.from(event.target.files || []);
+    event.target.value = "";
+    if (!files.length || sendingChat.current) return;
+    if (draftImages.length + files.length > MAX_CHAT_IMAGES) {
+      setChatSendError("Attach up to 3 images per message.");
+      return;
+    }
+    if (files.some((file) => file.size > MAX_CHAT_IMAGE_BYTES || file.size === 0 || (file.type && !CHAT_IMAGE_TYPES.includes(file.type)))) {
+      setChatSendError("Choose a JPEG, PNG, or WebP image up to 4 MiB.");
+      return;
+    }
+    setChatSendError("");
+    draftRequestID.current = null;
+    const images = files.map((file) => ({ key: crypto.randomUUID(), file }));
+    setDraftImages((current) => [...current, ...images]);
+    images.forEach(startDraftUpload);
+  };
+
+  const removeChatImage = (key) => {
+    draftUploads.current.get(key)?.abort();
+    draftUploads.current.delete(key);
+    draftRequestID.current = null;
+    setChatSendError("");
+    setDraftImages((current) => current.filter((image) => image.key !== key));
+  };
+
+  const uploadChatImage = async (file, signal) => {
+    const form = new FormData();
+    form.append("file", file);
+    const response = await fetch(`${apiUrl}/files/upload`, {
+      method: "POST",
+      headers: await getChatAuthHeaders(false),
+      body: form,
+      signal
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok || !data.data?.attachment_id) {
+      if (response.status === 401 && !signal.aborted) await logout();
+      throw { status: response.status };
+    }
+    return data.data;
+  };
+
+  const startDraftUpload = async ({ key, file }) => {
+    const uploads = draftUploads.current;
+    uploads.get(key)?.abort();
+    const controller = new AbortController();
+    uploads.set(key, controller);
+    try {
+      const attachment = await uploadChatImage(file, controller.signal);
+      if (!controller.signal.aborted) {
+        setDraftImages((current) => current.map((item) => item.key === key ? { ...item, attachment } : item));
+      }
+    } catch (error) {
+      if (!controller.signal.aborted) {
+        const uploadError = error?.status === 413 || error?.status === 415 ? "Invalid image" : "Upload failed";
+        setDraftImages((current) => current.map((item) => item.key === key ? { ...item, uploadError } : item));
+      }
+    } finally {
+      if (uploads.get(key) === controller) uploads.delete(key);
+    }
+  };
+
+  const retryDraftUpload = (image) => {
+    setDraftImages((current) => current.map((item) => item.key === image.key ? { ...item, uploadError: "" } : item));
+    startDraftUpload(image);
+  };
+
+  const sendV2Message = async () => {
+    const query = input.trim();
+    if ((!query && !draftImages.length) || !attachmentsReady || loading || sendingChat.current) return;
+    sendingChat.current = true;
+    setLoading(true);
+    setChatSendError("");
+
+    try {
+      draftRequestID.current ||= crypto.randomUUID();
+      const clientRequestId = draftRequestID.current;
+      const attachments = draftImages.map(({ attachment, file }) => ({ ...attachment, file }));
+      const userMessage = { id: `${clientRequestId}_u`, role: "user", content: query, attachments };
+      setPendingMessage(userMessage);
+      const result = await sendMessageToBackend(query, {
+        attachmentIds: attachments.map((attachment) => attachment.attachment_id),
+        clientRequestId
+      });
+      if (result.conversation_id) setConversationId(result.conversation_id);
+      setMessages((current) => [
+        ...current,
+        userMessage,
+        { id: `${result.message_id || clientRequestId}_a`, role: "assistant", content: result.answer }
+      ]);
+      if (!conversationId && result.conversation_id) fetchConversations();
+      resetChatDraft();
+    } catch (error) {
+      const status = error?.status;
+      if (status === 410 || (status === 404 && error?.error === "attachment not found")) {
+        draftRequestID.current = null;
+        const images = draftImages.map(({ key, file }) => ({ key, file }));
+        setDraftImages(images);
+        images.forEach(startDraftUpload);
+        setChatSendError("An attachment expired or was removed. Send again after the images finish uploading.");
+      } else if (status === 409) {
+        setChatSendError(error?.error === "chat request is already being processed"
+          ? "Your message is still being processed. Wait a moment, then try sending again."
+          : "This message could not be sent again. Reopen the chat or remove and reattach the image.");
+      } else if (status === 429) {
+        setChatSendError("You’ve reached today’s chat limit.");
+      } else if (status === 401 || status === 403) {
+        setChatSendError(AUTH_ERROR_MSG);
+      } else {
+        setChatSendError("Message could not be sent. Try again.");
+      }
+    } finally {
+      sendingChat.current = false;
+      setPendingMessage(null);
+      setLoading(false);
+    }
+  };
+
   const handleSend = async () => {
+    if (chatImagesEnabled) return sendV2Message();
     if (!input.trim() || loading) return;
 
     const userMsg = { id: Date.now(), role: "user", content: input.trim() };
@@ -776,13 +929,15 @@ export default function AppChat() {
   };
 
   const onKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
       e.preventDefault();
       handleSend();
     }
   };
 
   const handleNewChat = () => {
+    if (sendingChat.current) return;
+    if (chatImagesEnabled) resetChatDraft();
     setMessages([{ id: 1, role: "assistant", content: "Hi, I'm NEM AI. How can I help you today?" }]);
     setConversationId("");
     setIsSidebarOpen(false);
@@ -830,7 +985,7 @@ export default function AppChat() {
   };
 
   const confirmDeleteConversation = async () => {
-    if (!deleteTargetConversation?.id || isDeletingConversation) return;
+    if (!deleteTargetConversation?.id || isDeletingConversation || sendingChat.current) return;
 
     setIsDeletingConversation(true);
     try {
@@ -877,6 +1032,7 @@ export default function AppChat() {
 
   // เช็คว่าเริ่มแชทหรือยัง (ถ้ามีข้อความมากกว่า 1 หรือกำลังโหลด)
   const isChatStarted = messages.length > 1 || loading;
+  const visibleMessages = pendingMessage ? [...messages, pendingMessage] : messages;
 
   const combinedMcOptions = useMemo(() => {
     const map = new Map();
@@ -1329,8 +1485,8 @@ export default function AppChat() {
         <>
 
           <div className="chat-messages">
-            {messages.map((msg) => (
-              <Message key={msg.id} role={msg.role} content={msg.content} displayName={displayName} />
+            {visibleMessages.map((msg) => (
+              <Message key={msg.id} role={msg.role} content={msg.content} displayName={displayName} attachments={msg.attachments} getAuthHeaders={getChatAuthHeaders} />
             ))}
 
             {loading && (
@@ -1352,16 +1508,54 @@ export default function AppChat() {
           )}
 
           <div className="chat-input-container">
+            {chatImagesEnabled && !pendingMessage && draftImages.length > 0 && (
+              <div className="chat-draft-images">
+                {draftImages.map((image) => (
+                  <DraftChatImage
+                    key={image.key}
+                    file={image.file}
+                    uploadError={image.uploadError}
+                    disabled={loading}
+                    onRemove={() => removeChatImage(image.key)}
+                    onRetry={() => retryDraftUpload(image)}
+                  />
+                ))}
+              </div>
+            )}
+            {chatImagesEnabled && chatSendError && <div className="chat-send-error" role="alert">{chatSendError}</div>}
             <div className="input-box">
+              {chatImagesEnabled && (
+                <>
+                  <input type="file" ref={imageInputRef} accept={CHAT_IMAGE_TYPES.join(",")} multiple hidden onChange={selectChatImages} />
+                  <button
+                    type="button"
+                    className="chat-attach-button"
+                    aria-label="Attach images"
+                    onClick={() => imageInputRef.current?.click()}
+                    disabled={loading || draftImages.length >= MAX_CHAT_IMAGES}
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M21.4 11.6l-8.7 8.7a5.5 5.5 0 0 1-7.8-7.8l9.4-9.4a3.5 3.5 0 0 1 5 5l-9.5 9.4a1.5 1.5 0 0 1-2.1-2.1l8.7-8.7" />
+                    </svg>
+                  </button>
+                </>
+              )}
               <textarea
                 placeholder="Type your message..."
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
+                value={pendingMessage ? "" : input}
+                onChange={(e) => {
+                  if (chatImagesEnabled) {
+                    draftRequestID.current = null;
+                    setChatSendError("");
+                  }
+                  setInput(e.target.value);
+                }}
                 onKeyDown={onKeyDown}
+                disabled={chatImagesEnabled && loading}
                 rows={1}
               />
-              <button onClick={handleSend} disabled={!input.trim() || loading}>
-                Send
+              <button onClick={handleSend} disabled={loading || !attachmentsReady || (!input.trim() && !(chatImagesEnabled && draftImages.length))}>
+                {uploadingImages ? "Uploading…" : "Send"}
               </button>
             </div>
             <div className="disclaimer">NEM AI can make mistakes. Consider verifying critical information.</div>
@@ -1546,7 +1740,7 @@ const getAllergyPlaceholder = (categoryName) => {
   return "e.g. Please specify details...";
 };
 
-const Message = memo(function Message({ role, content, displayName }) {
+const Message = memo(function Message({ role, content, displayName, attachments, getAuthHeaders }) {
   const isUser = role === "user";
   const [copied, setCopied] = useState(false);
 
@@ -1608,11 +1802,21 @@ const Message = memo(function Message({ role, content, displayName }) {
       <div className={`message-content ${isUser ? "user" : "assistant"}`}>
         <div className={`bubble ${isUser ? "user" : "assistant"}`}>
           {isUser ? (
-            // Render user content as plain text to preserve exact newlines/spaces
-            <div className="user-plain-text">{String(content ?? "")}</div>
+            <>
+              {!!attachments?.length && (
+                <div className="chat-message-images">
+                  {attachments.map((image) => image.file ? (
+                    <LocalChatImage key={image.attachment_id} file={image.file} className="chat-message-image" />
+                  ) : (
+                    <ChatImage key={image.attachment_id} id={image.attachment_id} apiUrl={apiUrl} getAuthHeaders={getAuthHeaders} />
+                  ))}
+                </div>
+              )}
+              {content && <div className="user-plain-text">{String(content)}</div>}
+            </>
           ) : (
             <ReactMarkdown
-              rehypePlugins={[rehypeRaw, rehypeDisclaimerClass]}
+              rehypePlugins={[rehypeRaw, rehypeChatReplyFormatting, rehypeDisclaimerClass]}
               remarkPlugins={[remarkGfm]}
             >
               {content?.replace(/\n{3,}/g, "\n\n")}
