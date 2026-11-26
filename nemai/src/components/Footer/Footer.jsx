@@ -84,8 +84,8 @@ export default function Footer() {
         {/* LEFT SIDE */}
         <div className="footer-left">
           <h2>
-            Empower emergency response<br />
-            with intelligent real-time AI.
+            Your Personal AI <br />
+            for Health & Emergencies
           </h2>
         </div>
 
@@ -95,6 +95,7 @@ export default function Footer() {
           <form onSubmit={handleSubmit} className="subscribe-form">
             <input
               type="email"
+              aria-label="Email address"
               placeholder="Email *"
               value={email}
               onChange={(e) => setEmail(e.target.value)}

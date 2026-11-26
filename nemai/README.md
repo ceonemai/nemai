@@ -1,5 +1,7 @@
 # Nemai
 
+The homepage revamp is a review-stage preview. See [Homepage design and content handoff](HOMEPAGE-DESIGN.md) for the wireframe, visual direction, outstanding content, and download tracking setup. Run `npm run dev` for a local preview; use `npm run build` and `npm run preview` to review the production build.
+
 Nemai is a modern AI-powered landing page built with React (Vite).
 
 ---
