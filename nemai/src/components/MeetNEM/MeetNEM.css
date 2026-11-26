@@ -117,9 +117,25 @@
     height: 48px;
     display: grid;
     place-items: center;
-    font-size: 24px;
+    color: #1a8aa6;
     border-radius: 14px;
     background: linear-gradient(135deg, rgba(33, 135, 170, 0.18), rgba(139, 218, 161, 0.35));
+}
+
+.meet-feature-icon svg {
+    width: 26px;
+    height: 26px;
+}
+
+.meet-badge svg {
+    display: block;
+    width: 18px;
+    height: 18px;
+    color: #1a8aa6;
+}
+
+.meet-badge.b1 svg {
+    color: #e0475b;
 }
 
 .meet-feature-text {
@@ -275,5 +291,170 @@
 
     .meet-feature-desc {
         font-size: 14px;
+    }
+}
+
+/* Motion */
+.meet-feature {
+    position: relative;
+    overflow: hidden;
+}
+
+.meet-feature.active {
+    transform: translateX(10px);
+}
+
+.meet-feature.active .meet-feature-icon {
+    animation: meet-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.meet-feature-progress {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    width: 100%;
+    transform-origin: left;
+    background: linear-gradient(90deg, #59e0f4, #9fecb8);
+    animation: meet-progress linear forwards;
+}
+
+.meet-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    pointer-events: none;
+}
+
+.meet-orb.o1 {
+    width: 320px;
+    height: 320px;
+    top: 8%;
+    left: -80px;
+    background: rgba(159, 236, 184, 0.45);
+    animation: meet-drift 14s ease-in-out infinite alternate;
+}
+
+.meet-orb.o2 {
+    width: 360px;
+    height: 360px;
+    bottom: 4%;
+    right: -100px;
+    background: rgba(89, 224, 244, 0.4);
+    animation: meet-drift 18s ease-in-out infinite alternate-reverse;
+}
+
+.meet-visual {
+    position: relative;
+}
+
+.meet-phone {
+    animation: meet-float 6s ease-in-out infinite;
+}
+
+.meet-scan {
+    position: absolute;
+    inset: 12px;
+    border-radius: 34px;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.meet-scan::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 90px;
+    top: -90px;
+    background: linear-gradient(180deg, transparent, rgba(89, 224, 244, 0.28), transparent);
+    animation: meet-scan 4.5s ease-in-out infinite;
+}
+
+.meet-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 340px;
+    height: 340px;
+    margin: -170px 0 0 -170px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(0, 194, 168, 0.35);
+    pointer-events: none;
+    animation: meet-ring 4.5s ease-out infinite;
+}
+
+.meet-ring.r2 {
+    animation-delay: 2.25s;
+}
+
+.meet-badge {
+    position: absolute;
+    z-index: 4;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f3a40;
+    white-space: nowrap;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(33, 135, 170, 0.2);
+    box-shadow: 0 10px 28px rgba(33, 135, 170, 0.22);
+    backdrop-filter: blur(10px);
+}
+
+.meet-badge.b1 { top: 12%; left: -4%; animation: meet-float 5s ease-in-out infinite; }
+.meet-badge.b2 { top: 46%; right: -6%; animation: meet-float 6.5s ease-in-out -2s infinite; }
+.meet-badge.b3 { bottom: 12%; left: 0; animation: meet-float 5.5s ease-in-out -1s infinite; }
+
+@keyframes meet-float {
+    0%, 100% { translate: 0 0; }
+    50% { translate: 0 -14px; }
+}
+
+@keyframes meet-drift {
+    from { transform: translate(0, 0) scale(1); }
+    to { transform: translate(60px, -40px) scale(1.2); }
+}
+
+@keyframes meet-progress {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+}
+
+@keyframes meet-pop {
+    0% { transform: scale(0.6) rotate(-12deg); }
+    100% { transform: scale(1) rotate(0); }
+}
+
+@keyframes meet-scan {
+    0% { top: -90px; }
+    100% { top: 100%; }
+}
+
+@keyframes meet-ring {
+    0% { transform: scale(0.7); opacity: 0.8; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
+
+@media (max-width: 1024px) {
+    .meet-feature.active { transform: none; }
+}
+
+@media (max-width: 600px) {
+    .meet-ring { width: 260px; height: 260px; margin: -130px 0 0 -130px; }
+    .meet-badge { font-size: 12px; padding: 6px 10px; }
+    .meet-badge.b1 { left: -2%; }
+    .meet-badge.b2 { right: -2%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .meet-phone, .meet-badge, .meet-orb, .meet-ring, .meet-scan::after,
+    .meet-feature-progress, .meet-feature.active .meet-feature-icon {
+        animation: none;
     }
 }

@@ -1,0 +1,595 @@
+.how {
+    position: relative;
+    padding: 140px 0;
+    overflow: hidden;
+    font-family: "Prometo", sans-serif;
+    background: linear-gradient(145deg, #f8fffc, #f0f9ff);
+}
+
+.how-glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(600px 400px at 15% 20%, rgba(159, 236, 184, 0.28), transparent 70%),
+        radial-gradient(600px 400px at 90% 80%, rgba(89, 224, 244, 0.22), transparent 70%);
+}
+
+.how-inner {
+    position: relative;
+    width: min(100% - 12%, 1200px);
+    margin: 0 auto;
+}
+
+.how-header {
+    text-align: center;
+    max-width: 680px;
+    margin: 0 auto 72px;
+}
+
+.how .how-header h2 {
+    margin: 0 0 16px;
+    font-family: "Prometo", sans-serif;
+    font-size: clamp(2.1rem, 4.6vw, 3.2rem);
+    font-weight: 700;
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+    color: #0f1720;
+}
+
+.how .how-header h2 .brand {
+    background: linear-gradient(90deg, #0096ff, #00c2a8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.how .how-header p {
+    font-size: 17px;
+    line-height: 1.8;
+    color: #4a635c;
+}
+
+/* Steps */
+.how-steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.how-steps::before {
+    content: "";
+    position: absolute;
+    top: 38px;
+    left: 8%;
+    right: 8%;
+    height: 2px;
+    background: linear-gradient(90deg, #59e0f4, #9fecb8, #59e0f4);
+    opacity: 0.6;
+}
+
+.how-step {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    text-align: left;
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(33, 135, 170, 0.15);
+    border-radius: 24px;
+    backdrop-filter: blur(14px);
+    box-shadow: 0 10px 34px rgba(33, 135, 170, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.how-step:hover {
+    transform: translateY(-6px);
+    border-color: rgba(0, 194, 168, 0.5);
+    box-shadow: 0 18px 44px rgba(33, 135, 170, 0.18);
+}
+
+.how-step-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.how-step-number {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    min-width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(135deg, #2187aa, #00c2a8);
+    box-shadow: 0 0 0 6px #f4fffc, 0 8px 20px rgba(33, 135, 170, 0.35);
+}
+
+.how-step-icon {
+    color: #1a8aa6;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(33, 135, 170, 0.15), rgba(139, 218, 161, 0.35));
+}
+
+.how-step-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.how-lock {
+    display: inline-grid;
+    color: #1a8aa6;
+}
+
+.how-lock svg {
+    width: 18px;
+    height: 18px;
+}
+
+.how-chips.insight .chip-ico svg {
+    display: block;
+    width: 16px;
+    height: 16px;
+    flex: none;
+    stroke-width: 2;
+    color: #1a8aa6;
+}
+
+.how-chips.insight li:nth-child(2) .chip-ico svg {
+    color: #e0475b;
+}
+
+.how-shot {
+    margin-bottom: 22px;
+    aspect-ratio: 4 / 3;
+    border-radius: 16px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #d7f4ed, #d8f3fb);
+}
+
+.how-shot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.how-shot-placeholder {
+    height: 100%;
+    display: grid;
+    place-items: center;
+    border: 1px dashed rgba(33, 135, 170, 0.45);
+    border-radius: 16px;
+}
+
+.how-shot-placeholder span {
+    padding: 4px 12px;
+    font-size: 12px;
+    color: #2187aa;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.how .how-step h3 {
+    margin: 0 0 10px;
+    font-family: "Prometo", sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #0b1f24;
+}
+
+.how .how-step p {
+    margin: 0 0 18px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #3d5a55;
+}
+
+.how-chips {
+    list-style: none;
+    margin: auto 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.how-chips li {
+    padding: 6px 12px;
+    font-size: 13px;
+    color: #1f3a40;
+    border-radius: 999px;
+    background: #fff;
+    border: 1px solid rgba(33, 135, 170, 0.22);
+}
+
+.how-chips li.soon {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #526a6a;
+    border-style: dashed;
+    background: transparent;
+}
+
+.how-chips li.soon small {
+    padding: 1px 7px;
+    font-size: 10px;
+    border-radius: 999px;
+    color: #2187aa;
+    background: rgba(33, 135, 170, 0.1);
+}
+
+.how-privacy {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: fit-content;
+    max-width: 100%;
+    margin: 56px auto 0;
+    padding: 14px 24px;
+    font-size: 15px;
+    color: #1f3a40;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(33, 135, 170, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .how {
+        padding: 100px 0;
+    }
+
+    .how-steps {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        max-width: 560px;
+        margin: 0 auto;
+    }
+
+    .how-steps::before {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .how {
+        padding: 72px 0;
+    }
+
+    .how-inner {
+        width: calc(100% - 40px);
+    }
+
+    .how-header {
+        margin-bottom: 40px;
+    }
+
+    .how .how-header p {
+        font-size: 15px;
+    }
+
+    .how-step {
+        padding: 18px;
+    }
+
+    .how-privacy {
+        border-radius: 20px;
+        text-align: left;
+        font-size: 14px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .how-step {
+        transition: none;
+    }
+}
+
+/* Motion */
+.how-steps::before {
+    display: none;
+}
+
+.how-line {
+    position: absolute;
+    top: 38px;
+    left: 8%;
+    right: 8%;
+    height: 2px;
+    transform-origin: left;
+    background: linear-gradient(90deg, #59e0f4, #9fecb8, #59e0f4);
+    opacity: 0.7;
+}
+
+.how-line i {
+    position: absolute;
+    top: -4px;
+    left: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #00c2a8;
+    box-shadow: 0 0 14px 4px rgba(0, 194, 168, 0.6);
+    animation: how-travel 3.6s ease-in-out 2s infinite;
+}
+
+.how-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    pointer-events: none;
+}
+
+.how-orb.o1 {
+    width: 300px;
+    height: 300px;
+    top: 10%;
+    right: -80px;
+    background: rgba(89, 224, 244, 0.35);
+    animation: how-drift 15s ease-in-out infinite alternate;
+}
+
+.how-orb.o2 {
+    width: 340px;
+    height: 340px;
+    bottom: 6%;
+    left: -100px;
+    background: rgba(159, 236, 184, 0.4);
+    animation: how-drift 19s ease-in-out infinite alternate-reverse;
+}
+
+.how-step:hover {
+    transform: none;
+    translate: 0 -8px;
+}
+
+.how-step::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(89, 224, 244, 0.22), transparent 70%);
+}
+
+.how-step:hover::after {
+    opacity: 1;
+}
+
+.how-step-number {
+    position: relative;
+}
+
+.how-step-number::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid rgba(0, 194, 168, 0.55);
+    animation: how-pulse 2.6s ease-out infinite;
+}
+
+.how-step-icon {
+    animation: how-bob 3.5s ease-in-out infinite;
+}
+
+.how-shot-placeholder {
+    position: relative;
+    overflow: hidden;
+}
+
+.how-shot-placeholder::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.7) 50%, transparent 65%);
+    transform: translateX(-100%);
+    animation: how-shimmer 3.2s ease-in-out infinite;
+}
+
+.how-lock {
+    display: inline-block;
+    animation: how-wiggle 4s ease-in-out infinite;
+}
+
+@keyframes how-travel {
+    0% { left: 0; opacity: 0; }
+    10%, 90% { opacity: 1; }
+    100% { left: calc(100% - 10px); opacity: 0; }
+}
+
+@keyframes how-drift {
+    from { transform: translate(0, 0) scale(1); }
+    to { transform: translate(-60px, 40px) scale(1.2); }
+}
+
+@keyframes how-pulse {
+    0% { transform: scale(1); opacity: 0.9; }
+    100% { transform: scale(1.7); opacity: 0; }
+}
+
+@keyframes how-bob {
+    0%, 100% { translate: 0 0; rotate: 0deg; }
+    50% { translate: 0 -4px; rotate: 6deg; }
+}
+
+@keyframes how-shimmer {
+    0%, 30% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+@keyframes how-wiggle {
+    0%, 80%, 100% { rotate: 0deg; }
+    85% { rotate: -14deg; }
+    90% { rotate: 12deg; }
+    95% { rotate: -6deg; }
+}
+
+@media (max-width: 1024px) {
+    .how-line {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .how-line i, .how-orb, .how-step-number::after, .how-step-icon,
+    .how-shot-placeholder::after, .how-lock {
+        animation: none;
+    }
+}
+/* Chips */
+.how-chips li {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    overflow: hidden;
+    cursor: default;
+    border: 1px solid transparent;
+    background:
+        linear-gradient(#fff, #fff) padding-box,
+        linear-gradient(120deg, rgba(33, 135, 170, 0.28), rgba(139, 218, 161, 0.5)) border-box;
+    transition: translate 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, color 0.25s ease;
+}
+
+.how-chips li:hover {
+    translate: 0 -4px;
+    color: #0b5a63;
+    background:
+        linear-gradient(#f2fffb, #f2fffb) padding-box,
+        linear-gradient(120deg, #59e0f4, #9fecb8, #2187aa, #59e0f4) border-box;
+    background-size: 100% 100%, 300% 100%;
+    animation: chip-border 1.6s linear infinite;
+    box-shadow: 0 8px 20px rgba(0, 194, 168, 0.28);
+}
+
+.how-chips li.soon,
+.how-chips li.soon:hover {
+    background: transparent;
+    border: 1px dashed rgba(33, 135, 170, 0.35);
+    box-shadow: none;
+    animation: none;
+}
+
+.how-chips li.soon::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent 35%, rgba(89, 224, 244, 0.35) 50%, transparent 65%);
+    transform: translateX(-100%);
+    animation: how-shimmer 3.4s ease-in-out infinite;
+}
+
+.chip-ico:empty {
+    display: none;
+}
+
+.how-chips.profile .chip-ico:empty,
+.how-chips.connect li:not(.soon) .chip-ico:empty {
+    display: inline-block;
+    position: relative;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+}
+
+.how-chips.profile .chip-ico {
+    background: linear-gradient(135deg, #2187aa, #00c2a8);
+}
+
+.how-chips.profile .chip-ico::after {
+    content: "";
+    position: absolute;
+    left: 4.5px;
+    top: 2px;
+    width: 3px;
+    height: 6px;
+    border: solid #fff;
+    border-width: 0 1.6px 1.6px 0;
+    transform: rotate(45deg);
+    clip-path: inset(0 0 100% 0);
+    animation: chip-check 0.5s ease-out 1s forwards;
+}
+
+.how-chips.connect .chip-ico {
+    background: #22c55e;
+}
+
+.how-chips.connect .chip-ico::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: #22c55e;
+    animation: chip-live 1.8s ease-out infinite;
+}
+
+.how-chips.insight .chip-ico {
+    display: inline-block;
+    font-size: 13px;
+    line-height: 1;
+}
+
+.how-chips.insight li:nth-child(1) .chip-ico { animation: chip-sway 3s ease-in-out infinite; }
+.how-chips.insight li:nth-child(2) .chip-ico { animation: chip-beat 1.2s ease-in-out infinite; }
+.how-chips.insight li:nth-child(3) .chip-ico { animation: chip-step 1.4s ease-in-out infinite; }
+.how-chips.insight li:nth-child(4) .chip-ico { animation: chip-spin 3.5s linear infinite; }
+
+@keyframes chip-border {
+    from { background-position: 0 0, 0 0; }
+    to { background-position: 0 0, 300% 0; }
+}
+
+@keyframes chip-check {
+    to { clip-path: inset(0); }
+}
+
+@keyframes chip-live {
+    0% { transform: scale(1); opacity: 0.7; }
+    100% { transform: scale(2.6); opacity: 0; }
+}
+
+@keyframes chip-sway {
+    0%, 100% { rotate: -12deg; }
+    50% { rotate: 14deg; }
+}
+
+@keyframes chip-beat {
+    0%, 40%, 100% { scale: 1; }
+    15% { scale: 1.35; }
+    30% { scale: 1.1; }
+}
+
+@keyframes chip-step {
+    0%, 100% { translate: 0 0; }
+    50% { translate: 2px -2px; }
+}
+
+@keyframes chip-spin {
+    to { rotate: 360deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .how-chips li, .how-chips li::after, .chip-ico, .chip-ico::before, .chip-ico::after {
+        animation: none !important;
+    }
+    .how-chips.profile .chip-ico::after { clip-path: none; }
+}

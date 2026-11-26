@@ -4,21 +4,9 @@ import logomark from "../../assets/images/LogogramFullColor.png";
 import DownloadCTA from "./DownloadCTA";
 import PhoneCarousel from "./PhoneCarousel";
 import MeetNEM from "../MeetNEM/MeetNEM";
-import { capabilities, steps } from "./content";
+import HowItWorks from "../HowItWorks/HowItWorks";
+import Intelligence from "../Intelligence/Intelligence";
 import "./HomePage.css";
-
-function ScreenshotPlaceholder({ label, variant = "" }) {
-  return (
-    <div className={`screen-placeholder ${variant}`} aria-label={`${label} screenshot placeholder`}>
-      <div className="screen-placeholder-inner">
-        <span className="screen-placeholder-icon" aria-hidden="true">✳</span>
-        <span className="screen-placeholder-label">PRODUCT SCREENSHOT</span>
-        <strong>{label}</strong>
-        <span>Approved app image to be added</span>
-      </div>
-    </div>
-  );
-}
 
 function SectionHeading({ eyebrow, title, children }) {
   return (
@@ -120,7 +108,7 @@ export default function HomePage() {
             <p>Meet NEM AI, Intelligence for Your Health. Personalized insights. Clearer perspectives. Smarter health decisions.</p>
             <div className="hero-actions">
               <DownloadCTA placement="hero" />
-              <a className="text-link" href="#product">Explore NEM AI <span aria-hidden="true">↓</span></a>
+              <a className="text-link" href="#meet">Explore NEM AI <span aria-hidden="true">↓</span></a>
             </div>
           </div>
           <div className="hero-visual">
@@ -148,76 +136,9 @@ export default function HomePage() {
 
       <MeetNEM />
 
-      <section className="home-section product-section" id="product">
-        <div className="home-container">
-          <div className="section-intro">
-            <SectionHeading eyebrow="01 / MEET NEM AI" title={<>A better understanding<br />starts with <em>you.</em></>}>
-              Health is more than a single number. NEM AI is being built to bring your health context together, so the bigger picture can feel a little clearer.
-            </SectionHeading>
-            <span className="intro-mark" aria-hidden="true">✳</span>
-          </div>
-          <div className="product-feature">
-            <div className="product-feature-copy">
-              <span className="home-eyebrow">PERSONAL HEALTH, IN PERSPECTIVE</span>
-              <h3>One place for a more personal picture.</h3>
-              <p>From your health profile to the information you choose to connect, the experience is designed around the things that make your health yours.</p>
-              <span className="review-label">Product details pending confirmation</span>
-            </div>
-            <div className="product-feature-visual">
-              <ScreenshotPlaceholder label="Personal health dashboard" variant="wide-placeholder" />
-            </div>
-          </div>
-          <div className="capability-heading">
-            <div><span className="home-eyebrow">THE EXPERIENCE</span><h3>Designed around your health.</h3></div>
-            <p>Illustrative capabilities. Availability in the public app is pending confirmation.</p>
-          </div>
-          <div className="capability-grid">
-            {capabilities.map((item) => (
-              <article className="capability-card" key={item.number}>
-                <span className="capability-number">{item.number} <span aria-hidden="true">↗</span></span>
-                <h4>{item.title}</h4>
-                <p>{item.description}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
+      <HowItWorks />
 
-      <section className="home-section works-section" id="how-it-works">
-        <div className="home-container">
-          <div className="section-intro">
-            <SectionHeading eyebrow="02 / HOW IT WORKS" title={<>A little context.<br /><em>A lot more clarity.</em></>}>
-              A simple idea: bring your health information into context and make it easier to understand.
-            </SectionHeading>
-            <p className="section-aside">ILLUSTRATIVE JOURNEY<br />AVAILABILITY TO BE CONFIRMED</p>
-          </div>
-          <div className="steps-grid">
-            {steps.map((step) => (
-              <article className="step-card" key={step.number}>
-                <span className="step-number">{step.number}</span>
-                <div><h3>{step.title}</h3><p>{step.description}</p></div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="home-section intelligence-section" id="intelligence">
-        <div className="home-container intelligence-grid">
-          <div className="intelligence-visual">
-            <span className="visual-overline">YOUR HEALTH IS A STORY, NOT A STATISTIC</span>
-            <ScreenshotPlaceholder label="Personal health insights" variant="insight-placeholder" />
-            <span className="visual-footnote">MADE WITH YOUR CONTEXT IN MIND <span>✳</span></span>
-          </div>
-          <div className="intelligence-copy">
-            <SectionHeading eyebrow="03 / PERSONAL HEALTH INTELLIGENCE" title={<>More context.<br /><em>More you.</em></>}>
-              Your health is individual. NEM AI's vision is to turn personal health information into insights and guidance that feel relevant to you.
-            </SectionHeading>
-            <div className="intelligence-note"><span aria-hidden="true">✦</span><p>Thoughtful intelligence, grounded in your health context—not just generic answers.</p></div>
-            <span className="review-label">Insights and functionality pending confirmation</span>
-          </div>
-        </div>
-      </section>
+      <Intelligence />
 
       <section className="home-section trust-section" id="trust">
         <div className="home-container trust-grid">
