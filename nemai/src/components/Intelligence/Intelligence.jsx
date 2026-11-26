@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "../../assets/images/LogogramFullColor.png";
 import "./Intelligence.css";
@@ -337,6 +337,12 @@ function Intelligence() {
     const [paused, setPaused] = useState(false);
     const [started, setStarted] = useState(false);
 
+    const bodyRef = useRef(null);
+
+    useEffect(() => {
+        if (bodyRef.current) bodyRef.current.scrollTop = 0;
+    }, [active]);
+
     const s = scenarios[active];
     const total = s.answer.length;
 
@@ -409,26 +415,29 @@ function Intelligence() {
                     onMouseEnter={() => setPaused(true)}
                     onMouseLeave={() => setPaused(false)}
                 >
-                    <div className="intel-questions" role="tablist" aria-label="Sample questions">
-                        <span className="intel-hint">Try a question</span>
-                        {scenarios.map((sc, i) => (
-                            <button
-                                key={sc.id}
-                                type="button"
-                                role="tab"
-                                aria-selected={i === active}
-                                className={`intel-q${i === active ? " active" : ""}`}
-                                onClick={() => setActive(i)}
-                            >
-                                <span className="intel-q-icon">{sc.icon}</span>
-                                <span className="intel-q-label">{sc.label}</span>
-                                <span className="intel-q-arrow" aria-hidden="true">
-                                    <svg {...svgProps}>
-                                        <path d="M9 6l6 6-6 6" />
-                                    </svg>
-                                </span>
-                            </button>
-                        ))}
+                    <div className="intel-aside">
+                        <span className="intel-demo-pill">
+                            <i /> Interactive demo
+                        </span>
+                        <h3>Try it like the real app</h3>
+                        <ol className="intel-steps">
+                            <li>
+                                <b>1</b>
+                                <span>Tap a suggested question at the bottom of the phone.</span>
+                            </li>
+                            <li>
+                                <b>2</b>
+                                <span>Watch NEM AI answer using sample health data.</span>
+                            </li>
+                            <li>
+                                <b>3</b>
+                                <span>See which data it used, why, and what to do next.</span>
+                            </li>
+                        </ol>
+                        <p className="intel-sample-note">
+                            This is a showcase with example data, not a real person&apos;s
+                            health record.
+                        </p>
                         <p className="intel-disclaimer">
                             <span aria-hidden="true">{Icons.shield}</span>
                             NEM AI provides general health information and is not a substitute
@@ -436,7 +445,16 @@ function Intelligence() {
                         </p>
                     </div>
 
-                    <div className="intel-chat" aria-live="polite">
+                    <div className="intel-phone" aria-label="NEM AI app demo with sample data">
+                        <span className="intel-demo-tag">Demo</span>
+                        <div className="intel-screen">
+                        <div className="intel-notch" aria-hidden="true" />
+                        <div className="intel-status" aria-hidden="true">
+                            <span>9:41</span>
+                            <span className="intel-status-icons">
+                                <i /><i /><i />
+                            </span>
+                        </div>
                         <div className="intel-chat-bar">
                             <img src={logo} alt="" />
                             <strong>NEM AI</strong>
@@ -445,7 +463,7 @@ function Intelligence() {
                             </span>
                         </div>
 
-                        <div className="intel-chat-body">
+                        <div className="intel-chat-body" ref={bodyRef} aria-live="polite">
                             <AnimatePresence mode="wait">
                                 <motion.div
                                     key={s.id}
@@ -535,6 +553,34 @@ function Intelligence() {
                                     )}
                                 </motion.div>
                             </AnimatePresence>
+                        </div>
+
+                        <div className="intel-composer">
+                            <div className="intel-chips" role="tablist" aria-label="Sample questions">
+                                {scenarios.map((sc, i) => (
+                                    <button
+                                        key={sc.id}
+                                        type="button"
+                                        role="tab"
+                                        aria-selected={i === active}
+                                        className={`intel-q${i === active ? " active" : ""}`}
+                                        onClick={() => setActive(i)}
+                                    >
+                                        <span className="intel-q-icon">{sc.icon}</span>
+                                        <span className="intel-q-label">{sc.label}</span>
+                                    </button>
+                                ))}
+                            </div>
+                            <div className="intel-input" aria-hidden="true">
+                                <span>Ask NEM AI about your health…</span>
+                                <i>
+                                    <svg {...svgProps}>
+                                        <path d="M5 12h14M13 6l6 6-6 6" />
+                                    </svg>
+                                </i>
+                            </div>
+                        </div>
+                        <div className="intel-home" aria-hidden="true" />
                         </div>
                     </div>
                 </motion.div>

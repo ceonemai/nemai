@@ -234,7 +234,7 @@
   border: 1px solid rgba(33, 135, 170, 0.12);
   background: rgba(255, 255, 255, 0.58);
   padding: 24px;
-  font-family: "AllumiSTD", sans-serif;
+  font-family: "Prometo", sans-serif;
   font-weight: 500;
   line-height: 1.86;
   color: rgba(20, 45, 53, 0.84);
@@ -268,7 +268,7 @@
 .blog-markdown h2,
 .blog-markdown h3,
 .blog-markdown h4 {
-  font-family: "AllumiSTD", sans-serif;
+  font-family: "Prometo", sans-serif;
   font-weight: 700;
   line-height: 1.24;
   color: var(--primary-teal, #2187aa);

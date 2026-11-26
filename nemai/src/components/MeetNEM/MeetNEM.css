@@ -458,3 +458,39 @@
         animation: none;
     }
 }
+/* Mobile simplification */
+@media (max-width: 600px) {
+    .meet-orb,
+    .meet-scan,
+    .meet-ring,
+    .meet-badge {
+        display: none !important;
+    }
+
+    .meet-phone {
+        width: 200px;
+    }
+
+    .meet-sources li {
+        font-size: 14px;
+        padding: 8px 14px;
+    }
+
+    .meet-feature {
+        min-height: 64px;
+        align-items: center;
+    }
+
+    .meet-feature-title {
+        font-size: 18px;
+    }
+
+    .meet-feature:not(.active) .meet-feature-desc {
+        display: none;
+    }
+
+    .meet-feature-desc {
+        font-size: 15px;
+        line-height: 1.6;
+    }
+}

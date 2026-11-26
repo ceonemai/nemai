@@ -79,100 +79,96 @@
 /* Body */
 .intel-body {
     display: grid;
-    grid-template-columns: 0.8fr 1.2fr;
-    gap: 48px;
-    align-items: start;
+    grid-template-columns: 1fr auto;
+    gap: 72px;
+    align-items: center;
+    max-width: 960px;
+    margin: 0 auto;
 }
 
-.intel-questions {
+.intel-aside {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 20px;
 }
 
-.intel-hint {
+.intel-demo-pill {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0.4px;
     text-transform: uppercase;
-    color: #2187aa;
+    color: #1a8aa6;
+    border-radius: 999px;
+    background: rgba(33, 135, 170, 0.1);
+    border: 1px solid rgba(33, 135, 170, 0.22);
 }
 
-.intel-q {
-    position: relative;
-    display: flex;
-    align-items: center;
+.intel-demo-pill i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    animation: intel-live 1.8s ease-out infinite;
+}
+
+.intel .intel-aside h3 {
+    margin: 0;
+    font-family: "Prometo", sans-serif;
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #0f1720;
+}
+
+.intel-steps {
+    display: grid;
     gap: 14px;
-    width: 100%;
-    padding: 16px 18px;
-    text-align: left;
-    font-family: inherit;
-    font-size: 16px;
-    color: #1f3a40;
-    cursor: pointer;
-    background: rgba(255, 255, 255, 0.6);
-    border: 1px solid rgba(33, 135, 170, 0.16);
-    border-radius: 18px;
-    backdrop-filter: blur(12px);
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
-.intel-q:hover,
-.intel-q:focus-visible {
-    transform: translateX(4px);
-    outline: none;
-    border-color: rgba(0, 194, 168, 0.45);
+.intel-steps li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: 17px;
+    line-height: 1.55;
+    color: #2d4a47;
 }
 
-.intel-q.active {
-    transform: translateX(10px);
-    background: #fff;
-    border-color: rgba(0, 194, 168, 0.6);
-    box-shadow: 0 12px 30px rgba(33, 135, 170, 0.18);
-}
-
-.intel-q-icon {
+.intel-steps b {
     flex: none;
     display: grid;
     place-items: center;
-    width: 40px;
-    height: 40px;
-    color: #1a8aa6;
-    border-radius: 12px;
-    background: linear-gradient(135deg, rgba(33, 135, 170, 0.15), rgba(139, 218, 161, 0.35));
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+    color: #fff;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2187aa, #00c2a8);
 }
 
-.intel-q-icon svg {
-    width: 22px;
-    height: 22px;
-}
-
-.intel-q-label {
-    flex: 1;
-    font-weight: 600;
-}
-
-.intel-q-arrow {
-    display: grid;
-    color: #2187aa;
-    opacity: 0;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.intel-q-arrow svg {
-    width: 18px;
-    height: 18px;
-}
-
-.intel-q.active .intel-q-arrow {
-    opacity: 1;
-    animation: intel-nudge 1.2s ease-in-out infinite;
+.intel .intel-sample-note {
+    margin: 0;
+    padding: 12px 16px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: #2d4a47;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px dashed rgba(33, 135, 170, 0.4);
 }
 
 .intel-disclaimer {
     display: flex;
     gap: 10px;
-    margin: 12px 0 0;
+    margin: 0;
     font-size: 13px;
     line-height: 1.6;
     color: #526a6a;
@@ -189,21 +185,96 @@
     height: 18px;
 }
 
-/* Chat */
-.intel-chat {
+/* Phone */
+.intel-phone {
+    position: relative;
+    width: 380px;
+    max-width: 100%;
+    padding: 11px;
+    border-radius: 54px;
+    background: linear-gradient(145deg, #23373d, #0d1a1f);
+    box-shadow:
+        0 40px 80px rgba(33, 135, 170, 0.32),
+        0 0 80px rgba(139, 218, 161, 0.3),
+        inset 0 0 0 2px rgba(255, 255, 255, 0.08);
+}
+
+.intel-demo-tag {
+    position: absolute;
+    z-index: 3;
+    top: -14px;
+    right: 28px;
+    padding: 5px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #fff;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #2187aa, #00c2a8);
+    box-shadow: 0 8px 20px rgba(33, 135, 170, 0.4);
+}
+
+.intel-screen {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 700px;
     overflow: hidden;
-    border-radius: 28px;
-    background: rgba(255, 255, 255, 0.85);
-    border: 1px solid rgba(33, 135, 170, 0.18);
-    box-shadow: 0 24px 60px rgba(33, 135, 170, 0.2), 0 0 60px rgba(139, 218, 161, 0.25);
-    backdrop-filter: blur(16px);
+    border-radius: 44px;
+    background: #f7fcfb;
+}
+
+.intel-notch {
+    position: absolute;
+    z-index: 2;
+    top: 10px;
+    left: 50%;
+    width: 104px;
+    height: 28px;
+    transform: translateX(-50%);
+    border-radius: 999px;
+    background: #0d1a1f;
+}
+
+.intel-status {
+    flex: none;
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 28px 4px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #193d40;
+}
+
+.intel-status-icons {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.intel-status-icons i {
+    width: 14px;
+    height: 9px;
+    border-radius: 3px;
+    background: #193d40;
+}
+
+.intel-status-icons i:first-child {
+    width: 4px;
+    height: 9px;
+}
+
+.intel-status-icons i:nth-child(2) {
+    width: 10px;
 }
 
 .intel-chat-bar {
+    flex: none;
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 14px 20px;
+    padding: 12px 18px;
     border-bottom: 1px solid rgba(33, 135, 170, 0.12);
     background: linear-gradient(90deg, rgba(89, 224, 244, 0.14), rgba(159, 236, 184, 0.2));
 }
@@ -239,15 +310,125 @@
 }
 
 .intel-chat-body {
-    min-height: 640px;
-    padding: 24px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 18px 16px;
+    scrollbar-width: thin;
+}
+
+.intel-composer {
+    flex: none;
+    padding: 12px 14px 8px;
+    border-top: 1px solid rgba(33, 135, 170, 0.12);
+    background: #fff;
+}
+
+.intel-chips {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 0 0 10px;
+    padding: 2px 0;
+}
+
+.intel-q {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    min-height: 48px;
+    padding: 6px 10px 6px 7px;
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: left;
+    color: #1f3a40;
+    cursor: pointer;
+    border-radius: 999px;
+    background: #f1faf8;
+    border: 1px solid rgba(33, 135, 170, 0.2);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.intel-q:hover,
+.intel-q:focus-visible {
+    outline: none;
+    transform: translateY(-2px);
+    border-color: rgba(0, 194, 168, 0.55);
+}
+
+.intel-q.active {
+    color: #fff;
+    border-color: transparent;
+    background: linear-gradient(135deg, #2187aa, #00c2a8);
+    box-shadow: 0 8px 18px rgba(33, 135, 170, 0.3);
+}
+
+.intel-q-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    color: #1a8aa6;
+    border-radius: 50%;
+    background: rgba(33, 135, 170, 0.12);
+}
+
+.intel-q.active .intel-q-icon {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.24);
+}
+
+.intel-q-icon svg {
+    width: 17px;
+    height: 17px;
+}
+
+.intel-input {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 6px 6px 18px;
+    font-size: 14px;
+    color: #7a8f8c;
+    border-radius: 999px;
+    background: #f1f5f5;
+    border: 1px solid rgba(33, 135, 170, 0.14);
+}
+
+.intel-input i {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    color: #fff;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2187aa, #00c2a8);
+}
+
+.intel-input svg {
+    width: 18px;
+    height: 18px;
+}
+
+.intel-home {
+    flex: none;
+    width: 120px;
+    height: 5px;
+    margin: 4px auto 8px;
+    border-radius: 999px;
+    background: #0d1a1f;
+    opacity: 0.8;
 }
 
 .intel-user {
     width: fit-content;
-    max-width: 85%;
-    margin: 0 0 16px auto;
-    padding: 12px 18px;
+    max-width: 88%;
+    margin: 0 0 14px auto;
+    padding: 11px 16px;
     font-size: 15px;
     line-height: 1.5;
     color: #fff;
@@ -257,19 +438,19 @@
 }
 
 .intel-ai {
-    max-width: 92%;
-    min-height: 56px;
-    margin-bottom: 16px;
-    padding: 14px 18px;
+    max-width: 95%;
+    min-height: 52px;
+    margin-bottom: 14px;
+    padding: 12px 16px;
     border-radius: 20px 20px 20px 4px;
-    background: #f1faf8;
+    background: #fff;
     border: 1px solid rgba(33, 135, 170, 0.12);
 }
 
 .intel .intel-ai p {
     margin: 0;
     font-size: 15px;
-    line-height: 1.65;
+    line-height: 1.6;
     color: #1f3a40;
 }
 
@@ -551,29 +732,25 @@
 }
 
 /* Responsive */
-@media (max-width: 1024px) {
+@media (max-width: 900px) {
     .intel {
         padding: 100px 0;
     }
 
     .intel-body {
-        grid-template-columns: 1fr;
-        gap: 32px;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 40px;
+        justify-items: center;
     }
 
-    .intel-questions {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
+    .intel-aside {
+        width: 100%;
+        max-width: 560px;
     }
 
-    .intel-hint,
-    .intel-disclaimer {
-        grid-column: 1 / -1;
-    }
-
-    .intel-q.active,
-    .intel-q:hover {
-        transform: none;
+    .intel-phone {
+        order: -1;
+        width: min(100%, 380px);
     }
 }
 
@@ -582,40 +759,72 @@
         padding: 72px 0;
     }
 
+    .intel-orb,
+    .intel-glow {
+        display: none;
+    }
+
     .intel-inner {
-        width: calc(100% - 40px);
+        width: calc(100% - 32px);
     }
 
     .intel-header {
-        margin-bottom: 40px;
+        margin-bottom: 36px;
+    }
+
+    .intel .intel-header h2 {
+        font-size: 2rem;
     }
 
     .intel .intel-header p {
-        font-size: 15px;
+        font-size: 16px;
     }
 
-    .intel-questions {
-        grid-template-columns: 1fr;
+    .intel-body {
+        gap: 32px;
     }
 
-    .intel-chat-body {
-        min-height: 0;
-        padding: 16px;
+    .intel-steps li {
+        font-size: 16px;
     }
 
-    .intel-user,
-    .intel-ai {
-        max-width: 100%;
+    .intel-phone {
+        width: min(100%, 360px);
+        padding: 9px;
+        border-radius: 46px;
+    }
+
+    .intel-screen {
+        height: 640px;
+        border-radius: 38px;
+    }
+
+    .intel-day {
+        font-size: 16px;
+    }
+
+    .intel-base-label {
+        font-size: 14px;
+    }
+
+    .intel-card-head strong {
+        font-size: 26px;
+    }
+
+    .intel-chip,
+    .intel-next li,
+    .intel .intel-why p {
+        font-size: 14px;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
     .intel-orb,
     .intel-live i,
+    .intel-demo-pill i,
     .intel-caret,
     .intel-dots i,
-    .intel-dot-pulse,
-    .intel-q-arrow {
+    .intel-dot-pulse {
         animation: none !important;
     }
 }

@@ -593,3 +593,42 @@
     }
     .how-chips.profile .chip-ico::after { clip-path: none; }
 }
+/* Mobile simplification */
+@media (max-width: 600px) {
+    .how-orb,
+    .how-glow {
+        display: none;
+    }
+
+    .how-steps {
+        gap: 16px;
+    }
+
+    .how-step-top {
+        margin-bottom: 14px;
+    }
+
+    .how-shot {
+        aspect-ratio: 16 / 7;
+        margin-bottom: 16px;
+    }
+
+    .how .how-step h3 {
+        font-size: 21px;
+    }
+
+    .how .how-step p {
+        font-size: 16px;
+        line-height: 1.6;
+    }
+
+    .how-chips li {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+
+    .how-privacy {
+        margin-top: 32px;
+        font-size: 15px;
+    }
+}

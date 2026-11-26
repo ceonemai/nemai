@@ -14,7 +14,7 @@
 .home-section { padding: clamp(80px, 10vw, 150px) 0; scroll-margin-top: 85px; }
 .home h1, .home h2, .home h3, .home h4, .home p { margin: 0; }
 .home h1, .home h2, .home h3, .home h4 { font-weight: 400; }
-.home em { color: #2187aa; font-family: Georgia, serif; font-weight: 400; }
+.home em { color: #2187aa; font-family: inherit; font-weight: 400; }
 @supports (background-clip: text) {
   .home em { background: linear-gradient(90deg, #2187aa, #008f80); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 }
@@ -74,7 +74,7 @@
   box-shadow: 0 14px 35px rgba(48, 113, 115, 0.16);
 }
 .hero-card-number { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.hero-card-number text { fill: #fff; font: 700 34px system-ui, sans-serif; letter-spacing: -0.5px; }
+.hero-card-number text { fill: #fff; font: 700 34px "Prometo", sans-serif; letter-spacing: -0.5px; }
 .hero-card-steps { background-image: url("../../assets/images/hero-steps.png"); }
 .hero-card-activity { background-image: url("../../assets/images/hero-activity.png"); }
 .hero-card-distance { background-image: url("../../assets/images/hero-distance.png"); }
@@ -120,7 +120,7 @@
 .section-aside { font-size: 10px; letter-spacing: 0.1em; text-align: right; }
 .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 70px; }
 .step-card { min-height: 230px; display: flex; flex-direction: column; justify-content: space-between; padding: 28px; border-top: 1px solid #9ec7b5; }
-.step-number { color: #6b9d8c; font-family: Georgia, serif; font-size: 42px; font-style: italic; }
+.step-number { color: #6b9d8c; font-family: inherit; font-size: 42px; font-style: normal; }
 .step-card h3 { margin-bottom: 12px; font-size: 22px; letter-spacing: -0.03em; }
 .step-card p { max-width: 290px; font-size: 14px; }
 
@@ -276,4 +276,13 @@
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .home * { scroll-behavior: auto; transition: none; animation: none; }
+}
+
+@media (max-width: 560px) {
+  .home em { font-style: normal; }
+  .home-section p { font-size: 16px; line-height: 1.65; }
+  .trust-details p { font-size: 17px; }
+  .trust-details small { font-size: 14px; }
+  .safety-note { font-size: 14px; }
+  .review-label { font-size: 12px; }
 }
