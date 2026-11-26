@@ -6,6 +6,7 @@ import PhoneCarousel from "./PhoneCarousel";
 import MeetNEM from "../MeetNEM/MeetNEM";
 import HowItWorks from "../HowItWorks/HowItWorks";
 import Intelligence from "../Intelligence/Intelligence";
+import numiWave from "../../assets/images/numi-wave.webp";
 import "./HomePage.css";
 
 function SectionHeading({ eyebrow, title, children }) {
@@ -102,6 +103,17 @@ export default function HomePage() {
   return (
     <main className="home">
       <section className="home-hero" id="hero">
+        <div className="arctic-scene" aria-hidden="true">
+          <div className="arctic-aurora arctic-aurora-a" />
+          <div className="arctic-aurora arctic-aurora-b" />
+          <div className="arctic-aurora arctic-aurora-c" />
+          <div className="arctic-snow">
+            {Array.from({ length: 26 }, (_, i) => (
+              <i key={i} style={{ "--x": `${(i * 37) % 100}%`, "--d": `${9 + (i % 7) * 2}s`, "--s": `${-((i * 1.7) % 14)}s`, "--z": `${3 + (i % 4)}px`, "--w": `${(i % 2 ? 1 : -1) * (14 + (i % 5) * 6)}px` }} />
+            ))}
+          </div>
+          <img className="arctic-numi" src={numiWave} alt="" />
+        </div>
         <div className="home-container hero-content">
           <div className="hero-copy">
             <h1>Your Personal AI<br /><em>for Health &amp; Emergencies</em></h1>
