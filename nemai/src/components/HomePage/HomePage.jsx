@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import logomark from "../../assets/images/LogogramFullColor.png";
 import DownloadCTA from "./DownloadCTA";
 import PhoneCarousel from "./PhoneCarousel";
+import MeetNEM from "../MeetNEM/MeetNEM";
 import { capabilities, steps } from "./content";
 import "./HomePage.css";
 
@@ -115,7 +116,6 @@ export default function HomePage() {
       <section className="home-hero" id="hero">
         <div className="home-container hero-content">
           <div className="hero-copy">
-            <span className="home-eyebrow"><span className="eyebrow-dot" /> YOUR PERSONAL HEALTH AI</span>
             <h1>Your Personal AI<br /><em>for Health &amp; Emergencies</em></h1>
             <p>Meet NEM AI, Intelligence for Your Health. Personalized insights. Clearer perspectives. Smarter health decisions.</p>
             <div className="hero-actions">
@@ -145,6 +145,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <MeetNEM />
 
       <section className="home-section product-section" id="product">
         <div className="home-container">
