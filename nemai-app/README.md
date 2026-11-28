@@ -35,10 +35,13 @@ Set these Vercel variables in the Production deployment environment:
 | --- | --- |
 | `VITE_CUSTOMER_SERVICE_URL` | `https://customer-api.nemai.io` |
 | `VITE_CHAT_AI_SERVICE_URL` | `https://chat-ai-api.nemai.io` |
+| `VITE_CHAT_AI_API_VERSION` | `v1` (`v2` is also supported) |
 | `VITE_PRIVY_APP_ID` | Existing Privy App ID |
 
 Rebuild after changing `VITE_*` variables: Vite embeds them in browser assets.
 Never put a Privy app secret or other server-side credential in a `VITE_*` variable.
+Changing `VITE_CHAT_AI_API_VERSION` switches all chat requests between `/api/v1`
+and `/api/v2`; restart the Vite development server after changing it locally.
 
 ### Policy Allowlist
 
